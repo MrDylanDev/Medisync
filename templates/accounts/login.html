@@ -1,0 +1,84 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Iniciar Sesión — {{ app_name }}{% endblock %}
+
+{% block content %}
+<section class="section">
+  <div class="container">
+    <div class="columns is-centered">
+      <div class="column is-5-tablet is-4-desktop is-3-widescreen">
+        <div class="box">
+          <h1 class="title has-text-centered">Iniciar Sesión</h1>
+
+          {% if form.errors %}
+          <div class="notification is-danger is-light">
+            <button class="delete" onclick="this.parentElement.remove()"></button>
+            <p>Correo o contraseña incorrectos. Intente nuevamente.</p>
+          </div>
+          {% endif %}
+
+          {% if next and user.is_authenticated %}
+          <div class="notification is-warning is-light">
+            Su cuenta no tiene acceso a esta página. Inicie sesión con una cuenta autorizada.
+          </div>
+          {% endif %}
+
+          <form method="post" novalidate>
+            {% csrf_token %}
+            <input type="hidden" name="next" value="{{ next }}">
+
+            <div class="field">
+              <label class="label" for="id_username">Correo electrónico</label>
+              <div class="control has-icons-left">
+                <input class="input {% if form.errors %}is-danger{% endif %}"
+                       type="email"
+                       name="username"
+                       id="id_username"
+                       placeholder="correo@ejemplo.com"
+                       required
+                       autofocus
+                       value="{{ form.username.value|default:'' }}">
+                <span class="icon is-small is-left">
+                  <i class="fas fa-envelope"></i>
+                </span>
+              </div>
+            </div>
+
+            <div class="field">
+              <label class="label" for="id_password">Contraseña</label>
+              <div class="control has-icons-left">
+                <input class="input {% if form.errors %}is-danger{% endif %}"
+                       type="password"
+                       name="password"
+                       id="id_password"
+                       placeholder="Contraseña"
+                       required>
+                <span class="icon is-small is-left">
+                  <i class="fas fa-lock"></i>
+                </span>
+              </div>
+            </div>
+
+            <div class="field">
+              <button class="button is-primary is-fullwidth" type="submit">
+                Iniciar Sesión
+              </button>
+            </div>
+          </form>
+
+          <div class="has-text-centered mt-4">
+            <a href="{% url 'password_reset' %}" class="is-size-7">¿Olvidaste tu contraseña?</a>
+          </div>
+
+          <hr>
+
+          <div class="has-text-centered">
+            <p class="is-size-7">¿No tenés cuenta? <a href="{% url 'register' %}">Registrate</a></p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+{% endblock %}

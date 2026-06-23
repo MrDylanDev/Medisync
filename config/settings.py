@@ -97,11 +97,13 @@ DATABASES = {
         'PASSWORD': os.environ.get('DB_PASSWORD', 'medisync'),
         'HOST': os.environ.get('DB_HOST', 'localhost'),
         'PORT': os.environ.get('DB_PORT', '3306'),
-        'OPTIONS': {
-            'charset': 'utf8mb4',
-        },
     }
 }
+
+_DB_ENGINE = DATABASES['default']['ENGINE']
+if 'mysql' in _DB_ENGINE:
+    DATABASES['default'].setdefault('OPTIONS', {})
+    DATABASES['default']['OPTIONS']['charset'] = 'utf8mb4'
 
 # Cache
 # https://docs.djangoproject.com/en/6.0/topics/cache/
@@ -124,6 +126,10 @@ AUTH_USER_MODEL = 'accounts.Usuario'
 AUTHENTICATION_BACKENDS = [
     'django.contrib.auth.backends.ModelBackend',
 ]
+
+LOGIN_URL = 'login'
+LOGIN_REDIRECT_URL = 'dashboard'
+LOGOUT_REDIRECT_URL = 'login'
 
 
 # Password validation
@@ -232,3 +238,11 @@ MEDIA_ROOT = BASE_DIR / 'media'
 # https://docs.djangoproject.com/en/6.0/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+
+# Fixtures directory
+# https://docs.djangoproject.com/en/6.0/ref/settings/#fixture-dirs
+
+FIXTURE_DIRS = [
+    BASE_DIR / 'fixtures',
+]

@@ -1,0 +1,141 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Registro — {{ app_name }}{% endblock %}
+
+{% block content %}
+<section class="section">
+  <div class="container">
+    <div class="columns is-centered">
+      <div class="column is-6-tablet is-5-desktop is-4-widescreen">
+        <div class="box">
+          <h1 class="title has-text-centered">Crear Cuenta</h1>
+
+          <form method="post" novalidate>
+            {% csrf_token %}
+
+            <div class="field">
+              <label class="label" for="id_correo">Correo electrónico</label>
+              <div class="control">
+                <input class="input {% if errors.correo %}is-danger{% endif %}"
+                       type="email"
+                       name="correo"
+                       id="id_correo"
+                       placeholder="correo@ejemplo.com"
+                       required
+                       value="{{ form_data.correo|default:'' }}">
+              </div>
+              {% if errors.correo %}
+              <p class="help is-danger">{{ errors.correo }}</p>
+              {% endif %}
+            </div>
+
+            <div class="field">
+              <label class="label" for="id_nombre">Nombre</label>
+              <div class="control">
+                <input class="input {% if errors.nombre %}is-danger{% endif %}"
+                       type="text"
+                       name="nombre"
+                       id="id_nombre"
+                       placeholder="Tu nombre"
+                       required
+                       value="{{ form_data.nombre|default:'' }}">
+              </div>
+              {% if errors.nombre %}
+              <p class="help is-danger">{{ errors.nombre }}</p>
+              {% endif %}
+            </div>
+
+            <div class="field">
+              <label class="label" for="id_apellido">Apellido</label>
+              <div class="control">
+                <input class="input {% if errors.apellido %}is-danger{% endif %}"
+                       type="text"
+                       name="apellido"
+                       id="id_apellido"
+                       placeholder="Tu apellido"
+                       required
+                       value="{{ form_data.apellido|default:'' }}">
+              </div>
+              {% if errors.apellido %}
+              <p class="help is-danger">{{ errors.apellido }}</p>
+              {% endif %}
+            </div>
+
+            <div class="field">
+              <label class="label" for="id_telefono">Teléfono</label>
+              <div class="control">
+                <input class="input"
+                       type="tel"
+                       name="telefono"
+                       id="id_telefono"
+                       placeholder="Opcional"
+                       value="{{ form_data.telefono|default:'' }}">
+              </div>
+            </div>
+
+            <div class="field">
+              <label class="label">Rol</label>
+              <div class="control">
+                <div class="select is-fullwidth {% if errors.rol %}is-danger{% endif %}">
+                  <select name="rol">
+                    <option value="paciente" {% if form_data.rol == 'paciente' or not form_data.rol %}selected{% endif %}>Paciente</option>
+                    <option value="medico" {% if form_data.rol == 'medico' %}selected{% endif %}>Médico</option>
+                  </select>
+                </div>
+              </div>
+              {% if errors.rol %}
+              <p class="help is-danger">{{ errors.rol }}</p>
+              {% endif %}
+            </div>
+
+            <hr>
+
+            <div class="field">
+              <label class="label" for="id_password">Contraseña</label>
+              <div class="control">
+                <input class="input {% if errors.password %}is-danger{% endif %}"
+                       type="password"
+                       name="password"
+                       id="id_password"
+                       placeholder="Mínimo 8 caracteres"
+                       required>
+              </div>
+              {% if errors.password %}
+              <p class="help is-danger">{{ errors.password }}</p>
+              {% endif %}
+            </div>
+
+            <div class="field">
+              <label class="label" for="id_password_confirm">Confirmar contraseña</label>
+              <div class="control">
+                <input class="input {% if errors.password_confirm %}is-danger{% endif %}"
+                       type="password"
+                       name="password_confirm"
+                       id="id_password_confirm"
+                       placeholder="Repetí la contraseña"
+                       required>
+              </div>
+              {% if errors.password_confirm %}
+              <p class="help is-danger">{{ errors.password_confirm }}</p>
+              {% endif %}
+            </div>
+
+            <div class="field mt-5">
+              <button class="button is-primary is-fullwidth" type="submit">
+                Crear Cuenta
+              </button>
+            </div>
+          </form>
+
+          <hr>
+
+          <div class="has-text-centered">
+            <p class="is-size-7">¿Ya tenés cuenta? <a href="{% url 'login' %}">Iniciá sesión</a></p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+{% endblock %}

@@ -1,0 +1,84 @@
+:root {
+  --brand-primary: #00b89c;
+  --brand-primary-dark: #009b84;
+  --brand-accent: #3273dc;
+}
+
+.navbar.is-primary {
+  background-color: var(--brand-primary);
+}
+
+.navbar.is-primary .navbar-item {
+  color: #fff;
+}
+
+.navbar.is-primary .navbar-item:hover {
+  background-color: var(--brand-primary-dark);
+  color: #fff;
+}
+
+.button.is-primary {
+  background-color: var(--brand-primary);
+  border-color: transparent;
+}
+
+.button.is-primary:hover {
+  background-color: var(--brand-primary-dark);
+}
+
+.button.is-primary.is-outlined {
+  background-color: transparent;
+  border-color: var(--brand-primary);
+  color: var(--brand-primary);
+}
+
+.menu-list a.is-active {
+  background-color: var(--brand-primary);
+}
+
+.menu-list a:hover {
+  background-color: #f0f0f0;
+}
+
+.notification.is-success.is-light {
+  background-color: #ebfffa;
+  color: #009b84;
+}
+
+.notification.is-danger.is-light {
+  background-color: #feecf0;
+  color: #cc0f35;
+}
+
+.notification.is-warning.is-light {
+  background-color: #fffdf0;
+  color: #946c00;
+}
+
+.notification.is-info.is-light {
+  background-color: #eff5ff;
+  color: #296fa8;
+}
+
+.footer {
+  padding: 2rem 1.5rem;
+}
+
+main > .section:first-child {
+  padding-top: 2rem;
+}
+
+.box {
+  box-shadow: 0 0.5em 1em -0.125em rgba(10, 10, 10, 0.08), 0 0 0 1px rgba(10, 10, 10, 0.02);
+}
+
+.tag.is-success {
+  background-color: var(--brand-primary);
+  color: #fff;
+}
+
+@media screen and (max-width: 768px) {
+  .has-sidebar .columns {
+    display: block;
+  }
+}
