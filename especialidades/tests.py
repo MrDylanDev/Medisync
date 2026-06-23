@@ -73,7 +73,6 @@ class TestEspecialidadAdmin:
         """Especialidad should be registered in admin."""
         from django.contrib import admin
         from especialidades.models import Especialidad
-        from especialidades.admin import EspecialidadAdmin
         assert admin.site.is_registered(Especialidad)
 
     def test_admin_list_display(self):

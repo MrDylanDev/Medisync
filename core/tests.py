@@ -2,7 +2,7 @@
 Tests for core app: utils, middleware, context_processors.
 """
 import pytest
-from datetime import date, timedelta
+from datetime import date
 from core.utils import (
     validate_cuit,
     format_cuit,
@@ -12,7 +12,6 @@ from core.utils import (
 )
 from core.middleware import get_current_user, RequestUserMiddleware
 from django.http import HttpRequest
-from django.test import RequestFactory
 
 
 # ─── Utils: validate_cuit ────────────────────────────────────────────────────
@@ -154,7 +153,6 @@ class TestRequestUserMiddleware:
         """Middleware should store the request user in thread-local."""
         request = HttpRequest()
         request.user = 'test-user'
-        factory = RequestFactory()
 
         def get_response(req):
             assert get_current_user() == 'test-user'

@@ -2,7 +2,7 @@
 Tests for medicos app: models, signals, serializers, views.
 """
 import pytest
-from datetime import time, date, timedelta
+from datetime import time, date
 from django.db import IntegrityError
 from django.core.exceptions import ValidationError
 

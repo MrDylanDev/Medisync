@@ -2,7 +2,6 @@ from rest_framework import serializers
 from django.utils.translation import gettext_lazy as _
 
 from .models import Cita, AuditoriaCita
-from accounts.serializers import UsuarioSerializer
 
 
 class CitaSerializer(serializers.ModelSerializer):

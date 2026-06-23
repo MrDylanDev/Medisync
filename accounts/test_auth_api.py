@@ -1,7 +1,6 @@
 """
 Integration tests for the auth API endpoints.
 """
-import pytest
 from rest_framework import status
 from django.contrib.auth import get_user_model
 

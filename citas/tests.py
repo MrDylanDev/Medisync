@@ -4,7 +4,6 @@ Tests for citas app: models, signals, serializers, views.
 import pytest
 from datetime import time, date, timedelta
 from django.db import IntegrityError
-from django.core.exceptions import ValidationError
 
 
 # ─── Fixtures ─────────────────────────────────────────────────────────────────
@@ -343,7 +342,6 @@ class TestCitaBookEndpoint:
 
     def test_book_already_booked(self, paciente_client, db, paciente, available_horario):
         """Booking an already booked horario should fail."""
-        from citas.models import Cita
         # First booking
         paciente_client.post(self.BOOK_URL, {
             'paciente': paciente.id,

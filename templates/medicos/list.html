@@ -1,0 +1,107 @@
+{% extends "base.html" %}
+
+{% block title %}Médicos — {{ app_name }}{% endblock %}
+
+{% block content %}
+<section class="section">
+  <div class="container">
+    <h1 class="title">
+      {% if especialidad_filtro %}
+        Médicos — {{ especialidad_filtro.nombre }}
+      {% else %}
+        Médicos
+      {% endif %}
+    </h1>
+
+    <div class="columns is-multiline is-align-items-center mb-5">
+      <div class="column is-6-tablet is-4-desktop">
+        <form method="get" class="field has-addons">
+          {% if especialidad_filtro %}
+          <input type="hidden" name="especialidad" value="{{ especialidad_filtro.id }}">
+          {% endif %}
+          <div class="control is-expanded">
+            <input class="input" type="text" name="q" placeholder="Buscar por nombre o especialidad..." value="{{ query }}">
+          </div>
+          <div class="control">
+            <button class="button is-primary" type="submit">Buscar</button>
+          </div>
+        </form>
+      </div>
+      <div class="column is-6-tablet is-4-desktop">
+        <div class="select is-fullwidth">
+          <select onchange="window.location.href='?especialidad=' + this.value">
+            <option value="">Todas las especialidades</option>
+            {% for esp in especialidades %}
+            <option value="{{ esp.id }}" {% if especialidad_filtro and especialidad_filtro.id == esp.id %}selected{% endif %}>
+              {{ esp.nombre }}
+            </option>
+            {% endfor %}
+          </select>
+        </div>
+      </div>
+    </div>
+
+    <div class="columns is-multiline">
+      {% for medico in medicos %}
+      <div class="column is-6-tablet is-4-desktop">
+        <div class="box" style="transition: transform 0.15s;">
+          <h2 class="title is-5 mb-2">
+            <a href="{% url 'medicos_detail' medico.pk %}" class="has-text-dark">
+              Dr. {{ medico.usuario.nombre_completo }}
+            </a>
+          </h2>
+          <div class="tags mb-3">
+            {% for me in medico.especialidades.all %}
+            <span class="tag is-info is-light">{{ me.especialidad.nombre }}</span>
+            {% endfor %}
+          </div>
+          <div class="is-size-7 mb-2" style="color: #4A5568;">
+            {% if medico.informacion_consultorio %}
+            <p><span class="icon is-small"><i class="fas fa-location-dot"></i></span> {{ medico.informacion_consultorio|truncatechars:60 }}</p>
+            {% endif %}
+            {% if medico.atencion_online %}
+            <p><span class="icon is-small"><i class="fas fa-laptop-medical"></i></span> Atención online disponible</p>
+            {% endif %}
+          </div>
+          <div class="is-flex is-justify-content-space-between is-align-items-center">
+            <span class="has-text-weight-semibold">
+              {% if medico.precio_consulta %}
+                ${{ medico.precio_consulta }}
+              {% else %}
+                Precio a consultar
+              {% endif %}
+            </span>
+            <span class="has-text-warning">
+              {% if medico.calificacion > 0 %}
+                {% for i in "12345" %}
+                  {% if forloop.counter <= medico.calificacion %}
+                    <i class="fas fa-star"></i>
+                  {% else %}
+                    <i class="far fa-star"></i>
+                  {% endif %}
+                {% endfor %}
+              {% else %}
+                Sin calificar
+              {% endif %}
+            </span>
+            <a href="{% url 'medicos_detail' medico.pk %}" class="button is-primary is-small">
+              Ver horarios
+            </a>
+          </div>
+        </div>
+      </div>
+      {% empty %}
+      <div class="column">
+        <div class="notification is-warning is-light">
+          {% if query %}
+            No se encontraron médicos para "{{ query }}".
+          {% else %}
+            No hay médicos disponibles en este momento.
+          {% endif %}
+        </div>
+      </div>
+      {% endfor %}
+    </div>
+  </div>
+</section>
+{% endblock %}
