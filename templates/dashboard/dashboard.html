@@ -1,0 +1,71 @@
+{% extends "dashboard/base.html" %}
+
+{% block dashboard_title %}Dashboard{% endblock %}
+
+{% block dashboard_content %}
+<section class="section">
+  <h1 class="title">Bienvenido, {{ user.nombre }}</h1>
+  <p class="subtitle">Panel de {{ user.get_rol_display }}</p>
+
+  <div class="columns is-multiline mt-5">
+    {% if user.rol == 'paciente' %}
+    <div class="column is-4">
+      <div class="box has-text-centered">
+        <p class="heading">Mis Citas</p>
+        <p class="title is-size-3">0</p>
+      </div>
+    </div>
+    <div class="column is-4">
+      <div class="box has-text-centered">
+        <p class="heading">Pendientes</p>
+        <p class="title is-size-3">0</p>
+      </div>
+    </div>
+    <div class="column is-4">
+      <div class="box has-text-centered">
+        <p class="heading">Historial</p>
+        <p class="title is-size-3">0</p>
+      </div>
+    </div>
+    {% elif user.rol == 'medico' %}
+    <div class="column is-4">
+      <div class="box has-text-centered">
+        <p class="heading">Citas Hoy</p>
+        <p class="title is-size-3">0</p>
+      </div>
+    </div>
+    <div class="column is-4">
+      <div class="box has-text-centered">
+        <p class="heading">Próximas</p>
+        <p class="title is-size-3">0</p>
+      </div>
+    </div>
+    <div class="column is-4">
+      <div class="box has-text-centered">
+        <p class="heading">Pacientes</p>
+        <p class="title is-size-3">0</p>
+      </div>
+    </div>
+    {% elif user.rol == 'admin' %}
+    <div class="column is-4">
+      <div class="box has-text-centered">
+        <p class="heading">Usuarios</p>
+        <p class="title is-size-3">—</p>
+      </div>
+    </div>
+    <div class="column is-4">
+      <div class="box has-text-centered">
+        <p class="heading">Citas Totales</p>
+        <p class="title is-size-3">—</p>
+      </div>
+    </div>
+    <div class="column is-4">
+      <div class="box has-text-centered">
+        <p class="heading">Médicos</p>
+        <p class="title is-size-3">—</p>
+      </div>
+    </div>
+    {% endif %}
+  </div>
+</section>
+{% endblock %}

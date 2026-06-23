@@ -1,29 +1,57 @@
-"""
-URL configuration for config project.
-
-The `urlpatterns` list routes URLs to views. For more information please see:
-    https://docs.djangoproject.com/en/6.0/topics/http/urls/
-Examples:
-Function views
-    1. Add an import:  from my_app import views
-    2. Add a URL to urlpatterns:  path('', views.home, name='home')
-Class-based views
-    1. Add an import:  from other_app.views import Home
-    2. Add a URL to urlpatterns:  path('', Home.as_view(), name='home')
-Including another URLconf
-    1. Import the include() function: from django.urls import include, path
-    2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
-"""
 from django.contrib import admin
+from django.contrib.auth import views as auth_views
 from django.urls import path, include
-from rest_framework_simplejwt.views import (
-    TokenObtainPairView,
-    TokenRefreshView,
-    TokenBlacklistView,
-)
+
+from accounts import views_frontend
+from accounts.forms import EmailAuthenticationForm
+from core import views as core_views
+from especialidades import views_public as especialidades_public
+from medicos import views_public as medicos_public
 
 urlpatterns = [
+    # Admin
     path('admin/', admin.site.urls),
+
+    # Home
+    path('', core_views.home, name='home'),
+
+    # Frontend — session-based auth
+    path('accounts/login/', auth_views.LoginView.as_view(
+        template_name='accounts/login.html',
+        authentication_form=EmailAuthenticationForm,
+        redirect_authenticated_user=True,
+    ), name='login'),
+    path('accounts/logout/', auth_views.LogoutView.as_view(
+        next_page='login',
+    ), name='logout'),
+    path('accounts/register/', views_frontend.register, name='register'),
+    path('accounts/profile/', views_frontend.profile, name='profile'),
+    path('accounts/password-reset/', auth_views.PasswordResetView.as_view(
+        template_name='accounts/password_reset.html',
+        email_template_name='emails/password_reset.html',
+        subject_template_name='emails/password_reset_subject.txt',
+        success_url='/accounts/password-reset/done/',
+    ), name='password_reset'),
+    path('accounts/password-reset/done/', auth_views.PasswordResetDoneView.as_view(
+        template_name='accounts/password_reset_done.html',
+    ), name='password_reset_done'),
+    path('accounts/reset/<uidb64>/<token>/', auth_views.PasswordResetConfirmView.as_view(
+        template_name='accounts/password_reset_confirm.html',
+        success_url='/accounts/reset/done/',
+    ), name='password_reset_confirm'),
+    path('accounts/reset/done/', auth_views.PasswordResetCompleteView.as_view(
+        template_name='accounts/password_reset_complete.html',
+    ), name='password_reset_complete'),
+
+    # Dashboard
+    path('dashboard/', views_frontend.dashboard, name='dashboard'),
+
+    # Public landing pages
+    path('especialidades/', especialidades_public.especialidad_list, name='especialidades_list'),
+    path('medicos/', medicos_public.medico_list, name='medicos_list'),
+    path('medicos/<int:pk>/', medicos_public.medico_detail, name='medicos_detail'),
+
+    # API — JWT-based auth
     path('api/auth/', include('accounts.urls')),
     path('api/especialidades/', include('especialidades.urls')),
     path('api/medicos/', include('medicos.urls')),

@@ -1,0 +1,59 @@
+{% extends "base.html" %}
+
+{% block body_class %}has-sidebar{% endblock %}
+
+{% block content %}
+<div class="columns is-gapless" style="min-height: calc(100vh - 52px - 168px);">
+  <aside class="column is-2 is-hidden-mobile" style="background-color: #f5f5f5;">
+    <aside class="menu p-4">
+      <p class="menu-label">General</p>
+      <ul class="menu-list">
+        <li><a href="{% url 'dashboard' %}" class="{% if request.resolver_match.url_name == 'dashboard' %}is-active{% endif %}">Dashboard</a></li>
+        <li><a href="{% url 'profile' %}" class="{% if request.resolver_match.url_name == 'profile' %}is-active{% endif %}">Mi Perfil</a></li>
+      </ul>
+
+      {% if user.rol == 'paciente' %}
+      <p class="menu-label">Paciente</p>
+      <ul class="menu-list">
+        <li><a>Mis Citas</a></li>
+        <li><a>Agendar Cita</a></li>
+        <li><a>Historial</a></li>
+      </ul>
+      {% elif user.rol == 'medico' %}
+      <p class="menu-label">Médico</p>
+      <ul class="menu-list">
+        <li><a>Mis Horarios</a></li>
+        <li><a>Citas Agendadas</a></li>
+        <li><a>Pacientes</a></li>
+        <li><a>Especialidades</a></li>
+      </ul>
+      {% elif user.rol == 'admin' %}
+      <p class="menu-label">Administración</p>
+      <ul class="menu-list">
+        <li><a href="{% url 'admin:index' %}">Panel Admin Django</a></li>
+        <li><a>Usuarios</a></li>
+        <li><a>Especialidades</a></li>
+        <li><a>Médicos</a></li>
+        <li><a>Reportes</a></li>
+      </ul>
+      {% endif %}
+
+      <hr>
+      <ul class="menu-list">
+        <li>
+          <form method="post" action="{% url 'logout' %}">
+            {% csrf_token %}
+            <button type="submit" class="button is-light is-small is-fullwidth">
+              Cerrar Sesión
+            </button>
+          </form>
+        </li>
+      </ul>
+    </aside>
+  </aside>
+
+  <main class="column">
+    {% block dashboard_content %}{% endblock %}
+  </main>
+</div>
+{% endblock %}
