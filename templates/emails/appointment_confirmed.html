@@ -1,0 +1,69 @@
+{% load i18n %}<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Cita Confirmada — Medisync</title>
+</head>
+<body style="font-family: system-ui, -apple-system, sans-serif; background-color: #f5f5f5; margin: 0; padding: 0;">
+  <div style="max-width: 600px; margin: 40px auto; background: #fff; border-radius: 8px; overflow: hidden; box-shadow: 0 2px 8px rgba(0,0,0,0.08);">
+    <div style="background-color: #00b89c; padding: 24px; text-align: center;">
+      <h1 style="color: #fff; margin: 0; font-size: 20px;">{{ site_name }}</h1>
+    </div>
+    <div style="padding: 32px 24px;">
+      <h2 style="color: #363636; margin-top: 0;">Cita Confirmada</h2>
+      <p style="color: #4a4a4a; line-height: 1.6;">
+        Hola <strong>{{ paciente_nombre }}</strong>, tu cita fue agendada correctamente.
+      </p>
+      <div style="background-color: #f0fdf9; border: 1px solid #00b89c; border-radius: 6px; padding: 20px; margin: 20px 0;">
+        <table style="width: 100%; border-collapse: collapse;">
+          <tr>
+            <td style="padding: 6px 0; color: #7a7a7a; width: 120px;">Médico:</td>
+            <td style="padding: 6px 0; color: #363636;"><strong>{{ medico_nombre }}</strong></td>
+          </tr>
+          <tr>
+            <td style="padding: 6px 0; color: #7a7a7a;">Especialidad:</td>
+            <td style="padding: 6px 0; color: #363636;">{{ especialidad }}</td>
+          </tr>
+          <tr>
+            <td style="padding: 6px 0; color: #7a7a7a;">Fecha:</td>
+            <td style="padding: 6px 0; color: #363636;">{{ fecha }}</td>
+          </tr>
+          <tr>
+            <td style="padding: 6px 0; color: #7a7a7a;">Horario:</td>
+            <td style="padding: 6px 0; color: #363636;">{{ hora_inicio }} — {{ hora_fin }}</td>
+          </tr>
+          <tr>
+            <td style="padding: 6px 0; color: #7a7a7a;">Consultorio:</td>
+            <td style="padding: 6px 0; color: #363636;">{{ consultorio }}</td>
+          </tr>
+          {% if atencion_online %}
+          <tr>
+            <td style="padding: 6px 0; color: #7a7a7a;">Modalidad:</td>
+            <td style="padding: 6px 0; color: #363636;">Atención online disponible</td>
+          </tr>
+          {% endif %}
+          <tr>
+            <td style="padding: 6px 0; color: #7a7a7a;">Motivo:</td>
+            <td style="padding: 6px 0; color: #363636;">{{ motivo }}</td>
+          </tr>
+        </table>
+      </div>
+      <p style="color: #7a7a7a; font-size: 13px;">
+        Recordá que podés cancelar la cita hasta 24 horas antes sin costo.
+      </p>
+      <div style="text-align: center; margin: 28px 0;">
+        <a href="{{ protocol }}://{{ domain }}{% url 'dashboard' %}"
+           style="display: inline-block; padding: 12px 32px; background-color: #00b89c; color: #fff; text-decoration: none; border-radius: 4px; font-weight: 600;">
+          Ver mis citas
+        </a>
+      </div>
+    </div>
+    <div style="background-color: #fafafa; padding: 16px 24px; text-align: center; border-top: 1px solid #eee;">
+      <p style="color: #b5b5b5; font-size: 12px; margin: 0;">
+        {{ site_name }} &copy; {% now "Y" %}. Sistema de Gestión de Citas Médicas.
+      </p>
+    </div>
+  </div>
+</body>
+</html>

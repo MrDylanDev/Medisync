@@ -1,0 +1,52 @@
+{% load i18n %}<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Bienvenido a Medisync</title>
+</head>
+<body style="font-family: system-ui, -apple-system, sans-serif; background-color: #f5f5f5; margin: 0; padding: 0;">
+  <div style="max-width: 600px; margin: 40px auto; background: #fff; border-radius: 8px; overflow: hidden; box-shadow: 0 2px 8px rgba(0,0,0,0.08);">
+    <div style="background-color: #00b89c; padding: 24px; text-align: center;">
+      <h1 style="color: #fff; margin: 0; font-size: 20px;">{{ site_name }}</h1>
+    </div>
+    <div style="padding: 32px 24px;">
+      <h2 style="color: #363636; margin-top: 0;">¡Bienvenido, {{ nombre }}!</h2>
+      <p style="color: #4a4a4a; line-height: 1.6;">
+        Tu cuenta en <strong>{{ site_name }}</strong> fue creada correctamente.
+      </p>
+      <table style="width: 100%; border-collapse: collapse; margin: 20px 0;">
+        <tr>
+          <td style="padding: 8px 0; color: #7a7a7a; width: 120px;">Correo:</td>
+          <td style="padding: 8px 0; color: #363636;"><strong>{{ correo }}</strong></td>
+        </tr>
+        <tr>
+          <td style="padding: 8px 0; color: #7a7a7a;">Rol:</td>
+          <td style="padding: 8px 0; color: #363636;">{{ rol }}</td>
+        </tr>
+      </table>
+      <p style="color: #4a4a4a; line-height: 1.6;">
+        {% if rol == 'Paciente' %}
+        Ya podés buscar médicos, ver sus horarios disponibles y agendar citas.
+        {% elif rol == 'Médico' %}
+        Ya podés configurar tus horarios, gestionar tus especialidades y atender pacientes.
+        {% endif %}
+      </p>
+      <div style="text-align: center; margin: 28px 0;">
+        <a href="{{ protocol }}://{{ domain }}{% url 'dashboard' %}"
+           style="display: inline-block; padding: 12px 32px; background-color: #00b89c; color: #fff; text-decoration: none; border-radius: 4px; font-weight: 600;">
+          Ir al Dashboard
+        </a>
+      </div>
+      <p style="color: #7a7a7a; font-size: 13px; text-align: center;">
+        Si no creaste esta cuenta, ignorá este mensaje.
+      </p>
+    </div>
+    <div style="background-color: #fafafa; padding: 16px 24px; text-align: center; border-top: 1px solid #eee;">
+      <p style="color: #b5b5b5; font-size: 12px; margin: 0;">
+        {{ site_name }} &copy; {% now "Y" %}. Sistema de Gestión de Citas Médicas.
+      </p>
+    </div>
+  </div>
+</body>
+</html>

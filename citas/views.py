@@ -9,6 +9,7 @@ from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.pagination import PageNumberPagination
 
+from core.utils import send_template_email
 from .models import Cita, EstadoCita
 from .serializers import CitaSerializer
 
@@ -32,7 +33,6 @@ def cita_list(request):
                 'paciente', 'medico', 'horario', 'estado'
             ).all()
         else:
-            # Regular users see only their own citas
             queryset = Cita.objects.select_related(
                 'paciente', 'medico', 'horario', 'estado'
             ).filter(paciente__usuario=request.user)
@@ -88,9 +88,12 @@ def cancelar_cita(request, pk):
 
     Validates that the appointment is at least 24 hours in the future.
     Updates Cita estado to 'cancelada' and sets Horario.disponible=True.
+    Sends cancellation emails to both patient and doctor.
     """
     try:
-        cita = Cita.objects.select_related('horario', 'estado').get(pk=pk)
+        cita = Cita.objects.select_related(
+            'horario', 'estado', 'paciente__usuario', 'medico__usuario'
+        ).get(pk=pk)
     except Cita.DoesNotExist:
         return Response(
             {'detail': _('Cita no encontrada.')},
@@ -118,6 +121,9 @@ def cancelar_cita(request, pk):
         cita.horario.save(update_fields=['disponible'])
 
     serializer = CitaSerializer(cita)
+
+    _send_appointment_cancelled(cita, request.user)
+
     return Response(serializer.data, status=status.HTTP_200_OK)
 
 
@@ -127,6 +133,7 @@ def _book_appointment(request):
 
     Creates a Cita and sets Horario.disponible=False in a single
     database transaction to prevent race conditions.
+    Sends a confirmation email to the patient.
     """
     serializer = CitaSerializer(data=request.data)
     if not serializer.is_valid():
@@ -135,11 +142,74 @@ def _book_appointment(request):
     with transaction.atomic():
         cita = serializer.save()
 
-        # Mark the horario as unavailable
         horario = cita.horario
         horario.disponible = False
         horario.save(update_fields=['disponible'])
 
-    # Return with estado_nombre populated
     result_serializer = CitaSerializer(cita)
+
+    _send_appointment_confirmed(cita)
+
     return Response(result_serializer.data, status=status.HTTP_201_CREATED)
+
+
+# ─── Email helpers ────────────────────────────────────────────────────────────
+
+def _get_especialidad(medico):
+    """Get the primary especialidad name for a medico, or empty string."""
+    relacion = medico.especialidades.filter(es_principal=True).first()
+    if not relacion:
+        relacion = medico.especialidades.first()
+    return relacion.especialidad.nombre if relacion else ''
+
+
+def _send_appointment_confirmed(cita):
+    """Send confirmation email to the patient."""
+    especialidad = _get_especialidad(cita.medico)
+
+    context = {
+        'paciente_nombre': cita.paciente.usuario.nombre_completo,
+        'medico_nombre': f'Dr. {cita.medico.usuario.nombre_completo}',
+        'especialidad': especialidad,
+        'fecha': cita.horario.fecha.strftime('%d/%m/%Y'),
+        'hora_inicio': cita.horario.hora_inicio.strftime('%H:%M'),
+        'hora_fin': cita.horario.hora_fin.strftime('%H:%M'),
+        'consultorio': cita.medico.informacion_consultorio or 'No especificado',
+        'atencion_online': cita.medico.atencion_online,
+        'motivo': cita.motivo,
+    }
+
+    send_template_email(
+        subject='Cita confirmada — Medisync',
+        template_name='emails/appointment_confirmed.html',
+        context=context,
+        recipient_list=[cita.paciente.usuario.correo],
+    )
+
+
+def _send_appointment_cancelled(cita, cancelled_by):
+    """Send cancellation emails to patient and doctor."""
+    especialidad = _get_especialidad(cita.medico)
+
+    context = {
+        'paciente_nombre': cita.paciente.usuario.nombre_completo,
+        'medico_nombre': f'Dr. {cita.medico.usuario.nombre_completo}',
+        'especialidad': especialidad,
+        'fecha': cita.horario.fecha.strftime('%d/%m/%Y'),
+        'hora_inicio': cita.horario.hora_inicio.strftime('%H:%M'),
+        'hora_fin': cita.horario.hora_fin.strftime('%H:%M'),
+        'cancelada_por': cancelled_by.nombre_completo,
+    }
+
+    send_template_email(
+        subject='Cita cancelada — Medisync',
+        template_name='emails/appointment_cancelled.html',
+        context=context,
+        recipient_list=[cita.paciente.usuario.correo],
+    )
+    send_template_email(
+        subject='Cita cancelada — Medisync',
+        template_name='emails/appointment_cancelled.html',
+        context=context,
+        recipient_list=[cita.medico.usuario.correo],
+    )
