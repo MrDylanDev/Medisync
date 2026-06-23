@@ -6,7 +6,7 @@ from django.core.exceptions import ValidationError
 from django.contrib.auth import get_user_model
 
 from accounts.validators import UppercaseAndSpecialValidator
-from accounts.models import Paciente, Medico, TokenRecuperacion
+from accounts.models import Medico, TokenRecuperacion
 from accounts.serializers import (
     RegisterSerializer,
     LoginSerializer,

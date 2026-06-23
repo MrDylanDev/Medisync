@@ -1,0 +1,472 @@
+/* ===================================================================
+   Medisync Landing — Kimi-inspired design system on top of Bulma
+   =================================================================== */
+
+/* --- Color overrides (navy palette replaces Bulma teal on landing) --- */
+
+.landing-page :root {
+  --kimi-primary: #0B4F7C;
+  --kimi-secondary: #0E9AA7;
+  --kimi-accent: #2ECC71;
+  --kimi-dark: #1A2332;
+  --kimi-text: #4A5568;
+  --kimi-muted: #8FA3B8;
+  --kimi-border: #E8EEF4;
+  --kimi-bg-light: #F0F7FF;
+}
+
+/* --- Typography --- */
+
+.landing-page .kimi-heading {
+  font-family: 'Playfair Display', serif;
+}
+
+/* --- Navbar overrides for landing --- */
+
+.landing-navbar {
+  background: transparent !important;
+  transition: background 0.3s, box-shadow 0.3s;
+  height: 5rem;
+}
+.landing-navbar.scrolled {
+  background: rgba(255,255,255,0.95) !important;
+  backdrop-filter: blur(12px);
+  box-shadow: 0 2px 20px rgba(0,0,0,0.08);
+}
+.landing-navbar .navbar-item {
+  color: #1A2332 !important;
+  font-weight: 500;
+  font-family: 'Inter', sans-serif;
+  font-size: 0.9375rem;
+}
+.landing-navbar .navbar-item:hover {
+  color: #0B4F7C !important;
+  background: transparent;
+}
+.landing-navbar .kimi-brand {
+  font-family: 'Playfair Display', serif;
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: #1A2332 !important;
+}
+
+/* --- Buttons --- */
+
+.btn-kimi-primary {
+  background: linear-gradient(135deg, #0B4F7C, #157AB8) !important;
+  border: none !important;
+  color: #fff !important;
+  font-weight: 600;
+  font-family: 'Inter', sans-serif;
+  border-radius: 0.75rem !important;
+  padding: 0.85rem 2rem !important;
+  height: auto !important;
+  box-shadow: 0 4px 16px rgba(11,79,124,0.3);
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+.btn-kimi-primary:hover {
+  transform: scale(1.03);
+  box-shadow: 0 6px 24px rgba(11,79,124,0.4);
+  color: #fff !important;
+}
+
+.btn-kimi-outline {
+  border: 2px solid #0B4F7C !important;
+  color: #0B4F7C !important;
+  background: transparent !important;
+  font-weight: 600;
+  font-family: 'Inter', sans-serif;
+  border-radius: 0.75rem !important;
+  padding: 0.85rem 2rem !important;
+  height: auto !important;
+  transition: all 0.2s;
+}
+.btn-kimi-outline:hover {
+  background: #0B4F7C !important;
+  color: #fff !important;
+}
+
+.btn-kimi-green {
+  background: linear-gradient(135deg, #2ECC71, #27AE60) !important;
+  border: none !important;
+  color: #fff !important;
+  font-weight: 600;
+  font-family: 'Inter', sans-serif;
+  border-radius: 0.75rem !important;
+  padding: 0.9rem 2rem !important;
+  height: auto !important;
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+.btn-kimi-green:hover {
+  transform: scale(1.02);
+  box-shadow: 0 6px 20px rgba(46,204,113,0.3);
+  color: #fff !important;
+}
+
+/* --- Section Labels --- */
+
+.section-label {
+  font-family: 'Inter', sans-serif;
+  font-size: 0.8125rem;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: #0E9AA7 !important;
+}
+
+/* --- Section Titles --- */
+
+.section-title {
+  font-family: 'Playfair Display', serif;
+  font-size: 2.75rem;
+  font-weight: 700;
+  color: #1A2332 !important;
+  line-height: 1.15;
+}
+@media (max-width: 768px) {
+  .section-title { font-size: 2rem; }
+}
+
+/* --- Text Gradient --- */
+
+.text-gradient {
+  background: linear-gradient(135deg, #0B4F7C, #0E9AA7);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+/* --- Hero Section --- */
+
+.hero-kimi {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  background: linear-gradient(135deg, #F0F7FF 0%, #E8F4FD 50%, #FFFFFF 100%);
+}
+.hero-kimi-badge {
+  font-family: 'Inter', sans-serif;
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  background: #E8F4FD;
+  color: #0B4F7C;
+  border-radius: 9999px;
+  padding: 0.5rem 1.25rem;
+}
+.hero-kimi .title {
+  font-family: 'Playfair Display', serif;
+  color: #1A2332 !important;
+}
+.hero-kimi .subtitle {
+  font-family: 'Inter', sans-serif;
+  color: #4A5568 !important;
+  line-height: 1.7;
+}
+
+/* Hero decorative circles */
+.hero-circle {
+  position: absolute;
+  border-radius: 50%;
+}
+.hero-circle-1 {
+  top: -2rem;
+  right: -2rem;
+  width: 18rem;
+  height: 18rem;
+  background: linear-gradient(135deg, #0B4F7C, #0E9AA7);
+  opacity: 0.3;
+}
+.hero-circle-2 {
+  bottom: -1.5rem;
+  left: -1.5rem;
+  width: 12rem;
+  height: 12rem;
+  background: linear-gradient(135deg, #0E9AA7, #2ECC71);
+  opacity: 0.2;
+}
+
+/* Hero image card */
+.hero-image-card {
+  background: rgba(255,255,255,0.12);
+  border-radius: 1.5rem;
+  padding: 3rem 2.5rem;
+  backdrop-filter: blur(4px);
+}
+
+/* Stats inside hero */
+.hero-stat-value {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: #0B4F7C;
+  font-family: 'Playfair Display', serif;
+}
+.hero-stat-label {
+  font-size: 0.8125rem;
+  color: #8FA3B8;
+  font-family: 'Inter', sans-serif;
+}
+.hero-stat-divider {
+  width: 1px;
+  height: 3rem;
+  background: #E8EEF4;
+}
+
+/* --- Service Cards --- */
+
+.service-card {
+  background: #fff;
+  border: 1px solid #E8EEF4;
+  border-radius: 1rem;
+  padding: 2rem;
+  transition: transform 0.25s, box-shadow 0.25s;
+}
+.service-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 30px rgba(0,0,0,0.08);
+}
+.service-icon {
+  width: 3.5rem;
+  height: 3.5rem;
+  border-radius: 50%;
+  background: #E8F4FD;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #0B4F7C;
+  font-size: 1.25rem;
+  transition: background 0.25s, color 0.25s;
+  margin-bottom: 1.25rem;
+}
+.service-card:hover .service-icon {
+  background: #0B4F7C;
+  color: #fff;
+}
+.service-card h3 {
+  font-family: 'Inter', sans-serif;
+  font-weight: 600;
+  font-size: 1.125rem;
+  color: #1A2332 !important;
+  margin-bottom: 0.5rem;
+}
+.service-card p {
+  color: #4A5568 !important;
+  font-size: 0.875rem;
+  line-height: 1.6;
+  margin-bottom: 1rem;
+}
+.service-link {
+  font-size: 0.8125rem;
+  font-weight: 500;
+  color: #0B4F7C;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+  transition: text-decoration 0.2s;
+}
+.service-link:hover {
+  text-decoration: underline;
+}
+
+/* --- About / Nosotros --- */
+
+.kimi-bg-light {
+  background: #F0F7FF;
+}
+
+.feature-check {
+  width: 1.5rem;
+  height: 1.5rem;
+  border-radius: 50%;
+  background: #2ECC71;
+  color: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.75rem;
+  flex-shrink: 0;
+}
+
+.stat-card {
+  background: #fff;
+  border-radius: 0.75rem;
+  padding: 1.25rem;
+  text-align: center;
+}
+.stat-card .stat-value {
+  font-family: 'Playfair Display', serif;
+  font-size: 1.75rem;
+  font-weight: 700;
+  color: #0B4F7C;
+}
+.stat-card .stat-label {
+  font-size: 0.8125rem;
+  color: #4A5568 !important;
+  font-family: 'Inter', sans-serif;
+}
+
+/* --- Testimonials --- */
+
+.testimonial-card {
+  background: #fff;
+  border: 1px solid #E8EEF4;
+  border-radius: 1rem;
+  padding: 2rem;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.04);
+}
+.testimonial-quote {
+  font-family: 'Playfair Display', serif;
+  font-size: 4rem;
+  font-weight: 700;
+  line-height: 1;
+  color: rgba(14,154,167,0.1);
+  position: absolute;
+  top: 1rem;
+  left: 1.5rem;
+  user-select: none;
+}
+.testimonial-card .stars {
+  color: #F5A623;
+}
+.testimonial-card .text {
+  color: #4A5568 !important;
+  font-style: italic;
+  font-size: 0.9375rem;
+  line-height: 1.65;
+}
+
+/* --- Contact Section --- */
+
+.contact-section {
+  background: linear-gradient(135deg, #0B4F7C 0%, #0E9AA7 100%);
+}
+.contact-section .title,
+.contact-section .subtitle {
+  color: #fff;
+}
+.contact-section .section-label {
+  color: rgba(255,255,255,0.7);
+}
+.contact-badge {
+  background: rgba(255,255,255,0.2);
+  backdrop-filter: blur(8px);
+  color: #fff;
+  border-radius: 9999px;
+  padding: 0.5rem 1rem;
+  font-size: 0.875rem;
+  font-weight: 500;
+  font-family: 'Inter', sans-serif;
+}
+.contact-badge .pulse-dot {
+  width: 0.625rem;
+  height: 0.625rem;
+  border-radius: 50%;
+  background: #2ECC71;
+  display: inline-block;
+  margin-right: 0.5rem;
+  animation: pulse 2s infinite;
+}
+@keyframes pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.4; }
+}
+.contact-info-item {
+  color: rgba(255,255,255,0.9);
+  font-size: 0.9375rem;
+  font-family: 'Inter', sans-serif;
+}
+
+.form-card {
+  background: #fff;
+  border-radius: 1rem;
+  padding: 2.5rem;
+  box-shadow: 0 20px 60px rgba(0,0,0,0.2);
+}
+.form-card .input,
+.form-card .select select,
+.form-card .textarea {
+  border: 1px solid #E8EEF4 !important;
+  border-radius: 0.75rem !important;
+  padding: 0.9rem 1rem !important;
+  height: auto !important;
+  font-family: 'Inter', sans-serif;
+  color: #2D3748 !important;
+  background-color: #fff !important;
+  box-shadow: none !important;
+}
+.form-card .input:focus,
+.form-card .select select:focus,
+.form-card .textarea:focus {
+  border-color: #0B4F7C !important;
+  box-shadow: 0 0 0 3px rgba(11,79,124,0.1) !important;
+}
+.form-card .input::placeholder,
+.form-card .textarea::placeholder {
+  color: #8FA3B8 !important;
+}
+.form-card .label {
+  font-family: 'Inter', sans-serif;
+  font-weight: 500;
+  color: #2D3748 !important;
+  font-size: 0.875rem;
+}
+
+/* --- Footer --- */
+
+.landing-footer {
+  background: #1A2332;
+  color: rgba(255,255,255,0.7);
+  font-family: 'Inter', sans-serif;
+}
+.landing-footer h4 {
+  color: #fff;
+  font-weight: 600;
+  font-family: 'Inter', sans-serif;
+  font-size: 1rem;
+}
+.landing-footer a {
+  color: rgba(255,255,255,0.7);
+  font-size: 0.875rem;
+  transition: color 0.2s;
+}
+.landing-footer a:hover {
+  color: #0E9AA7;
+  text-decoration: none;
+}
+.social-icon {
+  width: 2.25rem;
+  height: 2.25rem;
+  border-radius: 50%;
+  background: rgba(255,255,255,0.1);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: rgba(255,255,255,0.7);
+  transition: background 0.2s;
+}
+.social-icon:hover {
+  background: #0E9AA7;
+  color: #fff;
+}
+
+/* --- Scroll behavior --- */
+
+html {
+  scroll-behavior: smooth;
+}
+
+/* --- Success state --- */
+
+.form-success-icon {
+  width: 4rem;
+  height: 4rem;
+  border-radius: 50%;
+  background: #E8F8F0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto 1.5rem;
+  color: #2ECC71;
+  font-size: 1.5rem;
+}

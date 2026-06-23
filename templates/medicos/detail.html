@@ -1,0 +1,91 @@
+{% extends "base.html" %}
+
+{% block title %}Dr. {{ medico.usuario.nombre_completo }} — {{ app_name }}{% endblock %}
+
+{% block content %}
+<section class="section">
+  <div class="container">
+    <nav class="breadcrumb mb-5" aria-label="breadcrumbs">
+      <ul>
+        <li><a href="/">Home</a></li>
+        <li><a href="{% url 'medicos_list' %}">Médicos</a></li>
+        <li class="is-active"><a>Dr. {{ medico.usuario.nombre_completo }}</a></li>
+      </ul>
+    </nav>
+
+    <div class="columns">
+      <div class="column is-8">
+        <div class="box">
+          <h1 class="title">Dr. {{ medico.usuario.nombre_completo }}</h1>
+          <div class="tags mb-4">
+            {% for me in medico.especialidades.all %}
+            <span class="tag is-info is-medium">{{ me.especialidad.nombre }}{% if me.es_principal %} <i class="fas fa-star"></i>{% endif %}</span>
+            {% endfor %}
+          </div>
+
+          {% if medico.informacion_consultorio %}
+          <div class="mb-4">
+            <h4 class="title is-6">Consultorio</h4>
+            <p>{{ medico.informacion_consultorio }}</p>
+          </div>
+          {% endif %}
+
+          <div class="columns is-mobile mb-4">
+            <div class="column">
+              <p class="heading">Precio consulta</p>
+              <p class="title is-4">
+                {% if medico.precio_consulta %}${{ medico.precio_consulta }}{% else %}A consultar{% endif %}
+              </p>
+            </div>
+            <div class="column">
+              <p class="heading">Calificación</p>
+              <p class="title is-4 has-text-warning">
+                {% if medico.calificacion > 0 %}
+                  {{ medico.calificacion }} <i class="fas fa-star"></i>
+                {% else %}
+                  —
+                {% endif %}
+              </p>
+            </div>
+            <div class="column">
+              <p class="heading">Atención online</p>
+              <p class="title is-4">
+                {% if medico.atencion_online %}
+                  <span class="icon has-text-success"><i class="fas fa-laptop-medical"></i></span> Sí
+                {% else %}
+                  <span class="icon" style="color: #4A5568;"><i class="fas fa-hospital"></i></span> Presencial
+                {% endif %}
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="column is-4">
+        <div class="box">
+          <h4 class="title is-5">Horarios Disponibles</h4>
+          {% if horarios_por_fecha %}
+            {% for fecha, slots in horarios_por_fecha.items %}
+            <div class="mb-4">
+              <p class="has-text-weight-semibold mb-2">{{ fecha|date:"l d/m" }}</p>
+              <div class="buttons are-small">
+                {% for slot in slots %}
+                <button class="button is-light" disabled title="{{ slot.hora_inicio }} - {{ slot.hora_fin }}">
+                  {{ slot.hora_inicio|time:"H:i" }}
+                </button>
+                {% endfor %}
+              </div>
+            </div>
+            {% endfor %}
+            <p class="is-size-7 mt-4" style="color: #4A5568;">
+              <a href="{% url 'login' %}">Iniciá sesión</a> para agendar un turno.
+            </p>
+          {% else %}
+            <p style="color: #4A5568;">No hay horarios disponibles próximamente.</p>
+          {% endif %}
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+{% endblock %}

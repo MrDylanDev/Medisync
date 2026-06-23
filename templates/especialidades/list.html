@@ -1,0 +1,32 @@
+{% extends "base.html" %}
+
+{% block title %}Especialidades — {{ app_name }}{% endblock %}
+
+{% block content %}
+<section class="section">
+  <div class="container">
+    <h1 class="title">Especialidades Médicas</h1>
+    <p class="subtitle">Seleccioná una especialidad para ver los médicos disponibles.</p>
+
+    <div class="columns is-multiline mt-5">
+      {% for esp in especialidades %}
+      <div class="column is-4-tablet is-3-desktop">
+        <a href="{% url 'medicos_list' %}?especialidad={{ esp.id }}" class="has-text-dark" style="text-decoration: none;">
+          <div class="box has-text-centered" style="transition: transform 0.15s; cursor: pointer;">
+            <h2 class="title is-5 mb-2">{{ esp.nombre }}</h2>
+            <p class="is-size-7" style="color: #4A5568;">{{ esp.descripcion|truncatechars:80 }}</p>
+            <span class="tag is-primary is-light mt-2">Ver médicos →</span>
+          </div>
+        </a>
+      </div>
+      {% empty %}
+      <div class="column">
+        <div class="notification is-warning is-light">
+          No hay especialidades disponibles en este momento.
+        </div>
+      </div>
+      {% endfor %}
+    </div>
+  </div>
+</section>
+{% endblock %}

@@ -1,0 +1,525 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block extra_head %}
+<link rel="stylesheet" href="{% static 'css/landing.css' %}">
+{% endblock %}
+
+{% block title %}Medisync — Gestión de Citas Médicas Online{% endblock %}
+
+{# Landing has its own navbar with its own fixed positioning #}
+{% block navbar %}
+<header id="landingNavbar" class="navbar is-fixed-top landing-navbar" role="navigation">
+  <div class="container">
+    <div class="navbar-brand">
+      <a class="navbar-item kimi-brand" href="#inicio">
+        Medisync
+      </a>
+      <a role="button" class="navbar-burger" aria-label="menu" data-target="landingMenu">
+        <span></span><span></span><span></span>
+      </a>
+    </div>
+    <div id="landingMenu" class="navbar-menu">
+      <div class="navbar-end">
+        <a class="navbar-item" href="#servicios">Servicios</a>
+        <a class="navbar-item" href="#nosotros">Nosotros</a>
+        <a class="navbar-item" href="#testimonios">Testimonios</a>
+        <a class="navbar-item" href="#contacto">Contacto</a>
+        <div class="navbar-item">
+          <a href="{% url 'login' %}" class="button is-light is-small mr-2">Iniciar Sesión</a>
+          <a href="#contacto" class="button btn-kimi-primary is-small">Agendar Cita</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</header>
+{% endblock %}
+
+{# Landing has its own footer #}
+{% block footer %}{% endblock %}
+
+{% block content %}
+<div class="landing-page">
+
+<!-- ====== HERO ====== -->
+<section id="inicio" class="hero-kimi">
+  <div class="container" style="padding-top: 5rem;">
+    <div class="columns is-vcentered is-variable is-8">
+      <div class="column is-7-tablet is-6-desktop has-text-centered-touch">
+        <div class="mb-5">
+          <span class="hero-kimi-badge">Grupo Médico Especializado</span>
+        </div>
+        <h1 class="title is-1 kimi-heading mb-5" style="color: #1A2332; line-height: 1.1;">
+          Tu Salud en las<br><span class="text-gradient">Mejores Manos</span>
+        </h1>
+        <p class="subtitle is-5 mb-5" style="font-family: 'Inter', sans-serif; color: #4A5568; max-width: 480px;">
+          Más de 20 años brindando atención médica de excelencia con un equipo
+          de especialistas comprometidos con tu bienestar.
+        </p>
+        <div class="buttons is-centered-touch mb-6">
+          <a href="#contacto" class="button btn-kimi-primary is-medium">
+            <span class="icon"><i class="fas fa-calendar-check"></i></span>
+            <span>Agendar una Cita</span>
+          </a>
+          <a href="#servicios" class="button btn-kimi-outline is-medium">
+            <span>Nuestros Servicios</span>
+            <span class="icon"><i class="fas fa-arrow-right"></i></span>
+          </a>
+        </div>
+        <div class="is-flex is-align-items-center is-justify-content-center-touch" style="gap: 2rem;">
+          <div class="has-text-centered-touch">
+            <div class="hero-stat-value">{{ medicos_count|default:"15" }}+</div>
+            <div class="hero-stat-label">Especialistas</div>
+          </div>
+          <div class="hero-stat-divider is-hidden-mobile"></div>
+          <div class="has-text-centered-touch">
+            <div class="hero-stat-value">{{ especialidades_count|default:"10" }}+</div>
+            <div class="hero-stat-label">Especialidades</div>
+          </div>
+          <div class="hero-stat-divider is-hidden-mobile"></div>
+          <div class="has-text-centered-touch">
+            <div class="hero-stat-value">10,000+</div>
+            <div class="hero-stat-label">Pacientes</div>
+          </div>
+        </div>
+      </div>
+      <div class="column is-5-tablet is-5-desktop is-hidden-mobile">
+        <div class="is-relative" style="display: flex; justify-content: center;">
+          <div class="hero-circle hero-circle-1"></div>
+          <div class="hero-circle hero-circle-2"></div>
+          <div class="hero-image-card has-text-centered" style="position: relative; z-index: 10;">
+            <span class="icon has-text-white" style="font-size: 4rem;">
+              <i class="fas fa-calendar-check"></i>
+            </span>
+            <p class="has-text-white has-text-weight-semibold mt-3 is-size-5">
+              Turnos disponibles hoy
+            </p>
+            <p class="has-text-white is-size-7 mt-2">
+              Encontrá horarios con disponibilidad inmediata
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ====== SERVICIOS ====== -->
+<section id="servicios" class="section">
+  <div class="container">
+    <div class="has-text-centered mb-6">
+      <span class="section-label mb-3" style="display: inline-block;">Nuestros Servicios</span>
+      <h2 class="section-title mb-4" style="color: #1A2332;">Atención Médica Integral</h2>
+      <p class="is-size-5" style="color: #4A5568; max-width: 600px; margin: 0 auto;">
+        Ofrecemos una amplia gama de especialidades médicas para cuidar de ti y tu familia.
+      </p>
+    </div>
+
+    <div class="columns is-multiline is-variable is-3">
+      <div class="column is-6-tablet is-4-desktop">
+        <div class="service-card">
+          <div class="service-icon"><i class="fas fa-stethoscope"></i></div>
+          <h3 style="color: #1A2332; font-weight: 600; font-size: 1.125rem; margin-bottom: 0.5rem;">Medicina General</h3>
+          <p style="color: #4A5568; font-size: 0.875rem; line-height: 1.6; margin-bottom: 1rem;">Atención primaria, chequeos preventivos y tratamiento de enfermedades comunes para toda la familia.</p>
+          <a href="#contacto" class="service-link">Saber más <i class="fas fa-arrow-right"></i></a>
+        </div>
+      </div>
+      <div class="column is-6-tablet is-4-desktop">
+        <div class="service-card">
+          <div class="service-icon"><i class="fas fa-heart-pulse"></i></div>
+          <h3 style="color: #1A2332; font-weight: 600; font-size: 1.125rem; margin-bottom: 0.5rem;">Cardiología</h3>
+          <p style="color: #4A5568; font-size: 0.875rem; line-height: 1.6; margin-bottom: 1rem;">Diagnóstico y tratamiento de enfermedades del corazón y sistema cardiovascular con tecnología avanzada.</p>
+          <a href="#contacto" class="service-link">Saber más <i class="fas fa-arrow-right"></i></a>
+        </div>
+      </div>
+      <div class="column is-6-tablet is-4-desktop">
+        <div class="service-card">
+          <div class="service-icon"><i class="fas fa-baby"></i></div>
+          <h3 style="color: #1A2332; font-weight: 600; font-size: 1.125rem; margin-bottom: 0.5rem;">Pediatría</h3>
+          <p style="color: #4A5568; font-size: 0.875rem; line-height: 1.6; margin-bottom: 1rem;">Cuidado integral de la salud de bebés, niños y adolescentes en un ambiente cálido y seguro.</p>
+          <a href="#contacto" class="service-link">Saber más <i class="fas fa-arrow-right"></i></a>
+        </div>
+      </div>
+      <div class="column is-6-tablet is-4-desktop">
+        <div class="service-card">
+          <div class="service-icon"><i class="fas fa-female"></i></div>
+          <h3 style="color: #1A2332; font-weight: 600; font-size: 1.125rem; margin-bottom: 0.5rem;">Ginecología</h3>
+          <p style="color: #4A5568; font-size: 0.875rem; line-height: 1.6; margin-bottom: 1rem;">Salud femenina, control prenatal, planificación familiar y acompañamiento en cada etapa.</p>
+          <a href="#contacto" class="service-link">Saber más <i class="fas fa-arrow-right"></i></a>
+        </div>
+      </div>
+      <div class="column is-6-tablet is-4-desktop">
+        <div class="service-card">
+          <div class="service-icon"><i class="fas fa-bone"></i></div>
+          <h3 style="color: #1A2332; font-weight: 600; font-size: 1.125rem; margin-bottom: 0.5rem;">Traumatología</h3>
+          <p style="color: #4A5568; font-size: 0.875rem; line-height: 1.6; margin-bottom: 1rem;">Tratamiento de lesiones óseas, articulares y musculares con enfoque en recuperación funcional.</p>
+          <a href="#contacto" class="service-link">Saber más <i class="fas fa-arrow-right"></i></a>
+        </div>
+      </div>
+      <div class="column is-6-tablet is-4-desktop">
+        <div class="service-card">
+          <div class="service-icon"><i class="fas fa-hand-dots"></i></div>
+          <h3 style="color: #1A2332; font-weight: 600; font-size: 1.125rem; margin-bottom: 0.5rem;">Dermatología</h3>
+          <p style="color: #4A5568; font-size: 0.875rem; line-height: 1.6; margin-bottom: 1rem;">Cuidado de la piel, diagnóstico y tratamiento de afecciones dermatológicas para todas las edades.</p>
+          <a href="#contacto" class="service-link">Saber más <i class="fas fa-arrow-right"></i></a>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ====== NOSOTROS ====== -->
+<section id="nosotros" class="section kimi-bg-light">
+  <div class="container">
+    <div class="columns is-vcentered is-variable is-8">
+      <div class="column is-6">
+        <div class="is-relative">
+          <div style="position: absolute; top: -1rem; left: -1rem; width: 100%; height: 100%; border-radius: 1.5rem; background: linear-gradient(135deg, rgba(11,79,124,0.08), rgba(14,154,167,0.08));"></div>
+          <div style="position: relative; z-index: 10; border-radius: 1.5rem; height: 300px; display: flex; align-items: center; justify-content: center; background: #f0f0f0;">
+            <span class="icon" style="font-size: 5rem; color: #c0c0c0;">
+              <i class="fas fa-user-doctor"></i>
+            </span>
+          </div>
+        </div>
+      </div>
+      <div class="column is-6">
+        <span class="section-label mb-3" style="display: inline-block;">Sobre Nosotros</span>
+        <h2 class="section-title mb-4" style="color: #1A2332;">Comprometidos con Tu Bienestar</h2>
+        <p class="is-size-5 mb-5" style="color: #4A5568; line-height: 1.7;">
+          Medisync nació con la misión de ofrecer atención médica de alta calidad,
+          accesible y humana. Nuestro equipo de especialistas trabaja de manera coordinada
+          para brindarte un cuidado integral.
+        </p>
+
+        <div class="mb-5">
+          <div class="is-flex is-align-items-center mb-3" style="gap: 0.75rem;">
+            <span class="feature-check"><i class="fas fa-check"></i></span>
+            <span style="font-weight: 500; color: #1A2332;">Tecnología de vanguardia en diagnóstico</span>
+          </div>
+          <div class="is-flex is-align-items-center mb-3" style="gap: 0.75rem;">
+            <span class="feature-check"><i class="fas fa-check"></i></span>
+            <span style="font-weight: 500; color: #1A2332;">Atención personalizada y seguimiento continuo</span>
+          </div>
+          <div class="is-flex is-align-items-center mb-3" style="gap: 0.75rem;">
+            <span class="feature-check"><i class="fas fa-check"></i></span>
+            <span style="font-weight: 500; color: #1A2332;">Instalaciones modernas y confortables</span>
+          </div>
+          <div class="is-flex is-align-items-center" style="gap: 0.75rem;">
+            <span class="feature-check"><i class="fas fa-check"></i></span>
+            <span style="font-weight: 500; color: #1A2332;">Convenios con las principales aseguradoras</span>
+          </div>
+        </div>
+
+        <div class="columns is-mobile is-multiline is-variable is-2">
+          <div class="column is-6">
+            <div class="stat-card">
+              <div class="stat-value">20+</div>
+              <div class="stat-label">Años de experiencia</div>
+            </div>
+          </div>
+          <div class="column is-6">
+            <div class="stat-card">
+              <div class="stat-value">{{ medicos_count|default:"15" }}</div>
+              <div class="stat-label">Especialistas</div>
+            </div>
+          </div>
+          <div class="column is-6">
+            <div class="stat-card">
+              <div class="stat-value">10,000+</div>
+              <div class="stat-label">Pacientes atendidos</div>
+            </div>
+          </div>
+          <div class="column is-6">
+            <div class="stat-card">
+              <div class="stat-value">98%</div>
+              <div class="stat-label">Satisfacción</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ====== TESTIMONIOS ====== -->
+<section id="testimonios" class="section">
+  <div class="container">
+    <div class="has-text-centered mb-6">
+      <span class="section-label mb-3" style="display: inline-block;">Testimonios</span>
+      <h2 class="section-title mb-4" style="color: #1A2332;">Lo que Dicen Nuestros Pacientes</h2>
+      <p class="is-size-5" style="color: #4A5568; max-width: 500px; margin: 0 auto;">
+        La confianza de nuestros pacientes es nuestro mayor orgullo.
+      </p>
+    </div>
+
+    <div class="columns is-multiline is-variable is-3">
+      <div class="column is-6-tablet is-4-desktop">
+        <div class="testimonial-card" style="position: relative;">
+          <div class="testimonial-quote">&ldquo;</div>
+          <div class="stars mt-4 mb-3">
+            <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i>
+          </div>
+          <p class="text mb-4">
+            &ldquo;El Dr. Martínez y su equipo me brindaron una atención excepcional durante mi tratamiento. Su profesionalidad y calidez humana marcaron la diferencia.&rdquo;
+          </p>
+          <div class="is-flex is-align-items-center" style="gap: 1rem; border-top: 1px solid #E8EEF4; padding-top: 1rem;">
+            <span class="icon is-large" style="color: #c0c0c0;"><i class="fas fa-user-circle fa-2x"></i></span>
+            <div>
+              <div style="font-weight: 600; color: #1A2332;">María González</div>
+              <div style="font-size: 0.8125rem; color: #8FA3B8;">52 años &middot; Paciente</div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="column is-6-tablet is-4-desktop">
+        <div class="testimonial-card" style="position: relative;">
+          <div class="testimonial-quote">&ldquo;</div>
+          <div class="stars mt-4 mb-3">
+            <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i>
+          </div>
+          <p class="text mb-4">
+            &ldquo;Llevo a mis hijos a Medisync desde que nacieron. La pediatra es maravillosa, siempre paciente y dedicada con los más pequeños.&rdquo;
+          </p>
+          <div class="is-flex is-align-items-center" style="gap: 1rem; border-top: 1px solid #E8EEF4; padding-top: 1rem;">
+            <span class="icon is-large" style="color: #c0c0c0;"><i class="fas fa-user-circle fa-2x"></i></span>
+            <div>
+              <div style="font-weight: 600; color: #1A2332;">Carlos Rodríguez</div>
+              <div style="font-size: 0.8125rem; color: #8FA3B8;">38 años &middot; Paciente</div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="column is-6-tablet is-4-desktop">
+        <div class="testimonial-card" style="position: relative;">
+          <div class="testimonial-quote">&ldquo;</div>
+          <div class="stars mt-4 mb-3">
+            <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i>
+          </div>
+          <p class="text mb-4">
+            &ldquo;Excelente servicio de ginecología. Instalaciones modernas, personal amable y tiempos de espera mínimos. Totalmente recomendado.&rdquo;
+          </p>
+          <div class="is-flex is-align-items-center" style="gap: 1rem; border-top: 1px solid #E8EEF4; padding-top: 1rem;">
+            <span class="icon is-large" style="color: #c0c0c0;"><i class="fas fa-user-circle fa-2x"></i></span>
+            <div>
+              <div style="font-weight: 600; color: #1A2332;">Ana Fernández</div>
+              <div style="font-size: 0.8125rem; color: #8FA3B8;">45 años &middot; Paciente</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ====== CONTACTO ====== -->
+<section id="contacto" class="section contact-section">
+  <div class="container">
+    <div class="columns is-vcentered is-variable is-8">
+      <div class="column is-5">
+        <span class="section-label mb-3" style="display: inline-block;">Contacto</span>
+        <h2 class="title is-2 kimi-heading mb-4" style="color: #fff;">Agenda tu Cita Hoy</h2>
+        <p class="mb-5" style="color: rgba(255,255,255,0.9); font-size: 1.1rem; line-height: 1.6; max-width: 400px;">
+          Estamos aquí para cuidar de ti. Completá el formulario y nuestro equipo se pondrá en contacto.
+        </p>
+
+        <div class="contact-badge mb-5" style="display: inline-flex; align-items: center;">
+          <span class="pulse-dot"></span>
+          Citas disponibles esta semana
+        </div>
+
+        <div class="mb-3 contact-info-item">
+          <span class="icon is-small mr-2"><i class="fas fa-location-dot"></i></span>
+          Av. de la Salud 123, Ciudad
+        </div>
+        <div class="mb-3 contact-info-item">
+          <span class="icon is-small mr-2"><i class="fas fa-phone"></i></span>
+          +54 11 4567-8900
+        </div>
+        <div class="mb-3 contact-info-item">
+          <span class="icon is-small mr-2"><i class="fas fa-envelope"></i></span>
+          info@medisync.com
+        </div>
+        <div class="contact-info-item">
+          <span class="icon is-small mr-2"><i class="fas fa-clock"></i></span>
+          Lun - Vie: 8:00 - 20:00 | Sáb: 9:00 - 14:00
+        </div>
+      </div>
+      <div class="column is-6 is-offset-1">
+        <div class="form-card">
+          <form method="post" action="#contacto">
+            {% csrf_token %}
+            <div class="field">
+              <label class="label">Nombre completo</label>
+              <div class="control">
+                <input class="input" type="text" name="nombre" placeholder="Tu nombre completo" required>
+              </div>
+            </div>
+            <div class="columns is-multiline is-mobile">
+              <div class="column is-6">
+                <div class="field">
+                  <label class="label">Correo electrónico</label>
+                  <div class="control">
+                    <input class="input" type="email" name="correo" placeholder="tu@email.com" required>
+                  </div>
+                </div>
+              </div>
+              <div class="column is-6">
+                <div class="field">
+                  <label class="label">Teléfono</label>
+                  <div class="control">
+                    <input class="input" type="tel" name="telefono" placeholder="+54 11 0000-0000">
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="columns is-multiline is-mobile">
+              <div class="column is-6">
+                <div class="field">
+                  <label class="label">Especialidad</label>
+                  <div class="control">
+                    <div class="select is-fullwidth">
+                      <select name="especialidad" required>
+                        <option value="">Seleccioná una especialidad</option>
+                        <option>Medicina General</option>
+                        <option>Cardiología</option>
+                        <option>Pediatría</option>
+                        <option>Ginecología</option>
+                        <option>Traumatología</option>
+                        <option>Dermatología</option>
+                        <option>Otra</option>
+                      </select>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="column is-6">
+                <div class="field">
+                  <label class="label">Fecha preferida</label>
+                  <div class="control">
+                    <input class="input" type="date" name="fecha">
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="field">
+              <label class="label">Mensaje</label>
+              <div class="control">
+                <textarea class="textarea" name="mensaje" placeholder="Contanos brevemente el motivo de tu consulta..." rows="3"></textarea>
+              </div>
+            </div>
+            <div class="field mt-4">
+              <button type="submit" class="button btn-kimi-green is-fullwidth is-medium">
+                Solicitar Cita
+              </button>
+            </div>
+            <p class="has-text-centered is-size-7 mt-3" style="color: #4A5568;">
+              Nos pondremos en contacto en menos de 24 horas.
+            </p>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ====== FOOTER ====== -->
+<footer class="landing-footer py-6">
+  <div class="container">
+    <div class="columns is-multiline is-variable is-8">
+      <div class="column is-4-tablet is-3-desktop">
+        <a href="#inicio" class="is-flex is-align-items-center mb-4" style="gap: 0.5rem;">
+          <span style="font-family: 'Playfair Display', serif; font-size: 1.25rem; font-weight: 700; color: #fff;">Medisync</span>
+        </a>
+        <p style="font-size: 0.875rem; line-height: 1.6; margin-bottom: 1.25rem;">
+          Sistema de gestión de citas médicas online. Conectamos pacientes con los mejores profesionales de la salud.
+        </p>
+        <div class="is-flex" style="gap: 0.5rem;">
+          <a href="#" class="social-icon" aria-label="Facebook"><i class="fab fa-facebook-f"></i></a>
+          <a href="#" class="social-icon" aria-label="Instagram"><i class="fab fa-instagram"></i></a>
+          <a href="#" class="social-icon" aria-label="Twitter"><i class="fab fa-x-twitter"></i></a>
+          <a href="#" class="social-icon" aria-label="LinkedIn"><i class="fab fa-linkedin-in"></i></a>
+        </div>
+      </div>
+
+      <div class="column is-4-tablet is-3-desktop">
+        <h4 class="mb-4" style="color: #fff; font-weight: 600;">Enlaces</h4>
+        <a href="#inicio" class="is-block mb-2" style="color: rgba(255,255,255,0.7); font-size: 0.875rem;">Inicio</a>
+        <a href="#servicios" class="is-block mb-2" style="color: rgba(255,255,255,0.7); font-size: 0.875rem;">Servicios</a>
+        <a href="#nosotros" class="is-block mb-2" style="color: rgba(255,255,255,0.7); font-size: 0.875rem;">Sobre Nosotros</a>
+        <a href="#testimonios" class="is-block mb-2" style="color: rgba(255,255,255,0.7); font-size: 0.875rem;">Testimonios</a>
+        <a href="#contacto" class="is-block mb-2" style="color: rgba(255,255,255,0.7); font-size: 0.875rem;">Contacto</a>
+      </div>
+
+      <div class="column is-4-tablet is-3-desktop">
+        <h4 class="mb-4" style="color: #fff; font-weight: 600;">Especialidades</h4>
+        <a href="#servicios" class="is-block mb-2" style="color: rgba(255,255,255,0.7); font-size: 0.875rem;">Medicina General</a>
+        <a href="#servicios" class="is-block mb-2" style="color: rgba(255,255,255,0.7); font-size: 0.875rem;">Cardiología</a>
+        <a href="#servicios" class="is-block mb-2" style="color: rgba(255,255,255,0.7); font-size: 0.875rem;">Pediatría</a>
+        <a href="#servicios" class="is-block mb-2" style="color: rgba(255,255,255,0.7); font-size: 0.875rem;">Ginecología</a>
+        <a href="#servicios" class="is-block mb-2" style="color: rgba(255,255,255,0.7); font-size: 0.875rem;">Traumatología</a>
+        <a href="#servicios" class="is-block mb-2" style="color: rgba(255,255,255,0.7); font-size: 0.875rem;">Dermatología</a>
+      </div>
+
+      <div class="column is-4-tablet is-3-desktop">
+        <h4 class="mb-4" style="color: #fff; font-weight: 600;">Contacto</h4>
+        <p style="font-size: 0.875rem; margin-bottom: 0.5rem; color: rgba(255,255,255,0.7);">Av. de la Salud 123, Ciudad</p>
+        <p style="font-size: 0.875rem; margin-bottom: 0.5rem;"><a href="tel:+541145678900" style="color: rgba(255,255,255,0.7);">+54 11 4567-8900</a></p>
+        <p style="font-size: 0.875rem; margin-bottom: 0.5rem;"><a href="mailto:info@medisync.com" style="color: rgba(255,255,255,0.7);">info@medisync.com</a></p>
+      </div>
+    </div>
+
+    <div style="border-top: 1px solid rgba(255,255,255,0.1); padding-top: 1.5rem; margin-top: 2rem;" class="is-flex is-justify-content-space-between is-align-items-center is-flex-wrap-wrap">
+      <p style="font-size: 0.75rem; color: rgba(255,255,255,0.5);">
+        &copy; {% now "Y" %} Medisync. Todos los derechos reservados.
+      </p>
+      <div style="display: flex; gap: 1.5rem; font-size: 0.75rem; color: rgba(255,255,255,0.5);">
+        <a href="#" style="color: rgba(255,255,255,0.5);">Política de Privacidad</a>
+        <a href="#" style="color: rgba(255,255,255,0.5);">Términos de Servicio</a>
+      </div>
+    </div>
+  </div>
+</footer>
+
+</div><!-- /landing-page -->
+{% endblock %}
+
+{% block extra_js %}
+{{ block.super }}
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+  var navbar = document.getElementById('landingNavbar');
+  var burger = navbar.querySelector('.navbar-burger');
+  var menu = document.getElementById('landingMenu');
+
+  burger.addEventListener('click', function() {
+    burger.classList.toggle('is-active');
+    menu.classList.toggle('is-active');
+  });
+
+  menu.querySelectorAll('a').forEach(function(link) {
+    link.addEventListener('click', function() {
+      burger.classList.remove('is-active');
+      menu.classList.remove('is-active');
+    });
+  });
+
+  window.addEventListener('scroll', function() {
+    if (window.scrollY > 50) {
+      navbar.classList.add('scrolled');
+    } else {
+      navbar.classList.remove('scrolled');
+    }
+  });
+
+  document.querySelectorAll('a[href^="#"]').forEach(function(anchor) {
+    anchor.addEventListener('click', function(e) {
+      var target = document.querySelector(this.getAttribute('href'));
+      if (target) {
+        e.preventDefault();
+        target.scrollIntoView({ behavior: 'smooth' });
+      }
+    });
+  });
+});
+</script>
+{% endblock %}
