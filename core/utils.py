@@ -1,5 +1,9 @@
 import re
 from datetime import date, datetime
+
+from django.conf import settings
+from django.core.mail import send_mail
+from django.template.loader import render_to_string
 from django.utils.text import slugify
 
 
@@ -105,3 +109,34 @@ def parse_argentine_date(date_str: str) -> date:
         ValueError: If the string cannot be parsed.
     """
     return datetime.strptime(date_str, '%d/%m/%Y').date()
+
+
+def send_template_email(subject, template_name, context, recipient_list):
+    """
+    Send an email by rendering a Django template to HTML.
+
+    Args:
+        subject: Email subject line.
+        template_name: Path to the template (e.g. 'emails/registration_confirm.html').
+        context: Template context dictionary. site_name, protocol, and domain
+                 are auto-injected from settings.
+        recipient_list: List of email addresses.
+
+    Returns:
+        The number of successfully delivered messages.
+    """
+    context.setdefault('site_name', 'Medisync')
+    context.setdefault('protocol', 'http')
+    context.setdefault('domain', 'localhost:8000')
+
+    html_message = render_to_string(template_name, context)
+    plain_message = re.sub(r'<[^>]+>', '', html_message)
+
+    return send_mail(
+        subject=subject,
+        message=plain_message.strip(),
+        from_email=settings.DEFAULT_FROM_EMAIL,
+        recipient_list=recipient_list,
+        html_message=html_message,
+        fail_silently=True,
+    )
