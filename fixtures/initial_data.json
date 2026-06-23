@@ -1,0 +1,116 @@
+[
+  {
+    "model": "accounts.role",
+    "pk": 1,
+    "fields": {
+      "nombre": "admin",
+      "descripcion": "Administrador del sistema con acceso completo"
+    }
+  },
+  {
+    "model": "accounts.role",
+    "pk": 2,
+    "fields": {
+      "nombre": "medico",
+      "descripcion": "Médico profesional con acceso a su agenda y pacientes"
+    }
+  },
+  {
+    "model": "accounts.role",
+    "pk": 3,
+    "fields": {
+      "nombre": "paciente",
+      "descripcion": "Paciente con acceso a sus citas e historial"
+    }
+  },
+  {
+    "model": "especialidades.especialidad",
+    "pk": 1,
+    "fields": {
+      "nombre": "Cardiología",
+      "descripcion": "Diagnóstico y tratamiento de enfermedades del corazón",
+      "activo": true
+    }
+  },
+  {
+    "model": "especialidades.especialidad",
+    "pk": 2,
+    "fields": {
+      "nombre": "Pediatría",
+      "descripcion": "Atención médica de niños y adolescentes",
+      "activo": true
+    }
+  },
+  {
+    "model": "especialidades.especialidad",
+    "pk": 3,
+    "fields": {
+      "nombre": "Dermatología",
+      "descripcion": "Diagnóstico y tratamiento de enfermedades de la piel",
+      "activo": true
+    }
+  },
+  {
+    "model": "especialidades.especialidad",
+    "pk": 4,
+    "fields": {
+      "nombre": "Traumatología",
+      "descripcion": "Tratamiento de lesiones del sistema musculoesquelético",
+      "activo": true
+    }
+  },
+  {
+    "model": "especialidades.especialidad",
+    "pk": 5,
+    "fields": {
+      "nombre": "Oftalmología",
+      "descripcion": "Diagnóstico y tratamiento de enfermedades oculares",
+      "activo": true
+    }
+  },
+  {
+    "model": "especialidades.especialidad",
+    "pk": 6,
+    "fields": {
+      "nombre": "Ginecología",
+      "descripcion": "Salud del aparato reproductor femenino",
+      "activo": true
+    }
+  },
+  {
+    "model": "especialidades.especialidad",
+    "pk": 7,
+    "fields": {
+      "nombre": "Neurología",
+      "descripcion": "Diagnóstico y tratamiento de enfermedades del sistema nervioso",
+      "activo": true
+    }
+  },
+  {
+    "model": "especialidades.especialidad",
+    "pk": 8,
+    "fields": {
+      "nombre": "Psiquiatría",
+      "descripcion": "Diagnóstico y tratamiento de trastornos mentales",
+      "activo": true
+    }
+  },
+  {
+    "model": "especialidades.especialidad",
+    "pk": 9,
+    "fields": {
+      "nombre": "Clínica Médica",
+      "descripcion": "Atención médica general y preventiva",
+      "activo": true
+    }
+  },
+  {
+    "model": "especialidades.especialidad",
+    "pk": 10,
+    "fields": {
+      "nombre": "Odontología",
+      "descripcion": "Salud bucal y tratamiento dental",
+      "activo": true
+    }
+  }
+]
