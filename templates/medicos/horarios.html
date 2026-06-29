@@ -1,0 +1,107 @@
+{% extends "dashboard/base.html" %}
+
+{% block title %}Mis Horarios — {{ app_name }}{% endblock %}
+
+{% block dashboard_title %}Mis Horarios{% endblock %}
+
+{% block dashboard_content %}
+<section class="section">
+  <div class="container">
+    <form method="get" class="box mb-5">
+      <div class="columns is-vcentered">
+        <div class="column is-4">
+          <label class="label">Fecha</label>
+          <input class="input" type="date" name="fecha" value="{{ fecha|date:'Y-m-d' }}"
+            onchange="this.form.submit()">
+        </div>
+      </div>
+    </form>
+
+    <div class="columns">
+      <div class="column is-7">
+        <div class="box">
+          <h3 class="title is-5 mb-4">Horarios — {{ fecha|date:"l d/m/Y" }}</h3>
+
+          {% if horarios %}
+          <table class="table is-fullwidth is-hoverable">
+            <thead>
+              <tr>
+                <th>Inicio</th>
+                <th>Fin</th>
+                <th>Disponible</th>
+                <th>Acción</th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for h in horarios %}
+              <tr>
+                <td>{{ h.hora_inicio|time:"H:i" }}</td>
+                <td>{{ h.hora_fin|time:"H:i" }}</td>
+                <td>
+                  {% if h.disponible %}
+                  <span class="tag is-success">Sí</span>
+                  {% else %}
+                  <span class="tag is-danger">No</span>
+                  {% endif %}
+                </td>
+                <td>
+                  <form method="post" action="{% url 'medicos:eliminar_horario' h.id %}"
+                    onsubmit="return confirm('¿Eliminar este horario?')" style="display:inline">
+                    {% csrf_token %}
+                    <button class="button is-small is-danger is-light" type="submit">Eliminar</button>
+                  </form>
+                </td>
+              </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+          {% else %}
+          <p style="color: #4A5568;">No hay horarios para esta fecha.</p>
+          {% endif %}
+        </div>
+      </div>
+
+      <div class="column is-5">
+        <div class="box">
+          <h3 class="title is-5 mb-4">Agregar Horarios</h3>
+
+          <form method="post" action="{% url 'medicos:agregar_horario' %}">
+            {% csrf_token %}
+            <input type="hidden" name="fecha" value="{{ fecha|date:'Y-m-d' }}">
+
+            <div class="field">
+              <label class="label">Hora inicio</label>
+              <div class="control">
+                <input class="input" type="time" name="hora_inicio" required>
+              </div>
+            </div>
+
+            <div class="field">
+              <label class="label">Hora fin</label>
+              <div class="control">
+                <input class="input" type="time" name="hora_fin" required>
+              </div>
+            </div>
+
+            <div class="field">
+              <label class="label">Dividir en slots de</label>
+              <div class="select is-fullwidth">
+                <select name="duracion_slot">
+                  <option value="">— No dividir (solo 1 slot) —</option>
+                  <option value="15">15 minutos</option>
+                  <option value="20">20 minutos</option>
+                  <option value="30" selected>30 minutos</option>
+                </select>
+              </div>
+            </div>
+
+            <div class="field">
+              <button class="button is-primary is-fullwidth" type="submit">Crear</button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+{% endblock %}

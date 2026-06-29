@@ -1,0 +1,82 @@
+{% extends "dashboard/base.html" %}
+
+{% block title %}Citas Agendadas — {{ app_name }}{% endblock %}
+
+{% block dashboard_title %}Citas Agendadas{% endblock %}
+
+{% block dashboard_content %}
+<section class="section">
+  <div class="container">
+    <div class="mb-4">
+      <div class="buttons">
+        <a href="{% url 'medicos:citas_agendadas' %}"
+          class="button is-small {% if not estado_filtro %}is-primary{% else %}is-light{% endif %}">
+          Todas
+        </a>
+        {% for est in estados %}
+        <a href="{% url 'medicos:citas_agendadas' %}?estado={{ est.nombre }}"
+          class="button is-small {% if estado_filtro == est.nombre %}is-primary{% else %}is-light{% endif %}">
+          {{ est.nombre|capfirst }}
+        </a>
+        {% endfor %}
+      </div>
+    </div>
+
+    {% if citas %}
+    <div class="table-container">
+      <table class="table is-fullwidth is-hoverable">
+        <thead>
+          <tr>
+            <th>Fecha</th>
+            <th>Horario</th>
+            <th>Paciente</th>
+            <th>Motivo</th>
+            <th>Estado</th>
+            <th>Acciones</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for cita in citas %}
+          <tr>
+            <td>{{ cita.horario.fecha|date:"d/m/Y" }}</td>
+            <td>{{ cita.horario.hora_inicio|time:"H:i" }} — {{ cita.horario.hora_fin|time:"H:i" }}</td>
+            <td>{{ cita.paciente.usuario.nombre_completo }}</td>
+            <td>{{ cita.motivo|truncatechars:40 }}</td>
+            <td>
+              {% if cita.estado.nombre == 'pendiente' %}
+              <span class="tag is-warning">Pendiente</span>
+              {% elif cita.estado.nombre == 'confirmada' %}
+              <span class="tag is-info">Confirmada</span>
+              {% elif cita.estado.nombre == 'realizada' %}
+              <span class="tag is-success">Realizada</span>
+              {% elif cita.estado.nombre == 'cancelada' %}
+              <span class="tag is-danger">Cancelada</span>
+              {% elif cita.estado.nombre == 'no_asistio' %}
+              <span class="tag is-dark">No Asistió</span>
+              {% endif %}
+            </td>
+            <td>
+              {% if cita.estado.nombre == 'pendiente' or cita.estado.nombre == 'confirmada' %}
+              <form method="post" action="{% url 'medicos:marcar_realizada' cita.id %}" style="display:inline">
+                {% csrf_token %}
+                <button class="button is-small is-success is-light" type="submit">Realizada</button>
+              </form>
+              <form method="post" action="{% url 'medicos:marcar_no_asistio' cita.id %}" style="display:inline">
+                {% csrf_token %}
+                <button class="button is-small is-dark is-light" type="submit">No Asistió</button>
+              </form>
+              {% endif %}
+            </td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+    {% else %}
+    <div class="notification is-light">
+      No tenés citas agendadas.
+    </div>
+    {% endif %}
+  </div>
+</section>
+{% endblock %}
