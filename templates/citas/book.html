@@ -1,0 +1,110 @@
+{% extends "dashboard/base.html" %}
+{% load l10n %}
+
+{% block title %}Agendar Cita — {{ app_name }}{% endblock %}
+
+{% block dashboard_title %}Agendar Cita{% endblock %}
+
+{% block dashboard_content %}
+<section class="section">
+  <div class="container">
+    <form method="get" class="box mb-5">
+      <div class="columns is-multiline is-vcentered">
+        <div class="column is-4">
+          <label class="label">Especialidad</label>
+          <div class="select is-fullwidth">
+            <select name="especialidad" onchange="this.form.submit()">
+              <option value="">Todas las especialidades</option>
+              {% for esp in especialidades %}
+              <option value="{{ esp.id }}"
+                {% if especialidad_seleccionada and especialidad_seleccionada.id == esp.id %}selected{% endif %}>
+                {{ esp.nombre }}
+              </option>
+              {% endfor %}
+            </select>
+          </div>
+        </div>
+
+        <div class="column is-4">
+          <label class="label">Médico</label>
+          <div class="select is-fullwidth">
+            <select name="medico" onchange="this.form.submit()">
+              <option value="">Seleccionar médico</option>
+              {% for m in medicos %}
+              <option value="{{ m.id }}"
+                {% if medico_seleccionado and medico_seleccionado.id == m.id %}selected{% endif %}>
+                Dr. {{ m.usuario.nombre_completo }}
+              </option>
+              {% endfor %}
+            </select>
+          </div>
+        </div>
+      </div>
+    </form>
+
+    {% if medico_seleccionado and horarios_por_fecha %}
+    <form method="post">
+      {% csrf_token %}
+      <input type="hidden" name="especialidad" value="{{ especialidad_seleccionada.id|default:'' }}">
+      <input type="hidden" name="medico" value="{{ medico_seleccionado.id }}">
+
+      <div class="box">
+        <h3 class="title is-5 mb-4">
+          Dr. {{ medico_seleccionado.usuario.nombre_completo }}
+          — Horarios disponibles
+        </h3>
+
+        {% for fecha, slots in horarios_por_fecha.items %}
+        <div class="mb-4">
+          <p class="has-text-weight-semibold mb-2">{{ fecha|date:"l d/m/Y" }}</p>
+          <div class="buttons">
+            {% for slot in slots %}
+            <label class="button is-outlined is-primary slot-btn">
+              <input type="radio" name="horario" value="{{ slot.id }}" required
+                class="radio-input" style="display:none">
+              <span class="slot-time">{{ slot.hora_inicio|time:"H:i" }} — {{ slot.hora_fin|time:"H:i" }}</span>
+            </label>
+            {% endfor %}
+          </div>
+        </div>
+        {% endfor %}
+
+        <div class="field">
+          <label class="label">Motivo de la consulta</label>
+          <div class="control">
+            <textarea class="textarea" name="motivo" placeholder="Describí el motivo de tu consulta..." required></textarea>
+          </div>
+        </div>
+
+        <div class="field">
+          <button class="button is-primary is-fullwidth" type="submit">
+            Confirmar Cita
+          </button>
+        </div>
+      </div>
+    </form>
+
+    {% elif medico_seleccionado and not horarios_por_fecha %}
+    <div class="notification is-warning is-light">
+      No hay horarios disponibles para este médico. Probá con otra fecha o especialista.
+    </div>
+    {% endif %}
+  </div>
+</section>
+
+<style>
+  .slot-btn {
+    cursor: pointer;
+    transition: all 0.15s;
+  }
+  .slot-btn:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+  }
+  .slot-btn:has(input:checked) {
+    background-color: var(--brand-primary) !important;
+    border-color: var(--brand-primary) !important;
+    color: #fff !important;
+  }
+</style>
+{% endblock %}

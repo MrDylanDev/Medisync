@@ -15,9 +15,8 @@
       {% if user.rol == 'paciente' %}
       <p class="menu-label">Paciente</p>
       <ul class="menu-list">
-        <li><a>Mis Citas</a></li>
-        <li><a>Agendar Cita</a></li>
-        <li><a>Historial</a></li>
+        <li><a href="{% url 'citas:mis_citas' %}" class="{% if request.resolver_match.url_name == 'mis_citas' %}is-active{% endif %}">Mis Citas</a></li>
+        <li><a href="{% url 'citas:agendar' %}" class="{% if request.resolver_match.url_name == 'agendar' %}is-active{% endif %}">Agendar Cita</a></li>
       </ul>
       {% elif user.rol == 'medico' %}
       <p class="menu-label">Médico</p>
