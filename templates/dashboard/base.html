@@ -21,10 +21,8 @@
       {% elif user.rol == 'medico' %}
       <p class="menu-label">Médico</p>
       <ul class="menu-list">
-        <li><a>Mis Horarios</a></li>
-        <li><a>Citas Agendadas</a></li>
-        <li><a>Pacientes</a></li>
-        <li><a>Especialidades</a></li>
+        <li><a href="{% url 'medicos:mis_horarios' %}" class="{% if request.resolver_match.url_name == 'mis_horarios' %}is-active{% endif %}">Mis Horarios</a></li>
+        <li><a href="{% url 'medicos:citas_agendadas' %}" class="{% if request.resolver_match.url_name == 'citas_agendadas' %}is-active{% endif %}">Citas Agendadas</a></li>
       </ul>
       {% elif user.rol == 'admin' %}
       <p class="menu-label">Administración</p>

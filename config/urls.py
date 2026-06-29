@@ -49,6 +49,9 @@ urlpatterns = [
     # Frontend — citas
     path('citas/', include('citas.urls_frontend')),
 
+    # Frontend — médicos
+    path('medicos/', include('medicos.urls_frontend')),
+
     # Public landing pages
     path('especialidades/', especialidades_public.especialidad_list, name='especialidades_list'),
     path('medicos/', medicos_public.medico_list, name='medicos_list'),
