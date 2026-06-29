@@ -1,6 +1,6 @@
 from django.contrib import admin
 from django.contrib.auth import views as auth_views
-from django.urls import path, include
+from django.urls import path, include, reverse_lazy
 
 from accounts import views_frontend
 from accounts.forms import EmailAuthenticationForm
@@ -30,14 +30,14 @@ urlpatterns = [
         template_name='accounts/password_reset.html',
         email_template_name='emails/password_reset.html',
         subject_template_name='emails/password_reset_subject.txt',
-        success_url='/accounts/password-reset/done/',
+        success_url=reverse_lazy('password_reset_done'),
     ), name='password_reset'),
     path('accounts/password-reset/done/', auth_views.PasswordResetDoneView.as_view(
         template_name='accounts/password_reset_done.html',
     ), name='password_reset_done'),
     path('accounts/reset/<uidb64>/<token>/', auth_views.PasswordResetConfirmView.as_view(
         template_name='accounts/password_reset_confirm.html',
-        success_url='/accounts/reset/done/',
+        success_url=reverse_lazy('password_reset_complete'),
     ), name='password_reset_confirm'),
     path('accounts/reset/done/', auth_views.PasswordResetCompleteView.as_view(
         template_name='accounts/password_reset_complete.html',

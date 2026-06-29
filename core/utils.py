@@ -1,3 +1,4 @@
+import logging
 import re
 from datetime import date, datetime
 
@@ -5,6 +6,8 @@ from django.conf import settings
 from django.core.mail import send_mail
 from django.template.loader import render_to_string
 from django.utils.text import slugify
+
+logger = logging.getLogger(__name__)
 
 
 def validate_cuit(cuit: str) -> bool:
@@ -132,11 +135,12 @@ def send_template_email(subject, template_name, context, recipient_list):
     html_message = render_to_string(template_name, context)
     plain_message = re.sub(r'<[^>]+>', '', html_message)
 
-    return send_mail(
+    sent = send_mail(
         subject=subject,
         message=plain_message.strip(),
         from_email=settings.DEFAULT_FROM_EMAIL,
         recipient_list=recipient_list,
         html_message=html_message,
-        fail_silently=True,
+        fail_silently=False,
     )
+    return sent

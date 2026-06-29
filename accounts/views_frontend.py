@@ -1,6 +1,8 @@
 from django.contrib import messages
 from django.contrib.auth import login as auth_login
+from django.contrib.auth import password_validation
 from django.contrib.auth.decorators import login_required
+from django.core.exceptions import ValidationError
 from django.shortcuts import render, redirect
 from django.utils.translation import gettext_lazy as _
 from django.views.decorators.http import require_http_methods
@@ -38,8 +40,11 @@ def register(request):
 
         if not password:
             errors['password'] = _('La contraseña es obligatoria.')
-        elif len(password) < 8:
-            errors['password'] = _('La contraseña debe tener al menos 8 caracteres.')
+        else:
+            try:
+                password_validation.validate_password(password)
+            except ValidationError as e:
+                errors['password'] = ' '.join(e.messages)
 
         if password != password_confirm:
             errors['password_confirm'] = _('Las contraseñas no coinciden.')
