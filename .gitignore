@@ -33,4 +33,4 @@ htmlcov/
 *.swp
 *.swo
 .atl/
-openspec/changes/*/tasks.md
+openspec/changes/*/tasks.mddb.sqlite3
