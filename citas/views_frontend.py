@@ -150,7 +150,9 @@ def cancelar(request, pk):
     with transaction.atomic():
         cancelada = EstadoCita.objects.get(nombre='cancelada')
         cita.estado = cancelada
-        cita.save(update_fields=['estado'])
+        cita.cancelada_por = 'paciente'
+        cita.fecha_cancelacion = timezone.now()
+        cita.save(update_fields=['estado', 'cancelada_por', 'fecha_cancelacion'])
         cita.horario.disponible = True
         cita.horario.save(update_fields=['disponible'])
 

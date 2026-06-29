@@ -114,7 +114,7 @@ class UsuarioSerializer(serializers.ModelSerializer):
         model = Usuario
         fields = [
             'id', 'correo', 'nombre', 'apellido',
-            'telefono', 'rol', 'is_active',
+            'telefono', 'documento', 'rol', 'is_active',
         ]
         read_only_fields = ['id', 'is_active']
 

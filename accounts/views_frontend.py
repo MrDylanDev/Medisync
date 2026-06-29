@@ -22,6 +22,7 @@ def register(request):
         nombre = request.POST.get('nombre', '').strip()
         apellido = request.POST.get('apellido', '').strip()
         telefono = request.POST.get('telefono', '').strip()
+        documento = request.POST.get('documento', '').strip()
         password = request.POST.get('password', '')
         password_confirm = request.POST.get('password_confirm', '')
         rol = request.POST.get('rol', 'paciente')
@@ -38,6 +39,9 @@ def register(request):
 
         if not apellido:
             errors['apellido'] = _('El apellido es obligatorio.')
+
+        if documento and Usuario.objects.filter(documento=documento).exists():
+            errors['documento'] = _('Este documento ya está registrado.')
 
         if not password:
             errors['password'] = _('La contraseña es obligatoria.')
@@ -61,6 +65,7 @@ def register(request):
                     'nombre': nombre,
                     'apellido': apellido,
                     'telefono': telefono,
+                    'documento': documento,
                     'rol': rol,
                 },
             })
@@ -71,6 +76,7 @@ def register(request):
             nombre=nombre,
             apellido=apellido,
             telefono=telefono,
+            documento=documento or None,
             rol=rol,
         )
         usuario.save()

@@ -51,13 +51,13 @@ def cita_list(request):
 
 @extend_schema(
     tags=['Citas'],
-    summary='Obtener / eliminar cita',
+    summary='Obtener / reprogramar / eliminar cita',
     responses={200: CitaSerializer, 204: None},
 )
-@api_view(['GET', 'DELETE'])
+@api_view(['GET', 'PUT', 'DELETE'])
 @permission_classes([IsAuthenticated])
 def cita_detail(request, pk):
-    """Retrieve or delete a cita."""
+    """Retrieve, reschedule or delete a cita."""
     try:
         cita = Cita.objects.select_related(
             'paciente', 'medico', 'horario', 'estado'
@@ -71,6 +71,41 @@ def cita_detail(request, pk):
     if request.method == 'GET':
         serializer = CitaSerializer(cita)
         return Response(serializer.data)
+
+    elif request.method == 'PUT':
+        can_edit = (
+            request.user.is_staff
+            or cita.paciente.usuario == request.user
+        )
+        if not can_edit:
+            return Response(
+                {'detail': _('No tienes permiso para modificar esta cita.')},
+                status=status.HTTP_403_FORBIDDEN,
+            )
+
+        if cita.estado.nombre not in ('pendiente', 'confirmada'):
+            return Response(
+                {'detail': _('Solo se pueden reprogramar citas pendientes o confirmadas.')},
+                status=status.HTTP_400_BAD_REQUEST,
+            )
+
+        serializer = CitaSerializer(cita, data=request.data, partial=True)
+        if not serializer.is_valid():
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+        from datetime import datetime
+        with transaction.atomic():
+            old_horario = cita.horario
+            nueva_cita = serializer.save()
+
+            if nueva_cita.horario != old_horario:
+                old_horario.disponible = True
+                old_horario.save(update_fields=['disponible'])
+                nueva_cita.horario.disponible = False
+                nueva_cita.horario.save(update_fields=['disponible'])
+
+        result = CitaSerializer(nueva_cita)
+        return Response(result.data)
 
     elif request.method == 'DELETE':
         if not request.user.is_staff:
@@ -112,11 +147,21 @@ def cancelar_cita(request, pk):
             status=status.HTTP_400_BAD_REQUEST,
         )
 
+    # Determine quien cancela
+    if request.user.is_staff:
+        cancelador = 'admin'
+    elif request.user.rol == 'medico':
+        cancelador = 'medico'
+    else:
+        cancelador = 'paciente'
+
     # Perform atomic cancellation
     with transaction.atomic():
         cancelada = EstadoCita.objects.get(nombre='cancelada')
         cita.estado = cancelada
-        cita.save(update_fields=['estado'])
+        cita.cancelada_por = cancelador
+        cita.fecha_cancelacion = timezone.now()
+        cita.save(update_fields=['estado', 'cancelada_por', 'fecha_cancelacion'])
 
         cita.horario.disponible = True
         cita.horario.save(update_fields=['disponible'])

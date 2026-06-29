@@ -80,6 +80,24 @@ class Cita(BaseModel):
         blank=True,
         help_text=_('Notas internas sobre la cita'),
     )
+    cancelada_por = models.CharField(
+        _('cancelada por'),
+        max_length=10,
+        blank=True,
+        null=True,
+        choices=[
+            ('paciente', 'Paciente'),
+            ('medico', 'Médico'),
+            ('admin', 'Administrador'),
+        ],
+        help_text=_('Quién canceló la cita'),
+    )
+    fecha_cancelacion = models.DateTimeField(
+        _('fecha de cancelación'),
+        blank=True,
+        null=True,
+        help_text=_('Fecha y hora en que se canceló la cita'),
+    )
 
     class Meta:
         verbose_name = _('cita')
