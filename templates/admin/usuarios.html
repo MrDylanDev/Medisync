@@ -1,0 +1,103 @@
+{% extends "dashboard/base.html" %}
+
+{% block title %}Usuarios — {{ app_name }}{% endblock %}
+
+{% block dashboard_title %}Gestión de Usuarios{% endblock %}
+
+{% block dashboard_content %}
+<section class="section">
+  <div class="container">
+    <form method="get" class="box mb-5">
+      <div class="columns is-vcentered">
+        <div class="column is-4">
+          <input class="input" type="text" name="search" placeholder="Buscar por nombre, apellido o correo..." value="{{ search }}">
+        </div>
+        <div class="column is-2">
+          <div class="select is-fullwidth">
+            <select name="rol">
+              <option value="">Todos los roles</option>
+              <option value="paciente" {% if rol_filtro == 'paciente' %}selected{% endif %}>Paciente</option>
+              <option value="medico" {% if rol_filtro == 'medico' %}selected{% endif %}>Médico</option>
+              <option value="admin" {% if rol_filtro == 'admin' %}selected{% endif %}>Admin</option>
+            </select>
+          </div>
+        </div>
+        <div class="column is-2">
+          <div class="select is-fullwidth">
+            <select name="activo">
+              <option value="">Todos</option>
+              <option value="true" {% if activo_filtro == 'true' %}selected{% endif %}>Activos</option>
+              <option value="false" {% if activo_filtro == 'false' %}selected{% endif %}>Bloqueados</option>
+            </select>
+          </div>
+        </div>
+        <div class="column is-2">
+          <button class="button is-primary is-fullwidth" type="submit">Filtrar</button>
+        </div>
+      </div>
+    </form>
+
+    <div class="table-container">
+      <table class="table is-fullwidth is-hoverable">
+        <thead>
+          <tr>
+            <th>ID</th>
+            <th>Nombre</th>
+            <th>Correo</th>
+            <th>Rol</th>
+            <th>Estado</th>
+            <th>Acciones</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for u in usuarios %}
+          <tr>
+            <td>{{ u.id }}</td>
+            <td>{{ u.nombre_completo }}</td>
+            <td>{{ u.correo }}</td>
+            <td><span class="tag">{{ u.get_rol_display }}</span></td>
+            <td>
+              {% if u.is_active %}
+              <span class="tag is-success">Activo</span>
+              {% else %}
+              <span class="tag is-danger">Bloqueado</span>
+              {% endif %}
+              {% if u.is_staff %}<span class="tag is-warning is-light">Staff</span>{% endif %}
+            </td>
+            <td>
+              <div class="buttons are-small">
+                {% if u.is_active %}
+                <form method="post" action="{% url 'admin-usuario-bloquear-frontend' u.pk %}" style="display:inline">
+                  {% csrf_token %}
+                  <button class="button is-warning" onclick="return confirm('¿Bloquear a {{ u.nombre_completo }}?')">
+                    Bloquear
+                  </button>
+                </form>
+                {% else %}
+                <form method="post" action="{% url 'admin-usuario-activar-frontend' u.pk %}" style="display:inline">
+                  {% csrf_token %}
+                  <button class="button is-success">
+                    Activar
+                  </button>
+                </form>
+                {% endif %}
+                {% if not u.is_staff %}
+                <form method="post" action="{% url 'admin-usuario-eliminar-frontend' u.pk %}" style="display:inline">
+                  {% csrf_token %}
+                  <button class="button is-danger" onclick="return confirm('¿Eliminar permanentemente a {{ u.nombre_completo }}?')">
+                    Eliminar
+                  </button>
+                </form>
+                {% endif %}
+              </div>
+            </td>
+          </tr>
+          {% empty %}
+          <tr><td colspan="6" class="has-text-centered">No se encontraron usuarios</td></tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+</section>
+{% endblock %}

@@ -1,6 +1,73 @@
 {% extends "base.html" %}
+{% load static %}
 
 {% block body_class %}has-sidebar{% endblock %}
+
+{% block extra_head %}
+<style>
+.notif-dropdown { width: 320px; max-height: 400px; overflow-y: auto; }
+.notif-item { border-bottom: 1px solid #f0f0f0; padding: 0.5rem 1rem; }
+.notif-item:last-child { border-bottom: none; }
+.notif-item.unread { background-color: #eff5ff; }
+.notif-badge {
+  position: absolute; top: 5px; right: 0;
+  font-size: 0.6rem; min-width: 18px; height: 18px;
+  line-height: 18px; padding: 0 5px; border-radius: 9px;
+}
+</style>
+{% endblock %}
+
+{% block navbar %}
+<nav class="navbar is-fixed-top is-primary" role="navigation" aria-label="main navigation">
+  <div class="container">
+    <div class="navbar-brand">
+      <a class="navbar-item has-text-weight-bold" href="/">{{ app_name }}</a>
+      <a role="button" class="navbar-burger" aria-label="menu" aria-expanded="false" data-target="mainNavbar">
+        <span aria-hidden="true"></span>
+        <span aria-hidden="true"></span>
+        <span aria-hidden="true"></span>
+      </a>
+    </div>
+    <div id="mainNavbar" class="navbar-menu">
+      <div class="navbar-start">
+        {% if user.is_authenticated %}
+        <a class="navbar-item" href="{% url 'dashboard' %}">Dashboard</a>
+        {% endif %}
+      </div>
+      <div class="navbar-end">
+        {% if user.is_authenticated %}
+        <div class="navbar-item has-dropdown is-hoverable" id="notif-dropdown">
+          <a class="navbar-link" style="position:relative;">
+            <span class="icon"><i class="fas fa-bell"></i></span>
+            <span id="notif-count" class="tag is-danger is-small notif-badge" style="display:none;">0</span>
+          </a>
+          <div class="navbar-dropdown is-right notif-dropdown" id="notif-list">
+            <div class="notif-item has-text-centered"><span class="has-text-grey">Cargando...</span></div>
+          </div>
+        </div>
+        <div class="navbar-item has-dropdown is-hoverable">
+          <a class="navbar-link">{{ user.nombre_completo }}</a>
+          <div class="navbar-dropdown is-right">
+            <a class="navbar-item" href="{% url 'dashboard' %}">Dashboard</a>
+            <a class="navbar-item" href="{% url 'profile' %}">Mi Perfil</a>
+            <hr class="navbar-divider">
+            <form method="post" action="{% url 'logout' %}">
+              {% csrf_token %}
+              <button type="submit" class="navbar-item has-text-danger" style="background:none;border:none;cursor:pointer;width:100%;text-align:left;">
+                Cerrar Sesión
+              </button>
+            </form>
+          </div>
+        </div>
+        {% else %}
+        <a class="navbar-item" href="{% url 'login' %}">Iniciar Sesión</a>
+        <a class="navbar-item" href="{% url 'register' %}">Registrarse</a>
+        {% endif %}
+      </div>
+    </div>
+  </div>
+</nav>
+{% endblock %}
 
 {% block content %}
 <div class="columns is-gapless" style="min-height: calc(100vh - 52px - 168px);">
@@ -17,18 +84,22 @@
       <ul class="menu-list">
         <li><a href="{% url 'citas:mis_citas' %}" class="{% if request.resolver_match.url_name == 'mis_citas' %}is-active{% endif %}">Mis Citas</a></li>
         <li><a href="{% url 'citas:agendar' %}" class="{% if request.resolver_match.url_name == 'agendar' %}is-active{% endif %}">Agendar Cita</a></li>
+        <li><a href="{% url 'expedientes:lista' %}" class="{% if request.resolver_match.url_name == 'lista' %}is-active{% endif %}">Mi Historial</a></li>
       </ul>
       {% elif user.rol == 'medico' %}
       <p class="menu-label">Médico</p>
       <ul class="menu-list">
         <li><a href="{% url 'medicos:mis_horarios' %}" class="{% if request.resolver_match.url_name == 'mis_horarios' %}is-active{% endif %}">Mis Horarios</a></li>
         <li><a href="{% url 'medicos:citas_agendadas' %}" class="{% if request.resolver_match.url_name == 'citas_agendadas' %}is-active{% endif %}">Citas Agendadas</a></li>
+        <li><a href="{% url 'expedientes:lista' %}" class="{% if request.resolver_match.url_name == 'lista' %}is-active{% endif %}">Expedientes</a></li>
       </ul>
       {% elif user.rol == 'admin' %}
       <p class="menu-label">Administración</p>
       <ul class="menu-list">
         <li><a href="{% url 'admin:index' %}">Panel Admin Django</a></li>
         <li><a href="{% url 'reportes' %}" class="{% if request.resolver_match.url_name == 'reportes' %}is-active{% endif %}">Reportes</a></li>
+        <li><a href="{% url 'admin-usuarios' %}" class="{% if request.resolver_match.url_name == 'admin-usuarios' %}is-active{% endif %}">Usuarios</a></li>
+        <li><a href="{% url 'expedientes:lista' %}" class="{% if request.resolver_match.url_name == 'lista' %}is-active{% endif %}">Expedientes</a></li>
       </ul>
       {% endif %}
 
@@ -37,9 +108,7 @@
         <li>
           <form method="post" action="{% url 'logout' %}">
             {% csrf_token %}
-            <button type="submit" class="button is-light is-small is-fullwidth">
-              Cerrar Sesión
-            </button>
+            <button type="submit" class="button is-light is-small is-fullwidth">Cerrar Sesión</button>
           </form>
         </li>
       </ul>
@@ -50,4 +119,47 @@
     {% block dashboard_content %}{% endblock %}
   </main>
 </div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+  function loadNotifications() {
+    fetch('/notificaciones/api/no-leidas/')
+      .then(r => r.json())
+      .then(data => {
+        const count = data.no_leidas;
+        const badge = document.getElementById('notif-count');
+        if (count > 0) {
+          badge.textContent = count;
+          badge.style.display = 'inline';
+        } else {
+          badge.style.display = 'none';
+        }
+      });
+  }
+  function loadNotificationList() {
+    fetch('/notificaciones/api/recientes/')
+      .then(r => r.json())
+      .then(data => {
+        const list = document.getElementById('notif-list');
+        if (!data.length) {
+          list.innerHTML = '<div class="notif-item has-text-centered"><span class="has-text-grey">Sin notificaciones</span></div>';
+          return;
+        }
+        list.innerHTML = data.map(n => `
+          <div class="notif-item ${n.leida ? '' : 'unread'}">
+            <p class="is-size-7 has-text-weight-semibold">${n.titulo}</p>
+            <p class="is-size-7 has-text-grey">${n.tipo_display || ''} · ${n.creado_en}</p>
+          </div>
+        `).join('') + `<div class="notif-item has-text-centered"><a href="/notificaciones/" class="is-size-7">Ver todas</a></div>`;
+      });
+  }
+  loadNotifications();
+  const dropdown = document.getElementById('notif-dropdown');
+  if (dropdown) {
+    dropdown.addEventListener('mouseenter', loadNotificationList);
+  }
+});
+</script>
 {% endblock %}
