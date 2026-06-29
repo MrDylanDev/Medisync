@@ -1,9 +1,10 @@
 from django.contrib import messages
 from django.contrib.auth import login as auth_login
 from django.contrib.auth import password_validation
-from django.contrib.auth.decorators import login_required
+from django.contrib.auth.decorators import login_required, user_passes_test
 from django.core.exceptions import ValidationError
-from django.shortcuts import render, redirect
+from django.db.models import Q
+from django.shortcuts import render, redirect, get_object_or_404
 from django.utils.translation import gettext_lazy as _
 from django.views.decorators.http import require_http_methods
 
@@ -104,3 +105,71 @@ def dashboard(request):
     if not request.user.is_authenticated:
         return redirect('login')
     return render(request, 'dashboard/dashboard.html')
+
+
+# ─── Admin user management ────────────────────────────────────────────────────
+
+@login_required
+@user_passes_test(lambda u: u.is_staff)
+def admin_usuarios(request):
+    search = request.GET.get('search', '')
+    rol = request.GET.get('rol', '')
+    activo = request.GET.get('activo', '')
+
+    usuarios = Usuario.objects.all()
+    if search:
+        usuarios = usuarios.filter(
+            Q(correo__icontains=search)
+            | Q(nombre__icontains=search)
+            | Q(apellido__icontains=search)
+        )
+    if rol:
+        usuarios = usuarios.filter(rol=rol)
+    if activo == 'true':
+        usuarios = usuarios.filter(is_active=True)
+    elif activo == 'false':
+        usuarios = usuarios.filter(is_active=False)
+
+    usuarios = usuarios.order_by('apellido', 'nombre')
+
+    return render(request, 'admin/usuarios.html', {
+        'usuarios': usuarios,
+        'search': search,
+        'rol_filtro': rol,
+        'activo_filtro': activo,
+    })
+
+
+@login_required
+@user_passes_test(lambda u: u.is_staff)
+@require_http_methods(["POST"])
+def admin_bloquear_usuario_frontend(request, pk):
+    user = get_object_or_404(Usuario, pk=pk)
+    user.is_active = False
+    user.save(update_fields=['is_active'])
+    messages.success(request, _(f'Usuario {user.nombre_completo} bloqueado.'))
+    return redirect('admin-usuarios')
+
+
+@login_required
+@user_passes_test(lambda u: u.is_staff)
+@require_http_methods(["POST"])
+def admin_activar_usuario_frontend(request, pk):
+    user = get_object_or_404(Usuario, pk=pk)
+    user.is_active = True
+    user.save(update_fields=['is_active'])
+    messages.success(request, _(f'Usuario {user.nombre_completo} activado.'))
+    return redirect('admin-usuarios')
+
+
+@login_required
+@user_passes_test(lambda u: u.is_staff)
+@require_http_methods(["POST"])
+def admin_eliminar_usuario_frontend(request, pk):
+    user = get_object_or_404(Usuario, pk=pk)
+    if user.is_staff:
+        messages.error(request, _('No se puede eliminar un administrador.'))
+        return redirect('admin-usuarios')
+    user.delete()
+    messages.success(request, _('Usuario eliminado.'))
+    return redirect('admin-usuarios')

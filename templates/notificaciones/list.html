@@ -1,0 +1,52 @@
+{% extends "dashboard/base.html" %}
+
+{% block title %}Notificaciones — {{ app_name }}{% endblock %}
+
+{% block dashboard_title %}Notificaciones{% endblock %}
+
+{% block dashboard_content %}
+<section class="section">
+  <div class="container">
+    {% if notificaciones %}
+    <div class="table-container">
+      <table class="table is-fullwidth is-hoverable">
+        <thead>
+          <tr>
+            <th>Tipo</th>
+            <th>Título</th>
+            <th>Mensaje</th>
+            <th>Estado</th>
+            <th>Fecha</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for n in notificaciones %}
+          <tr class="{% if not n.leida %}has-background-info-light{% endif %}">
+            <td>
+              <span class="tag is-small {% if n.tipo == 'cita_confirmada' %}is-success{% elif n.tipo == 'cita_cancelada' %}is-danger{% elif n.tipo == 'recordatorio' %}is-warning{% else %}is-info{% endif %}">
+                {{ n.get_tipo_display }}
+              </span>
+            </td>
+            <td>{{ n.titulo }}</td>
+            <td>{{ n.mensaje }}</td>
+            <td>
+              {% if n.leida %}
+              <span class="tag is-light">Leída</span>
+              {% else %}
+              <span class="tag is-primary">No leída</span>
+              {% endif %}
+            </td>
+            <td>{{ n.creado_en|date:"d/m/Y H:i" }}</td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+    {% else %}
+    <div class="notification is-info is-light">
+      No tenés notificaciones.
+    </div>
+    {% endif %}
+  </div>
+</section>
+{% endblock %}

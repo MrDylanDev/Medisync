@@ -1,0 +1,96 @@
+{% extends "dashboard/base.html" %}
+
+{% block title %}Nuevo Expediente — {{ app_name }}{% endblock %}
+
+{% block dashboard_title %}Nuevo Expediente{% endblock %}
+
+{% block dashboard_content %}
+<section class="section">
+  <div class="container">
+    <div class="box">
+      <form method="post">
+        {% csrf_token %}
+
+        <div class="field">
+          <label class="label">Paciente</label>
+          <div class="control">
+            <div class="select is-fullwidth{% if errors.paciente %} is-danger{% endif %}">
+              <select name="paciente">
+                <option value="">Seleccionar paciente...</option>
+                {% for p in pacientes %}
+                <option value="{{ p.pk }}" {% if form_data.paciente == p.pk|stringformat:"s" %}selected{% endif %}>
+                  {{ p.usuario.nombre_completo }} — HC: {{ p.numero_historia_clinica|default:"S/H" }}
+                </option>
+                {% endfor %}
+              </select>
+            </div>
+          </div>
+          {% if errors.paciente %}<p class="help is-danger">{{ errors.paciente }}</p>{% endif %}
+        </div>
+
+        {% if not medico_mode %}
+        <div class="field">
+          <label class="label">Médico</label>
+          <div class="control">
+            <div class="select is-fullwidth">
+              <select name="medico">
+                {% for m in medicos %}
+                <option value="{{ m.pk }}">Dr. {{ m.usuario.nombre_completo }}</option>
+                {% endfor %}
+              </select>
+            </div>
+          </div>
+        </div>
+        {% endif %}
+
+        <div class="field">
+          <label class="label">Cita asociada (opcional)</label>
+          <div class="control">
+            <div class="select is-fullwidth">
+              <select name="cita">
+                <option value="">Sin cita asociada</option>
+                {% for c in citas %}
+                <option value="{{ c.pk }}" {% if form_data.cita == c.pk|stringformat:"s" %}selected{% endif %}>
+                  {{ c.paciente.usuario.nombre_completo }} — {{ c.horario.fecha|date:"d/m/Y" }} {{ c.horario.hora_inicio|time:"H:i" }}
+                </option>
+                {% endfor %}
+              </select>
+            </div>
+          </div>
+        </div>
+
+        <div class="field">
+          <label class="label">Diagnóstico <span class="has-text-danger">*</span></label>
+          <div class="control">
+            <textarea class="textarea{% if errors.diagnostico %} is-danger{% endif %}" name="diagnostico" rows="4" placeholder="Diagnóstico del paciente">{{ form_data.diagnostico|default:"" }}</textarea>
+          </div>
+          {% if errors.diagnostico %}<p class="help is-danger">{{ errors.diagnostico }}</p>{% endif %}
+        </div>
+
+        <div class="field">
+          <label class="label">Tratamiento</label>
+          <div class="control">
+            <textarea class="textarea" name="tratamiento" rows="3" placeholder="Tratamiento recetado">{{ form_data.tratamiento|default:"" }}</textarea>
+          </div>
+        </div>
+
+        <div class="field">
+          <label class="label">Notas adicionales</label>
+          <div class="control">
+            <textarea class="textarea" name="notas" rows="3" placeholder="Notas clínicas">{{ form_data.notas|default:"" }}</textarea>
+          </div>
+        </div>
+
+        <div class="field is-grouped">
+          <div class="control">
+            <button type="submit" class="button is-primary">Guardar</button>
+          </div>
+          <div class="control">
+            <a href="{% url 'expedientes:lista' %}" class="button is-light">Cancelar</a>
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
+</section>
+{% endblock %}

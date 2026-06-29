@@ -55,6 +55,18 @@ urlpatterns = [
     # Frontend — médicos
     path('medicos/', include('medicos.urls_frontend')),
 
+    # Frontend — expedientes
+    path('expedientes/', include('expedientes.urls_frontend')),
+
+    # Frontend — notificaciones
+    path('notificaciones/', include('notificaciones.urls_frontend')),
+
+    # Frontend — admin usuarios (nota: evitar /admin/ porque lo captura el admin de Django)
+    path('dashboard/usuarios/', views_frontend.admin_usuarios, name='admin-usuarios'),
+    path('dashboard/usuarios/<int:pk>/bloquear/', views_frontend.admin_bloquear_usuario_frontend, name='admin-usuario-bloquear-frontend'),
+    path('dashboard/usuarios/<int:pk>/activar/', views_frontend.admin_activar_usuario_frontend, name='admin-usuario-activar-frontend'),
+    path('dashboard/usuarios/<int:pk>/eliminar/', views_frontend.admin_eliminar_usuario_frontend, name='admin-usuario-eliminar-frontend'),
+
     # Frontend — reportes
     path('reportes/', views_reports.reportes, name='reportes'),
 

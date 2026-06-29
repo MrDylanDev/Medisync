@@ -1,0 +1,53 @@
+{% extends "dashboard/base.html" %}
+
+{% block title %}Expedientes — {{ app_name }}{% endblock %}
+
+{% block dashboard_title %}Expedientes{% endblock %}
+
+{% block dashboard_content %}
+<section class="section">
+  <div class="container">
+    {% if user.rol == 'medico' or user.rol == 'admin' %}
+    <div class="mb-4">
+      <a href="{% url 'expedientes:crear' %}" class="button is-primary">
+        <span class="icon"><i class="fas fa-plus"></i></span>
+        <span>Nuevo Expediente</span>
+      </a>
+    </div>
+    {% endif %}
+
+    {% if expedientes %}
+    <div class="table-container">
+      <table class="table is-fullwidth is-hoverable">
+        <thead>
+          <tr>
+            <th>#</th>
+            <th>Paciente</th>
+            <th>Médico</th>
+            <th>Diagnóstico</th>
+            <th>Tratamiento</th>
+            <th>Fecha</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for exp in expedientes %}
+          <tr>
+            <td>{{ exp.id }}</td>
+            <td>{{ exp.paciente.usuario.nombre_completo }}</td>
+            <td>Dr. {{ exp.medico.usuario.nombre_completo }}</td>
+            <td>{{ exp.diagnostico|truncatewords:15 }}</td>
+            <td>{{ exp.tratamiento|truncatewords:10|default:"—" }}</td>
+            <td>{{ exp.created_at|date:"d/m/Y H:i" }}</td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+    {% else %}
+    <div class="notification is-info is-light">
+      No hay expedientes registrados.
+    </div>
+    {% endif %}
+  </div>
+</section>
+{% endblock %}
