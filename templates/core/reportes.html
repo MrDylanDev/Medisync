@@ -1,0 +1,138 @@
+{% extends "dashboard/base.html" %}
+
+{% block title %}Reportes — {{ app_name }}{% endblock %}
+
+{% block dashboard_title %}Reportes Operativos{% endblock %}
+
+{% block dashboard_content %}
+<section class="section">
+  <div class="container">
+    <form method="get" class="box mb-5">
+      <div class="columns is-vcentered">
+        <div class="column is-3">
+          <label class="label">Desde</label>
+          <input class="input" type="date" name="desde" value="{{ desde }}">
+        </div>
+        <div class="column is-3">
+          <label class="label">Hasta</label>
+          <input class="input" type="date" name="hasta" value="{{ hasta }}">
+        </div>
+        <div class="column is-3 is-flex is-align-items-flex-end">
+          <button class="button is-primary" type="submit">Filtrar</button>
+        </div>
+      </div>
+    </form>
+
+    <div class="columns is-multiline mb-5">
+      <div class="column is-3">
+        <div class="box has-text-centered">
+          <p class="heading">Total Citas</p>
+          <p class="title is-3">{{ resumen.total_citas }}</p>
+        </div>
+      </div>
+      <div class="column is-3">
+        <div class="box has-text-centered">
+          <p class="heading">Pacientes</p>
+          <p class="title is-3">{{ resumen.total_pacientes }}</p>
+        </div>
+      </div>
+      <div class="column is-3">
+        <div class="box has-text-centered">
+          <p class="heading">Médicos</p>
+          <p class="title is-3">{{ resumen.total_medicos }}</p>
+        </div>
+      </div>
+      <div class="column is-3">
+        <div class="box has-text-centered">
+          <p class="heading">Especialidades</p>
+          <p class="title is-3">{{ resumen.total_especialidades }}</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="columns">
+      <div class="column is-6">
+        <div class="box">
+          <h3 class="title is-5">Citas por Estado</h3>
+          <table class="table is-fullwidth">
+            <thead>
+              <tr>
+                <th>Estado</th>
+                <th class="has-text-right">Cantidad</th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for item in por_estado %}
+              <tr>
+                <td>{{ item.estado__nombre|capfirst }}</td>
+                <td class="has-text-right">{{ item.total }}</td>
+              </tr>
+              {% empty %}
+              <tr><td colspan="2" class="has-text-centered">Sin datos</td></tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <div class="column is-6">
+        <div class="box">
+          <h3 class="title is-5">Citas por Especialidad</h3>
+          <table class="table is-fullwidth">
+            <thead>
+              <tr>
+                <th>Especialidad</th>
+                <th class="has-text-right">Cantidad</th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for item in por_especialidad %}
+              <tr>
+                <td>{{ item.medico__especialidades__especialidad__nombre|default:"Sin especificar" }}</td>
+                <td class="has-text-right">{{ item.total }}</td>
+              </tr>
+              {% empty %}
+              <tr><td colspan="2" class="has-text-centered">Sin datos</td></tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <div class="box">
+      <h3 class="title is-5">Tasa de No Asistencia por Médico</h3>
+      <table class="table is-fullwidth is-hoverable">
+        <thead>
+          <tr>
+            <th>Médico</th>
+            <th class="has-text-right">Total Citas</th>
+            <th class="has-text-right">No Asistieron</th>
+            <th class="has-text-right">Canceladas</th>
+            <th class="has-text-right">% No Asistencia</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for m in medicos_tasa %}
+          <tr>
+            <td>Dr. {{ m.medico__usuario__nombre }} {{ m.medico__usuario__apellido }}</td>
+            <td class="has-text-right">{{ m.total }}</td>
+            <td class="has-text-right">{{ m.no_asistieron }}</td>
+            <td class="has-text-right">{{ m.canceladas }}</td>
+            <td class="has-text-right">
+              {% if m.total %}
+                {% widthratio m.no_asistieron m.total 100 %}%
+              {% else %}
+                —
+              {% endif %}
+            </td>
+          </tr>
+          {% empty %}
+          <tr><td colspan="5" class="has-text-centered">Sin datos</td></tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+</section>
+{% endblock %}

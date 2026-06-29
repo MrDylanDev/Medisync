@@ -5,6 +5,7 @@ from django.urls import path, include, reverse_lazy
 from accounts import views_frontend
 from accounts.forms import EmailAuthenticationForm
 from core import views as core_views
+from core import views_reports
 from especialidades import views_public as especialidades_public
 from medicos import views_public as medicos_public
 
@@ -51,6 +52,12 @@ urlpatterns = [
 
     # Frontend — médicos
     path('medicos/', include('medicos.urls_frontend')),
+
+    # Frontend — reportes
+    path('reportes/', views_reports.reportes, name='reportes'),
+
+    # API — reportes
+    path('api/reportes/', views_reports.reportes_api, name='reportes-api'),
 
     # Public landing pages
     path('especialidades/', especialidades_public.especialidad_list, name='especialidades_list'),
