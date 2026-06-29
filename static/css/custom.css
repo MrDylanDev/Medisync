@@ -1,29 +1,63 @@
+/* ============================================================
+   Medisync Design System — Navy Palette
+   ============================================================ */
+
 :root {
-  --brand-primary: #00b89c;
-  --brand-primary-dark: #009b84;
-  --brand-accent: #3273dc;
+  --brand-primary: #0B4F7C;
+  --brand-primary-dark: #083A5C;
+  --brand-primary-light: #157AB8;
+  --brand-secondary: #0E9AA7;
+  --brand-accent-green: #2ECC71;
+  --brand-dark: #1A2332;
+  --brand-text: #4A5568;
+  --brand-muted: #8FA3B8;
+  --brand-border: #E8EEF4;
+  --brand-bg-light: #F0F7FF;
+  --brand-white: #FFFFFF;
 }
+
+/* ─── Navbar ─────────────────────────────────────────────── */
 
 .navbar.is-primary {
   background-color: var(--brand-primary);
 }
 
-.navbar.is-primary .navbar-item {
-  color: #fff;
+.navbar.is-primary .navbar-item,
+.navbar.is-primary .navbar-link {
+  color: var(--brand-white);
 }
 
-.navbar.is-primary .navbar-item:hover {
+.navbar.is-primary .navbar-item:hover,
+.navbar.is-primary .navbar-link:hover {
   background-color: var(--brand-primary-dark);
-  color: #fff;
+  color: var(--brand-white);
 }
+
+.navbar.is-primary .navbar-dropdown .navbar-item {
+  color: var(--brand-text);
+}
+
+.navbar.is-primary .navbar-dropdown .navbar-item:hover {
+  background-color: var(--brand-bg-light);
+  color: var(--brand-primary);
+}
+
+.navbar-burger {
+  color: var(--brand-white);
+}
+
+/* ─── Buttons ────────────────────────────────────────────── */
 
 .button.is-primary {
   background-color: var(--brand-primary);
   border-color: transparent;
+  color: var(--brand-white);
 }
 
-.button.is-primary:hover {
+.button.is-primary:hover,
+.button.is-primary:focus {
   background-color: var(--brand-primary-dark);
+  color: var(--brand-white);
 }
 
 .button.is-primary.is-outlined {
@@ -32,12 +66,67 @@
   color: var(--brand-primary);
 }
 
+.button.is-primary.is-outlined:hover {
+  background-color: var(--brand-primary);
+  color: var(--brand-white);
+}
+
+.button.is-primary.is-light {
+  background-color: var(--brand-bg-light);
+  color: var(--brand-primary);
+}
+
+.button.is-primary.is-light:hover {
+  background-color: #d4e6f7;
+}
+
+.button.is-success {
+  background-color: var(--brand-accent-green);
+}
+
+.button.is-danger {
+  background-color: #cc0f35;
+}
+
+/* ─── Tags / Badges ──────────────────────────────────────── */
+
+.tag.is-primary,
+.tag.is-success {
+  background-color: var(--brand-primary);
+  color: var(--brand-white);
+}
+
+.tag.is-primary.is-light,
+.tag.is-success.is-light {
+  background-color: var(--brand-bg-light);
+  color: var(--brand-primary);
+}
+
+.tag.is-warning.is-light {
+  background-color: #fffdf0;
+  color: #946c00;
+}
+
+/* ─── Sidebar Menu ───────────────────────────────────────── */
+
 .menu-list a.is-active {
   background-color: var(--brand-primary);
+  color: var(--brand-white);
+}
+
+.menu-list a.is-active:hover {
+  background-color: var(--brand-primary-dark);
 }
 
 .menu-list a:hover {
-  background-color: #f0f0f0;
+  background-color: var(--brand-bg-light);
+}
+
+/* ─── Notifications ──────────────────────────────────────── */
+
+.notification.is-primary.is-light {
+  background-color: var(--brand-bg-light);
+  color: var(--brand-primary);
 }
 
 .notification.is-success.is-light {
@@ -56,9 +145,38 @@
 }
 
 .notification.is-info.is-light {
-  background-color: #eff5ff;
-  color: #296fa8;
+  background-color: var(--brand-bg-light);
+  color: var(--brand-primary);
 }
+
+/* ─── Helpers ────────────────────────────────────────────── */
+
+.has-text-primary {
+  color: var(--brand-primary) !important;
+}
+
+.has-background-primary {
+  background-color: var(--brand-primary) !important;
+}
+
+/* ─── Pagination ─────────────────────────────────────────── */
+
+.pagination .is-current {
+  background-color: var(--brand-primary);
+  border-color: var(--brand-primary);
+}
+
+/* ─── Links ──────────────────────────────────────────────── */
+
+a {
+  color: var(--brand-primary);
+}
+
+a:hover {
+  color: var(--brand-primary-light);
+}
+
+/* ─── Misc ───────────────────────────────────────────────── */
 
 .footer {
   padding: 2rem 1.5rem;
@@ -69,12 +187,8 @@ main > .section:first-child {
 }
 
 .box {
-  box-shadow: 0 0.5em 1em -0.125em rgba(10, 10, 10, 0.08), 0 0 0 1px rgba(10, 10, 10, 0.02);
-}
-
-.tag.is-success {
-  background-color: var(--brand-primary);
-  color: #fff;
+  box-shadow: 0 0.5em 1em -0.125em rgba(10, 10, 10, 0.08),
+              0 0 0 1px rgba(10, 10, 10, 0.02);
 }
 
 @media screen and (max-width: 768px) {

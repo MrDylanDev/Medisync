@@ -2,17 +2,17 @@
    Medisync Landing — Kimi-inspired design system on top of Bulma
    =================================================================== */
 
-/* --- Color overrides (navy palette replaces Bulma teal on landing) --- */
+/* --- Color overrides — uses app-wide brand variables --- */
 
 .landing-page :root {
-  --kimi-primary: #0B4F7C;
-  --kimi-secondary: #0E9AA7;
-  --kimi-accent: #2ECC71;
-  --kimi-dark: #1A2332;
-  --kimi-text: #4A5568;
-  --kimi-muted: #8FA3B8;
-  --kimi-border: #E8EEF4;
-  --kimi-bg-light: #F0F7FF;
+  --kimi-primary: var(--brand-primary, #0B4F7C);
+  --kimi-secondary: var(--brand-secondary, #0E9AA7);
+  --kimi-accent: var(--brand-accent-green, #2ECC71);
+  --kimi-dark: var(--brand-dark, #1A2332);
+  --kimi-text: var(--brand-text, #4A5568);
+  --kimi-muted: var(--brand-muted, #8FA3B8);
+  --kimi-border: var(--brand-border, #E8EEF4);
+  --kimi-bg-light: var(--brand-bg-light, #F0F7FF);
 }
 
 /* --- Typography --- */
