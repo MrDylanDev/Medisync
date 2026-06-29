@@ -1,13 +1,41 @@
 import logging
 import re
-from datetime import date, datetime
+from datetime import date, datetime, timedelta
 
 from django.conf import settings
+from django.core.cache import cache
 from django.core.mail import send_mail
 from django.template.loader import render_to_string
 from django.utils.text import slugify
 
 logger = logging.getLogger(__name__)
+
+LOGIN_MAX_ATTEMPTS = 3
+LOGIN_LOCKOUT_MINUTES = 15
+
+
+def _login_cache_key(email):
+    return f'login_attempts:{email}'
+
+
+def is_login_locked(email):
+    """Return True if the account is currently locked out."""
+    attempts = cache.get(_login_cache_key(email), 0)
+    return attempts >= LOGIN_MAX_ATTEMPTS
+
+
+def register_failed_attempt(email):
+    """Increment failed attempt counter. Locks after MAX_ATTEMPTS."""
+    key = _login_cache_key(email)
+    attempts = cache.get(key, 0) + 1
+    timeout = LOGIN_LOCKOUT_MINUTES * 60
+    cache.set(key, attempts, timeout=timeout)
+    return attempts
+
+
+def reset_login_attempts(email):
+    """Clear failed attempt counter on successful login."""
+    cache.delete(_login_cache_key(email))
 
 
 def validate_cuit(cuit: str) -> bool:

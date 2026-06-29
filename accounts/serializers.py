@@ -2,6 +2,7 @@ from django.contrib.auth import authenticate
 from django.utils.translation import gettext_lazy as _
 from rest_framework import serializers
 
+from core.utils import is_login_locked, register_failed_attempt, reset_login_attempts
 from .models import Usuario, Paciente, Medico
 
 
@@ -68,12 +69,19 @@ class LoginSerializer(serializers.Serializer):
         password = attrs.get('password')
 
         if correo and password:
+            if is_login_locked(correo):
+                raise serializers.ValidationError(
+                    _('Demasiados intentos fallidos. La cuenta está bloqueada por 15 minutos.'),
+                    code='account_locked',
+                )
+
             user = authenticate(
                 request=self.context.get('request'),
                 username=correo,
                 password=password,
             )
             if not user:
+                register_failed_attempt(correo)
                 raise serializers.ValidationError(
                     _('Credenciales inválidas.'),
                     code='authentication_failed',
@@ -83,6 +91,8 @@ class LoginSerializer(serializers.Serializer):
                     _('La cuenta está desactivada.'),
                     code='account_disabled',
                 )
+
+            reset_login_attempts(correo)
             attrs['user'] = user
         else:
             raise serializers.ValidationError(
