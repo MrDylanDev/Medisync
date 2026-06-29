@@ -1,32 +1,34 @@
 from datetime import datetime, timedelta
 
 from django.db import transaction
+from django.http import HttpResponse
 from django.utils.translation import gettext_lazy as _
 from django.utils import timezone
-from rest_framework import status
+from drf_spectacular.utils import extend_schema, OpenApiParameter, inline_serializer
+from rest_framework import serializers, status
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.pagination import PageNumberPagination
 
 from core.utils import send_template_email
+from core.pdf_utils import generar_comprobante_cita
 from .models import Cita, EstadoCita
 from .serializers import CitaSerializer
 
 PAGE_SIZE = 20
 
 
+@extend_schema(
+    tags=['Citas'],
+    summary='Listar / agendar citas',
+    request=CitaSerializer,
+    responses={200: CitaSerializer(many=True), 201: CitaSerializer},
+)
 @api_view(['GET', 'POST'])
 @permission_classes([IsAuthenticated])
 def cita_list(request):
-    """
-    List citas or book a new appointment.
-
-    GET: Returns paginated list of citas.
-        - Regular users see only their own citas (as paciente).
-        - Admin/staff users see all citas.
-    POST: Books a new appointment (atomic: creates Cita + marks Horario as unavailable).
-    """
+    """List citas or book a new appointment."""
     if request.method == 'GET':
         if request.user.is_staff:
             queryset = Cita.objects.select_related(
@@ -47,15 +49,15 @@ def cita_list(request):
         return _book_appointment(request)
 
 
+@extend_schema(
+    tags=['Citas'],
+    summary='Obtener / eliminar cita',
+    responses={200: CitaSerializer, 204: None},
+)
 @api_view(['GET', 'DELETE'])
 @permission_classes([IsAuthenticated])
 def cita_detail(request, pk):
-    """
-    Retrieve or delete a cita.
-
-    GET: Returns the cita details.
-    DELETE: Deletes the cita (admin only).
-    """
+    """Retrieve or delete a cita."""
     try:
         cita = Cita.objects.select_related(
             'paciente', 'medico', 'horario', 'estado'
@@ -80,16 +82,15 @@ def cita_detail(request, pk):
         return Response(status=status.HTTP_204_NO_CONTENT)
 
 
+@extend_schema(
+    tags=['Citas'],
+    summary='Cancelar cita',
+    responses={200: CitaSerializer, 400: None},
+)
 @api_view(['POST'])
 @permission_classes([IsAuthenticated])
 def cancelar_cita(request, pk):
-    """
-    Cancel an appointment (atomic operation).
-
-    Validates that the appointment is at least 24 hours in the future.
-    Updates Cita estado to 'cancelada' and sets Horario.disponible=True.
-    Sends cancellation emails to both patient and doctor.
-    """
+    """Cancel an appointment (atomic operation)."""
     try:
         cita = Cita.objects.select_related(
             'horario', 'estado', 'paciente__usuario', 'medico__usuario'
@@ -213,3 +214,42 @@ def _send_appointment_cancelled(cita, cancelled_by):
         context=context,
         recipient_list=[cita.medico.usuario.correo],
     )
+
+
+@extend_schema(
+    tags=['Citas'],
+    summary='Descargar comprobante PDF',
+    responses={200: None, 404: None},
+)
+@api_view(['GET'])
+@permission_classes([IsAuthenticated])
+def comprobante_pdf(request, pk):
+    """Download a PDF receipt for an appointment."""
+    try:
+        cita = Cita.objects.select_related(
+            'paciente__usuario', 'medico__usuario',
+            'horario', 'estado',
+        ).get(pk=pk)
+    except Cita.DoesNotExist:
+        return Response(
+            {'detail': _('Cita no encontrada.')},
+            status=status.HTTP_404_NOT_FOUND,
+        )
+
+    can_access = (
+        request.user.is_staff
+        or cita.paciente.usuario == request.user
+        or cita.medico.usuario == request.user
+    )
+    if not can_access:
+        return Response(
+            {'detail': _('No tienes permiso para acceder a este comprobante.')},
+            status=status.HTTP_403_FORBIDDEN,
+        )
+
+    pdf_bytes = generar_comprobante_cita(cita)
+    filename = f'comprobante_cita_{pk}.pdf'
+
+    return HttpResponse(pdf_bytes, content_type='application/pdf', headers={
+        'Content-Disposition': f'attachment; filename="{filename}"',
+    })

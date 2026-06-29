@@ -46,12 +46,15 @@ INSTALLED_APPS = [
     # Third-party
     'rest_framework',
     'rest_framework_simplejwt',
+    'drf_spectacular',
     # Local apps
     'core',
     'accounts',
     'especialidades',
     'medicos',
     'citas',
+    'expedientes',
+    'notificaciones',
 ]
 
 MIDDLEWARE = [
@@ -174,6 +177,19 @@ REST_FRAMEWORK = {
         'rest_framework.renderers.JSONRenderer',
         'rest_framework.renderers.BrowsableAPIRenderer',
     ),
+    'DEFAULT_SCHEMA_CLASS': 'drf_spectacular.openapi.AutoSchema',
+}
+
+
+# drf-spectacular (Swagger/OpenAPI)
+# https://drf-spectacular.readthedocs.io/
+
+SPECTACULAR_SETTINGS = {
+    'TITLE': 'Medisync API',
+    'DESCRIPTION': 'API de gestión de citas médicas',
+    'VERSION': '1.0.0',
+    'SERVE_INCLUDE_SCHEMA': False,
+    'SCHEMA_PATH_PREFIX': '/api/',
 }
 
 
