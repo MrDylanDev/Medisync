@@ -2,6 +2,8 @@ from django.contrib import admin
 from django.contrib.auth import views as auth_views
 from django.urls import path, include, reverse_lazy
 
+from accounts import views as accounts_views
+from citas import views as citas_views
 from accounts import views_frontend
 from accounts.forms import EmailAuthenticationForm
 from core import views as core_views
@@ -69,4 +71,23 @@ urlpatterns = [
     path('api/especialidades/', include('especialidades.urls')),
     path('api/medicos/', include('medicos.urls')),
     path('api/citas/', include('citas.urls')),
+
+    # API — expedientes
+    path('api/expedientes/', include('expedientes.urls')),
+
+    # API — notificaciones
+    path('api/notificaciones/', include('notificaciones.urls')),
+
+    # API — admin
+    path('api/admin/usuarios/', accounts_views.admin_usuarios_list, name='admin-usuarios-list'),
+    path('api/admin/usuarios/<int:pk>/bloquear/', accounts_views.admin_bloquear_usuario, name='admin-usuario-bloquear'),
+    path('api/admin/usuarios/<int:pk>/activar/', accounts_views.admin_activar_usuario, name='admin-usuario-activar'),
+    path('api/admin/usuarios/<int:pk>/eliminar/', accounts_views.admin_eliminar_usuario, name='admin-usuario-eliminar'),
+
+    # PDF comprobante
+    path('api/citas/<int:pk>/comprobante/', citas_views.comprobante_pdf),
+
+
+    # API — Swagger
+    path('api/schema/', include('core.urls_swagger')),
 ]
