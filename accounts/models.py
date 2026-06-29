@@ -36,6 +36,14 @@ class Usuario(AbstractUser):
         blank=True,
         help_text=_('Número de teléfono de contacto'),
     )
+    documento = models.CharField(
+        _('documento'),
+        max_length=30,
+        unique=True,
+        blank=True,
+        null=True,
+        help_text=_('Documento de identidad'),
+    )
     rol = models.CharField(
         _('rol'),
         max_length=20,

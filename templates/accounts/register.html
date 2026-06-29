@@ -63,6 +63,21 @@
             </div>
 
             <div class="field">
+              <label class="label" for="id_documento">Documento</label>
+              <div class="control">
+                <input class="input {% if errors.documento %}is-danger{% endif %}"
+                       type="text"
+                       name="documento"
+                       id="id_documento"
+                       placeholder="DNI, CE, etc."
+                       value="{{ form_data.documento|default:'' }}">
+              </div>
+              {% if errors.documento %}
+              <p class="help is-danger">{{ errors.documento }}</p>
+              {% endif %}
+            </div>
+
+            <div class="field">
               <label class="label" for="id_telefono">Teléfono</label>
               <div class="control">
                 <input class="input"

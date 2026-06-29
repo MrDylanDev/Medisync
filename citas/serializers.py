@@ -21,9 +21,13 @@ class CitaSerializer(serializers.ModelSerializer):
         fields = [
             'id', 'paciente', 'medico', 'horario',
             'estado', 'estado_nombre', 'motivo', 'notas',
+            'cancelada_por', 'fecha_cancelacion',
             'created_at', 'updated_at',
         ]
-        read_only_fields = ['created_at', 'updated_at']
+        read_only_fields = [
+            'cancelada_por', 'fecha_cancelacion',
+            'created_at', 'updated_at',
+        ]
 
     def validate_horario(self, value):
         """Ensure the horario is available for booking."""
