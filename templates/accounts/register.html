@@ -3,154 +3,447 @@
 
 {% block title %}Registro — {{ app_name }}{% endblock %}
 
-{% block content %}
-<section class="section">
+{% block navbar %}
+<header id="landingNavbar" class="navbar landing-navbar scrolled" role="navigation">
   <div class="container">
-    <div class="columns is-centered">
-      <div class="column is-6-tablet is-5-desktop is-4-widescreen">
-        <div class="box">
-          <h1 class="title has-text-centered">Crear Cuenta</h1>
-
-          <form method="post" novalidate>
-            {% csrf_token %}
-
-            <div class="field">
-              <label class="label" for="id_correo">Correo electrónico</label>
-              <div class="control">
-                <input class="input {% if errors.correo %}is-danger{% endif %}"
-                       type="email"
-                       name="correo"
-                       id="id_correo"
-                       placeholder="correo@ejemplo.com"
-                       required
-                       value="{{ form_data.correo|default:'' }}">
-              </div>
-              {% if errors.correo %}
-              <p class="help is-danger">{{ errors.correo }}</p>
-              {% endif %}
-            </div>
-
-            <div class="field">
-              <label class="label" for="id_nombre">Nombre</label>
-              <div class="control">
-                <input class="input {% if errors.nombre %}is-danger{% endif %}"
-                       type="text"
-                       name="nombre"
-                       id="id_nombre"
-                       placeholder="Tu nombre"
-                       required
-                       value="{{ form_data.nombre|default:'' }}">
-              </div>
-              {% if errors.nombre %}
-              <p class="help is-danger">{{ errors.nombre }}</p>
-              {% endif %}
-            </div>
-
-            <div class="field">
-              <label class="label" for="id_apellido">Apellido</label>
-              <div class="control">
-                <input class="input {% if errors.apellido %}is-danger{% endif %}"
-                       type="text"
-                       name="apellido"
-                       id="id_apellido"
-                       placeholder="Tu apellido"
-                       required
-                       value="{{ form_data.apellido|default:'' }}">
-              </div>
-              {% if errors.apellido %}
-              <p class="help is-danger">{{ errors.apellido }}</p>
-              {% endif %}
-            </div>
-
-            <div class="field">
-              <label class="label" for="id_documento">Documento</label>
-              <div class="control">
-                <input class="input {% if errors.documento %}is-danger{% endif %}"
-                       type="text"
-                       name="documento"
-                       id="id_documento"
-                       placeholder="DNI, CE, etc."
-                       value="{{ form_data.documento|default:'' }}">
-              </div>
-              {% if errors.documento %}
-              <p class="help is-danger">{{ errors.documento }}</p>
-              {% endif %}
-            </div>
-
-            <div class="field">
-              <label class="label" for="id_telefono">Teléfono</label>
-              <div class="control">
-                <input class="input"
-                       type="tel"
-                       name="telefono"
-                       id="id_telefono"
-                       placeholder="Opcional"
-                       value="{{ form_data.telefono|default:'' }}">
-              </div>
-            </div>
-
-            <div class="field">
-              <label class="label">Rol</label>
-              <div class="control">
-                <div class="select is-fullwidth {% if errors.rol %}is-danger{% endif %}">
-                  <select name="rol">
-                    <option value="paciente" {% if form_data.rol == 'paciente' or not form_data.rol %}selected{% endif %}>Paciente</option>
-                    <option value="medico" {% if form_data.rol == 'medico' %}selected{% endif %}>Médico</option>
-                  </select>
-                </div>
-              </div>
-              {% if errors.rol %}
-              <p class="help is-danger">{{ errors.rol }}</p>
-              {% endif %}
-            </div>
-
-            <hr>
-
-            <div class="field">
-              <label class="label" for="id_password">Contraseña</label>
-              <div class="control">
-                <input class="input {% if errors.password %}is-danger{% endif %}"
-                       type="password"
-                       name="password"
-                       id="id_password"
-                       placeholder="Mínimo 8 caracteres"
-                       required>
-              </div>
-              {% if errors.password %}
-              <p class="help is-danger">{{ errors.password }}</p>
-              {% endif %}
-            </div>
-
-            <div class="field">
-              <label class="label" for="id_password_confirm">Confirmar contraseña</label>
-              <div class="control">
-                <input class="input {% if errors.password_confirm %}is-danger{% endif %}"
-                       type="password"
-                       name="password_confirm"
-                       id="id_password_confirm"
-                       placeholder="Repetí la contraseña"
-                       required>
-              </div>
-              {% if errors.password_confirm %}
-              <p class="help is-danger">{{ errors.password_confirm }}</p>
-              {% endif %}
-            </div>
-
-            <div class="field mt-5">
-              <button class="button is-primary is-fullwidth" type="submit">
-                Crear Cuenta
-              </button>
-            </div>
-          </form>
-
-          <hr>
-
-          <div class="has-text-centered">
-            <p class="is-size-7">¿Ya tenés cuenta? <a href="{% url 'login' %}">Iniciá sesión</a></p>
-          </div>
-        </div>
+    <div class="navbar-brand">
+      <a class="navbar-item" href="{% url 'home' %}">
+        <span class="brand-mark"></span>
+        <span class="brand-text">Medisync</span>
+      </a>
+      <a role="button" class="navbar-burger" aria-label="menu" data-target="landingMenu">
+        <span></span><span></span><span></span>
+      </a>
+    </div>
+    <div id="landingMenu" class="navbar-menu">
+      <div class="navbar-end">
+        <a class="navbar-item" href="{% url 'home' %}#servicios">Servicios</a>
+        <a class="navbar-item" href="{% url 'home' %}#nosotros">Nosotros</a>
+        <a class="navbar-item" href="{% url 'home' %}#medicos">Médicos</a>
+        <a class="navbar-item" href="{% url 'home' %}#testimonios">Testimonios</a>
+        <span class="navbar-item">
+          <a href="{% url 'home' %}" class="button is-outlined is-small nav-btn-outlined">Iniciar Sesión</a>
+        </span>
+        <span class="navbar-item">
+          <a href="{% url 'home' %}#contacto" class="button is-small nav-btn-primary">Agendar Cita</a>
+        </span>
       </div>
     </div>
   </div>
-</section>
+</header>
+{% endblock %}
+
+{% block footer %}{% endblock %}
+
+{% block extra_head %}
+<link rel="stylesheet" href="{% static 'css/landing.css' %}">
+{% static "images/register-bg.jpg" as register_bg %}
+<style>
+.register-split {
+  min-height: calc(100vh - 4rem);
+  display: flex;
+  margin-top: 4rem;
+}
+
+html, body, main, .landing-page {
+  padding: 0 !important;
+  margin: 0 !important;
+}
+
+.landing-navbar.scrolled {
+  background: #fff !important;
+  backdrop-filter: none !important;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.08);
+}
+
+.landing-navbar .navbar-menu {
+  background: #fff !important;
+}
+
+.register-visual {
+  flex: 0 0 45%;
+  position: relative;
+  background-color: #0B4F7C;
+  background-image: url('{{ register_bg }}');
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.register-visual-overlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(135deg, rgba(11,79,124,0.92), rgba(14,154,167,0.85));
+}
+
+.register-visual-content {
+  position: relative;
+  z-index: 2;
+  text-align: center;
+  color: #fff;
+  padding: 2rem;
+}
+
+.register-visual-content .brand-icon {
+  font-size: 3rem;
+  margin-bottom: 1rem;
+}
+
+.register-visual-content h2 {
+  font-family: 'Playfair Display', serif;
+  font-size: 2.2rem;
+  font-weight: 700;
+  margin-bottom: 0.75rem;
+}
+
+.register-visual-content p {
+  font-size: 1.05rem;
+  opacity: 0.9;
+  max-width: 320px;
+  margin: 0 auto;
+  line-height: 1.6;
+}
+
+.register-form-wrap {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 2rem;
+  background: #f8faff;
+}
+
+.register-form-inner {
+  width: 100%;
+  max-width: 440px;
+}
+
+.register-form-inner h1 {
+  font-family: 'Playfair Display', serif;
+  font-size: 1.8rem;
+  color: var(--brand-primary, #0B4F7C);
+  margin-bottom: 0.25rem;
+}
+
+.register-form-inner > p {
+  color: var(--brand-muted, #8FA3B8);
+  font-size: 0.9rem;
+  margin-bottom: 1.5rem;
+}
+
+.register-form-inner .field .label {
+  font-size: 0.8125rem;
+  color: var(--brand-dark, #1A2332);
+}
+
+.register-form-inner .input,
+.register-form-inner .select select {
+  border-radius: 8px;
+  border: 1.5px solid var(--brand-border, #E8EEF4);
+  font-size: 0.875rem;
+  height: 2.6rem;
+  transition: border-color 0.2s;
+  background: #fff;
+  color: #1A2332;
+}
+
+.register-form-inner .input::placeholder,
+.register-form-inner .select select::placeholder {
+  color: #c5d1de;
+}
+
+.register-form-inner .input:focus,
+.register-form-inner .select select:focus {
+  border-color: var(--brand-primary, #0B4F7C);
+  box-shadow: 0 0 0 3px rgba(11,79,124,0.1);
+}
+
+.register-form-inner .button.is-primary {
+  background: linear-gradient(135deg, var(--brand-primary, #0B4F7C), var(--brand-secondary, #0E9AA7));
+  border: none;
+  height: 2.8rem;
+  font-weight: 600;
+  border-radius: 8px;
+  transition: box-shadow 0.2s;
+}
+
+.register-form-inner .button.is-primary:hover {
+  box-shadow: 0 4px 15px rgba(11,79,124,0.35);
+}
+
+.doctor-fields {
+  background: #f0f7ff;
+  border: 1.5px solid #d4e6f8;
+  border-radius: 10px;
+  padding: 1.25rem;
+  margin: 1rem 0;
+}
+
+.doctor-fields-heading {
+  font-size: 0.85rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--brand-primary, #0B4F7C);
+  margin-bottom: 1rem;
+}
+
+.doctor-fields-heading i {
+  margin-right: 0.4rem;
+}
+
+.doctor-fields .textarea {
+  font-size: 0.875rem;
+  border-radius: 8px;
+  border: 1.5px solid var(--brand-border, #E8EEF4);
+  transition: border-color 0.2s;
+  background: #fff;
+  color: #1A2332;
+}
+
+.doctor-fields .textarea::placeholder {
+  color: #c5d1de;
+}
+
+.doctor-fields .textarea:focus {
+  border-color: var(--brand-primary, #0B4F7C);
+  box-shadow: 0 0 0 3px rgba(11,79,124,0.1);
+}
+
+.doctor-fields .input {
+  background: #fff;
+}
+
+@media (max-width: 768px) {
+  .register-split { flex-direction: column; }
+  .register-visual { flex: none; min-height: 30vh; }
+  .register-visual-content h2 { font-size: 1.6rem; }
+  .register-visual-content .brand-icon { font-size: 2rem; }
+  .register-form-wrap { min-height: auto; padding: 1.5rem; }
+}
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="register-split">
+  <div class="register-visual">
+    <div class="register-visual-overlay"></div>
+    <div class="register-visual-content">
+      <div class="brand-icon"><i class="fas fa-heart-pulse"></i></div>
+      <h2>Medisync</h2>
+      <p>Creá tu cuenta y accedé a turnos médicos online de forma rápida y segura.</p>
+    </div>
+  </div>
+
+  <div class="register-form-wrap">
+    <div class="register-form-inner">
+      <h1>Crear Cuenta</h1>
+      <p>Completá tus datos para registrarte</p>
+
+      {% if errors.non_field %}
+      <div class="notification is-danger is-light">{{ errors.non_field }}</div>
+      {% endif %}
+
+      <form method="post" novalidate>
+        {% csrf_token %}
+
+        <div class="columns is-multiline is-mobile">
+          <div class="column is-6">
+            <div class="field">
+              <label class="label">Nombre</label>
+              <div class="control has-icons-left">
+                <input class="input {% if errors.nombre %}is-danger{% endif %}"
+                       type="text" name="nombre" id="id_nombre"
+                       placeholder="Nombre" required
+                       value="{{ form_data.nombre|default:'' }}">
+                <span class="icon is-small is-left"><i class="fas fa-user"></i></span>
+              </div>
+              {% if errors.nombre %}<p class="help is-danger">{{ errors.nombre }}</p>{% endif %}
+            </div>
+          </div>
+          <div class="column is-6">
+            <div class="field">
+              <label class="label">Apellido</label>
+              <div class="control has-icons-left">
+                <input class="input {% if errors.apellido %}is-danger{% endif %}"
+                       type="text" name="apellido" id="id_apellido"
+                       placeholder="Apellido" required
+                       value="{{ form_data.apellido|default:'' }}">
+                <span class="icon is-small is-left"><i class="fas fa-user"></i></span>
+              </div>
+              {% if errors.apellido %}<p class="help is-danger">{{ errors.apellido }}</p>{% endif %}
+            </div>
+          </div>
+        </div>
+
+        <div class="field">
+          <label class="label">Correo electrónico</label>
+          <div class="control has-icons-left">
+            <input class="input {% if errors.correo %}is-danger{% endif %}"
+                   type="email" name="correo" id="id_correo"
+                   placeholder="correo@ejemplo.com" required
+                   value="{{ form_data.correo|default:'' }}">
+            <span class="icon is-small is-left"><i class="fas fa-envelope"></i></span>
+          </div>
+          {% if errors.correo %}<p class="help is-danger">{{ errors.correo }}</p>{% endif %}
+        </div>
+
+        <div class="columns is-multiline is-mobile">
+          <div class="column is-6">
+            <div class="field">
+              <label class="label">Documento</label>
+              <div class="control has-icons-left">
+                <input class="input {% if errors.documento %}is-danger{% endif %}"
+                       type="text" name="documento" id="id_documento"
+                       placeholder="DNI, CE" value="{{ form_data.documento|default:'' }}">
+                <span class="icon is-small is-left"><i class="fas fa-id-card"></i></span>
+              </div>
+              {% if errors.documento %}<p class="help is-danger">{{ errors.documento }}</p>{% endif %}
+            </div>
+          </div>
+          <div class="column is-6">
+            <div class="field">
+              <label class="label">Teléfono</label>
+              <div class="control has-icons-left">
+                <input class="input" type="tel" name="telefono" id="id_telefono"
+                       placeholder="Opcional" value="{{ form_data.telefono|default:'' }}">
+                <span class="icon is-small is-left"><i class="fas fa-phone"></i></span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="field">
+          <label class="label">Rol</label>
+          <div class="control">
+            <div class="select is-fullwidth {% if errors.rol %}is-danger{% endif %}">
+              <select name="rol">
+                <option value="paciente" {% if form_data.rol == 'paciente' or not form_data.rol %}selected{% endif %}>Paciente</option>
+                <option value="medico" {% if form_data.rol == 'medico' %}selected{% endif %}>Médico</option>
+              </select>
+            </div>
+          </div>
+          {% if errors.rol %}<p class="help is-danger">{{ errors.rol }}</p>{% endif %}
+        </div>
+
+        <div id="doctorFields" class="doctor-fields" {% if form_data.rol != 'medico' %}style="display:none"{% endif %}>
+          <div class="doctor-fields-heading"><i class="fas fa-stethoscope"></i> Datos Profesionales</div>
+          <div class="field">
+            <label class="label">N° Matrícula <span class="has-text-danger">*</span></label>
+            <div class="control has-icons-left">
+              <input class="input {% if errors.numero_matricula %}is-danger{% endif %}"
+                     type="text" name="numero_matricula" id="id_numero_matricula"
+                     placeholder="Ej: MN 123456"
+                     value="{{ form_data.numero_matricula|default:'' }}">
+              <span class="icon is-small is-left"><i class="fas fa-id-card"></i></span>
+            </div>
+            {% if errors.numero_matricula %}<p class="help is-danger">{{ errors.numero_matricula }}</p>{% endif %}
+          </div>
+          <div class="field">
+            <label class="label">Información del consultorio</label>
+            <div class="control">
+              <textarea class="textarea" name="informacion_consultorio" id="id_informacion_consultorio"
+                        placeholder="Dirección y datos del consultorio (opcional)"
+                        rows="2">{{ form_data.informacion_consultorio|default:'' }}</textarea>
+            </div>
+          </div>
+          <div class="columns is-mobile">
+            <div class="column is-6">
+              <div class="field">
+                <label class="label">Precio consulta ($)</label>
+                <div class="control has-icons-left">
+                  <input class="input" type="number" step="0.01" min="0"
+                         name="precio_consulta" id="id_precio_consulta"
+                         placeholder="0.00"
+                         value="{{ form_data.precio_consulta|default:'' }}">
+                  <span class="icon is-small is-left"><i class="fas fa-dollar-sign"></i></span>
+                </div>
+              </div>
+            </div>
+            <div class="column is-6">
+              <div class="field" style="padding-top: 1.6rem;">
+                <label class="checkbox">
+                  <input type="checkbox" name="atencion_online" value="1"
+                         {% if form_data.atencion_online %}checked{% endif %}>
+                  <span style="font-size:0.875rem; margin-left:0.4rem;">Atención online</span>
+                </label>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <hr style="margin: 1rem 0;">
+
+        <div class="columns is-multiline is-mobile">
+          <div class="column is-6">
+            <div class="field">
+              <label class="label">Contraseña</label>
+              <div class="control has-icons-left">
+                <input class="input {% if errors.password %}is-danger{% endif %}"
+                       type="password" name="password" id="id_password"
+                       placeholder="Mín. 8 caracteres" required>
+                <span class="icon is-small is-left"><i class="fas fa-lock"></i></span>
+              </div>
+              {% if errors.password %}<p class="help is-danger">{{ errors.password }}</p>{% endif %}
+            </div>
+          </div>
+          <div class="column is-6">
+            <div class="field">
+              <label class="label">Confirmar</label>
+              <div class="control has-icons-left">
+                <input class="input {% if errors.password_confirm %}is-danger{% endif %}"
+                       type="password" name="password_confirm" id="id_password_confirm"
+                       placeholder="Repetila" required>
+                <span class="icon is-small is-left"><i class="fas fa-lock"></i></span>
+              </div>
+              {% if errors.password_confirm %}<p class="help is-danger">{{ errors.password_confirm }}</p>{% endif %}
+            </div>
+          </div>
+        </div>
+
+        <div class="field mt-4">
+          <button class="button is-primary is-fullwidth" type="submit">
+            Crear Cuenta
+          </button>
+        </div>
+      </form>
+
+      <div class="has-text-centered mt-4">
+        <p class="is-size-7">¿Ya tenés cuenta? <a href="{% url 'home' %}">Iniciá sesión</a></p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+  var navbar = document.getElementById('landingNavbar');
+  if (navbar) {
+    var burger = navbar.querySelector('.navbar-burger');
+    var menu = document.getElementById('landingMenu');
+    if (burger && menu) {
+      burger.addEventListener('click', function() {
+        burger.classList.toggle('is-active');
+        menu.classList.toggle('is-active');
+      });
+      menu.querySelectorAll('a').forEach(function(link) {
+        link.addEventListener('click', function() {
+          burger.classList.remove('is-active');
+          menu.classList.remove('is-active');
+        });
+      });
+    }
+  }
+
+  var rol = document.querySelector('select[name="rol"]');
+  var df = document.getElementById('doctorFields');
+  function toggle() {
+    df.style.display = rol.value === 'medico' ? 'block' : 'none';
+  }
+  if (rol && df) { rol.addEventListener('change', toggle); }
+});
+</script>
 {% endblock %}

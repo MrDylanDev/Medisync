@@ -7,15 +7,15 @@
 {% block dashboard_content %}
 <section class="section">
   <div class="container">
-    <div class="mb-4">
+    <div class="filter-buttons">
       <div class="buttons">
         <a href="{% url 'medicos:citas_agendadas' %}"
-          class="button is-small {% if not estado_filtro %}is-primary{% else %}is-light{% endif %}">
+          class="button is-small {% if not estado_filtro %}is-primary{% else %}is-primary is-light{% endif %}">
           Todas
         </a>
         {% for est in estados %}
         <a href="{% url 'medicos:citas_agendadas' %}?estado={{ est.nombre }}"
-          class="button is-small {% if estado_filtro == est.nombre %}is-primary{% else %}is-light{% endif %}">
+          class="button is-small {% if estado_filtro == est.nombre %}is-primary{% else %}is-primary is-light{% endif %}">
           {{ est.nombre|capfirst }}
         </a>
         {% endfor %}

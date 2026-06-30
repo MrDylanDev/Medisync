@@ -8,15 +8,23 @@
     <div class="columns is-centered">
       <div class="column is-6-tablet is-5-desktop">
         <div class="box">
-          <h1 class="title">Mi Perfil</h1>
+          <div class="has-text-centered mb-4">
+            <span class="icon is-large has-text-primary" style="font-size: 3rem;">
+              <i class="fas fa-user-circle"></i>
+            </span>
+            <h1 class="title is-4 mt-2">{{ usuario.nombre_completo }}</h1>
+            {% if usuario.rol == 'admin' %}
+            <span class="tag is-danger">Administrador</span>
+            {% elif usuario.rol == 'medico' %}
+            <span class="tag is-info">Médico</span>
+            {% else %}
+            <span class="tag is-success is-light">Paciente</span>
+            {% endif %}
+          </div>
 
           <div class="content">
             <table class="table is-fullwidth">
               <tbody>
-                <tr>
-                  <th>Nombre</th>
-                  <td>{{ usuario.nombre_completo }}</td>
-                </tr>
                 <tr>
                   <th>Correo</th>
                   <td>{{ usuario.correo }}</td>
@@ -26,16 +34,8 @@
                   <td>{{ usuario.telefono|default:"—" }}</td>
                 </tr>
                 <tr>
-                  <th>Rol</th>
-                  <td>
-                    {% if usuario.rol == 'admin' %}
-                    <span class="tag is-danger">Administrador</span>
-                    {% elif usuario.rol == 'medico' %}
-                    <span class="tag is-info">Médico</span>
-                    {% else %}
-                    <span class="tag is-success">Paciente</span>
-                    {% endif %}
-                  </td>
+                  <th>Documento</th>
+                  <td>{{ usuario.documento|default:"—" }}</td>
                 </tr>
                 <tr>
                   <th>Miembro desde</th>
@@ -45,7 +45,9 @@
             </table>
           </div>
 
-          <a href="{% url 'dashboard' %}" class="button is-light">Volver al Dashboard</a>
+          <div class="has-text-centered">
+            <a href="{% url 'dashboard' %}" class="button is-light">Volver al Dashboard</a>
+          </div>
         </div>
       </div>
     </div>

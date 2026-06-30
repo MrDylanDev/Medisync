@@ -7,13 +7,13 @@
 
 {% block title %}Medisync — Gestión de Citas Médicas Online{% endblock %}
 
-{# Landing has its own navbar with its own fixed positioning #}
 {% block navbar %}
-<header id="landingNavbar" class="navbar is-fixed-top landing-navbar" role="navigation">
+<header id="landingNavbar" class="navbar landing-navbar" role="navigation">
   <div class="container">
     <div class="navbar-brand">
-      <a class="navbar-item kimi-brand" href="#inicio">
-        Medisync
+      <a class="navbar-item" href="#hero">
+        <span class="brand-mark"></span>
+        <span class="brand-text">Medisync</span>
       </a>
       <a role="button" class="navbar-burger" aria-label="menu" data-target="landingMenu">
         <span></span><span></span><span></span>
@@ -21,400 +21,408 @@
     </div>
     <div id="landingMenu" class="navbar-menu">
       <div class="navbar-end">
-        <a class="navbar-item" href="#servicios">Servicios</a>
-        <a class="navbar-item" href="#nosotros">Nosotros</a>
-        <a class="navbar-item" href="#testimonios">Testimonios</a>
-        <a class="navbar-item" href="#contacto">Contacto</a>
-        <div class="navbar-item">
-          <a href="{% url 'login' %}" class="button is-light is-small mr-2">Iniciar Sesión</a>
-          <a href="#contacto" class="button btn-kimi-primary is-small">Agendar Cita</a>
-        </div>
+        <span class="navbar-item">
+          <a class="button is-outlined is-small nav-btn-outlined" onclick="openLoginModal()">Iniciar Sesión</a>
+        </span>
       </div>
     </div>
   </div>
 </header>
 {% endblock %}
 
-{# Landing has its own footer #}
 {% block footer %}{% endblock %}
 
 {% block content %}
 <div class="landing-page">
 
-<!-- ====== HERO ====== -->
-<section id="inicio" class="hero-kimi">
-  <div class="container" style="padding-top: 5rem;">
-    <div class="columns is-vcentered is-variable is-8">
-      <div class="column is-7-tablet is-6-desktop has-text-centered-touch">
-        <div class="mb-5">
-          <span class="hero-kimi-badge">Grupo Médico Especializado</span>
-        </div>
-        <h1 class="title is-1 kimi-heading mb-5" style="color: #1A2332; line-height: 1.1;">
-          Tu Salud en las<br><span class="text-gradient">Mejores Manos</span>
-        </h1>
-        <p class="subtitle is-5 mb-5" style="font-family: 'Inter', sans-serif; color: #4A5568; max-width: 480px;">
-          Más de 20 años brindando atención médica de excelencia con un equipo
-          de especialistas comprometidos con tu bienestar.
-        </p>
-        <div class="buttons is-centered-touch mb-6">
-          <a href="#contacto" class="button btn-kimi-primary is-medium">
-            <span class="icon"><i class="fas fa-calendar-check"></i></span>
-            <span>Agendar una Cita</span>
-          </a>
-          <a href="#servicios" class="button btn-kimi-outline is-medium">
-            <span>Nuestros Servicios</span>
-            <span class="icon"><i class="fas fa-arrow-right"></i></span>
-          </a>
-        </div>
-        <div class="is-flex is-align-items-center is-justify-content-center-touch" style="gap: 2rem;">
-          <div class="has-text-centered-touch">
-            <div class="hero-stat-value">{{ medicos_count|default:"15" }}+</div>
-            <div class="hero-stat-label">Especialistas</div>
-          </div>
-          <div class="hero-stat-divider is-hidden-mobile"></div>
-          <div class="has-text-centered-touch">
-            <div class="hero-stat-value">{{ especialidades_count|default:"10" }}+</div>
-            <div class="hero-stat-label">Especialidades</div>
-          </div>
-          <div class="hero-stat-divider is-hidden-mobile"></div>
-          <div class="has-text-centered-touch">
-            <div class="hero-stat-value">10,000+</div>
-            <div class="hero-stat-label">Pacientes</div>
+<!-- ====== LOGIN MODAL ====== -->
+<div id="loginModal" class="modal">
+  <div class="modal-background" onclick="closeLoginModal()"></div>
+  <div class="modal-card">
+    <header class="modal-card-head">
+      <p class="modal-card-title">Iniciar Sesión</p>
+      <button class="delete" onclick="closeLoginModal()"></button>
+    </header>
+    <section class="modal-card-body">
+      <form id="loginForm" method="post" action="{% url 'login' %}">
+        {% csrf_token %}
+        <input type="hidden" name="next" value="{{ request.path }}">
+        <div id="loginError" class="notification is-danger is-light" style="display:none"></div>
+        <div class="field">
+          <label class="label">Correo electrónico</label>
+          <div class="control has-icons-left">
+            <input class="input" type="email" name="username" placeholder="correo@ejemplo.com" required autofocus>
+            <span class="icon is-small is-left"><i class="fas fa-envelope"></i></span>
           </div>
         </div>
+        <div class="field">
+          <label class="label">Contraseña</label>
+          <div class="control has-icons-left">
+            <input class="input" type="password" name="password" placeholder="Contraseña" required>
+            <span class="icon is-small is-left"><i class="fas fa-lock"></i></span>
+          </div>
+        </div>
+        <div class="field">
+          <button class="button is-primary is-fullwidth" type="submit">Iniciar Sesión</button>
+        </div>
+      </form>
+      <div class="has-text-centered mt-4">
+        <a href="{% url 'password_reset' %}" class="is-size-7">¿Olvidaste tu contraseña?</a>
       </div>
-      <div class="column is-5-tablet is-5-desktop is-hidden-mobile">
-        <div class="is-relative" style="display: flex; justify-content: center;">
-          <div class="hero-circle hero-circle-1"></div>
-          <div class="hero-circle hero-circle-2"></div>
-          <div class="hero-image-card has-text-centered" style="position: relative; z-index: 10;">
-            <span class="icon has-text-white" style="font-size: 4rem;">
-              <i class="fas fa-calendar-check"></i>
-            </span>
-            <p class="has-text-white has-text-weight-semibold mt-3 is-size-5">
-              Turnos disponibles hoy
-            </p>
-            <p class="has-text-white is-size-7 mt-2">
-              Encontrá horarios con disponibilidad inmediata
-            </p>
+    </section>
+    <footer class="modal-card-foot has-text-centered">
+      <p class="is-size-7">¿No tenés cuenta? <a href="{% url 'register' %}">Registrate</a></p>
+    </footer>
+  </div>
+</div>
+
+<!-- ====== HERO ====== -->
+<section id="hero" class="l-hero">
+  <div class="l-hero-bg">
+    <div class="l-hero-overlay"></div>
+    <video class="l-hero-video is-active" autoplay muted playsinline poster="https://images.unsplash.com/photo-1631217868264-e5b90bb7e133?w=1600&q=80" data-idx="0">
+      <source src="{% static 'videos/hero-bg.mp4' %}" type="video/mp4">
+    </video>
+    <video class="l-hero-video" muted playsinline poster="https://images.unsplash.com/photo-1631217868264-e5b90bb7e133?w=1600&q=80" data-idx="1">
+      <source src="{% static 'videos/hero-bg-2.mp4' %}" type="video/mp4">
+    </video>
+    <video class="l-hero-video" muted playsinline poster="https://images.unsplash.com/photo-1631217868264-e5b90bb7e133?w=1600&q=80" data-idx="2">
+      <source src="{% static 'videos/hero-bg-3.mp4' %}" type="video/mp4">
+    </video>
+  </div>
+  <div class="l-hero-content">
+    <div class="container">
+      <div class="columns is-vcentered is-variable is-8">
+        <div class="column is-7">
+          <h1 class="hero-title">
+            Cuidamos de tu<br><span class="hero-title-accent">salud y bienestar</span>
+          </h1>
+          <p class="hero-desc">
+            Accedé a los mejores profesionales de la salud desde cualquier lugar.
+            Agendá tus citas online de forma rápida y segura.
+          </p>
+          <div class="hero-actions">
+            <a href="#contacto" class="button hero-btn-primary">
+              <span class="icon"><i class="fas fa-calendar-check"></i></span>
+              <span>Agendar Cita</span>
+            </a>
+            <a href="#medicos" class="button hero-btn-ghost">
+              <span>Conocé a los Especialistas</span>
+              <span class="icon"><i class="fas fa-arrow-right"></i></span>
+            </a>
+          </div>
+          <div class="hero-stats">
+            <div class="hero-stat">
+              <span class="hero-stat-value">{{ medicos_count|default:"15" }}+</span>
+              <span class="hero-stat-label">Especialistas</span>
+            </div>
+            <div class="hero-stat-dot"></div>
+            <div class="hero-stat">
+              <span class="hero-stat-value">{{ especialidades_count|default:"10" }}+</span>
+              <span class="hero-stat-label">Especialidades</span>
+            </div>
+            <div class="hero-stat-dot"></div>
+            <div class="hero-stat">
+              <span class="hero-stat-value">10k+</span>
+              <span class="hero-stat-label">Pacientes</span>
+            </div>
           </div>
         </div>
+        <div class="column is-5 is-hidden-mobile"></div>
       </div>
     </div>
   </div>
 </section>
 
 <!-- ====== SERVICIOS ====== -->
-<section id="servicios" class="section">
+<section id="servicios" class="l-section l-section-alt">
   <div class="container">
-    <div class="has-text-centered mb-6">
-      <span class="section-label mb-3" style="display: inline-block;">Nuestros Servicios</span>
-      <h2 class="section-title mb-4" style="color: #1A2332;">Atención Médica Integral</h2>
-      <p class="is-size-5" style="color: #4A5568; max-width: 600px; margin: 0 auto;">
-        Ofrecemos una amplia gama de especialidades médicas para cuidar de ti y tu familia.
-      </p>
+    <div class="l-section-header reveal">
+      <h2 class="l-title l-section-header-underline">Especialidades Médicas</h2>
+      <p class="l-desc">Ofrecemos una amplia gama de especialidades para cuidar tu salud integral.</p>
     </div>
 
     <div class="columns is-multiline is-variable is-3">
-      <div class="column is-6-tablet is-4-desktop">
-        <div class="service-card">
-          <div class="service-icon"><i class="fas fa-stethoscope"></i></div>
-          <h3 style="color: #1A2332; font-weight: 600; font-size: 1.125rem; margin-bottom: 0.5rem;">Medicina General</h3>
-          <p style="color: #4A5568; font-size: 0.875rem; line-height: 1.6; margin-bottom: 1rem;">Atención primaria, chequeos preventivos y tratamiento de enfermedades comunes para toda la familia.</p>
-          <a href="#contacto" class="service-link">Saber más <i class="fas fa-arrow-right"></i></a>
+      {% for s in especialidades %}
+      <div class="column is-6-tablet is-4-desktop reveal" style="transition-delay: 0.{{ forloop.counter }}s">
+        <div class="service-card-alt">
+          <div class="service-card-alt-icon">
+            {% if forloop.counter == 1 %}<i class="fas fa-stethoscope"></i>
+            {% elif forloop.counter == 2 %}<i class="fas fa-heart-pulse"></i>
+            {% elif forloop.counter == 3 %}<i class="fas fa-baby"></i>
+            {% elif forloop.counter == 4 %}<i class="fas fa-female"></i>
+            {% elif forloop.counter == 5 %}<i class="fas fa-bone"></i>
+            {% elif forloop.counter == 6 %}<i class="fas fa-hand-dots"></i>
+            {% else %}<i class="fas fa-hospital"></i>{% endif %}
+          </div>
+          <h3>{{ s.nombre }}</h3>
+          <p>{{ s.descripcion|truncatechars:120 }}</p>
         </div>
       </div>
-      <div class="column is-6-tablet is-4-desktop">
-        <div class="service-card">
-          <div class="service-icon"><i class="fas fa-heart-pulse"></i></div>
-          <h3 style="color: #1A2332; font-weight: 600; font-size: 1.125rem; margin-bottom: 0.5rem;">Cardiología</h3>
-          <p style="color: #4A5568; font-size: 0.875rem; line-height: 1.6; margin-bottom: 1rem;">Diagnóstico y tratamiento de enfermedades del corazón y sistema cardiovascular con tecnología avanzada.</p>
-          <a href="#contacto" class="service-link">Saber más <i class="fas fa-arrow-right"></i></a>
+      {% empty %}
+      {% for servicio in "123456"|make_list %}
+      <div class="column is-6-tablet is-4-desktop reveal" style="transition-delay: 0.{{ forloop.counter }}s">
+        <div class="service-card-alt">
+          <div class="service-card-alt-icon">
+            {% if forloop.counter == 1 %}<i class="fas fa-stethoscope"></i>
+            {% elif forloop.counter == 2 %}<i class="fas fa-heart-pulse"></i>
+            {% elif forloop.counter == 3 %}<i class="fas fa-baby"></i>
+            {% elif forloop.counter == 4 %}<i class="fas fa-female"></i>
+            {% elif forloop.counter == 5 %}<i class="fas fa-bone"></i>
+            {% else %}<i class="fas fa-hand-dots"></i>{% endif %}
+          </div>
+          <h3>
+            {% if forloop.counter == 1 %}Medicina General
+            {% elif forloop.counter == 2 %}Cardiología
+            {% elif forloop.counter == 3 %}Pediatría
+            {% elif forloop.counter == 4 %}Ginecología
+            {% elif forloop.counter == 5 %}Traumatología
+            {% else %}Dermatología{% endif %}
+          </h3>
+          <p>Atención especializada con profesionales de primer nivel. Cuidamos cada detalle de tu salud con calidez y compromiso.</p>
         </div>
       </div>
-      <div class="column is-6-tablet is-4-desktop">
-        <div class="service-card">
-          <div class="service-icon"><i class="fas fa-baby"></i></div>
-          <h3 style="color: #1A2332; font-weight: 600; font-size: 1.125rem; margin-bottom: 0.5rem;">Pediatría</h3>
-          <p style="color: #4A5568; font-size: 0.875rem; line-height: 1.6; margin-bottom: 1rem;">Cuidado integral de la salud de bebés, niños y adolescentes en un ambiente cálido y seguro.</p>
-          <a href="#contacto" class="service-link">Saber más <i class="fas fa-arrow-right"></i></a>
-        </div>
-      </div>
-      <div class="column is-6-tablet is-4-desktop">
-        <div class="service-card">
-          <div class="service-icon"><i class="fas fa-female"></i></div>
-          <h3 style="color: #1A2332; font-weight: 600; font-size: 1.125rem; margin-bottom: 0.5rem;">Ginecología</h3>
-          <p style="color: #4A5568; font-size: 0.875rem; line-height: 1.6; margin-bottom: 1rem;">Salud femenina, control prenatal, planificación familiar y acompañamiento en cada etapa.</p>
-          <a href="#contacto" class="service-link">Saber más <i class="fas fa-arrow-right"></i></a>
-        </div>
-      </div>
-      <div class="column is-6-tablet is-4-desktop">
-        <div class="service-card">
-          <div class="service-icon"><i class="fas fa-bone"></i></div>
-          <h3 style="color: #1A2332; font-weight: 600; font-size: 1.125rem; margin-bottom: 0.5rem;">Traumatología</h3>
-          <p style="color: #4A5568; font-size: 0.875rem; line-height: 1.6; margin-bottom: 1rem;">Tratamiento de lesiones óseas, articulares y musculares con enfoque en recuperación funcional.</p>
-          <a href="#contacto" class="service-link">Saber más <i class="fas fa-arrow-right"></i></a>
-        </div>
-      </div>
-      <div class="column is-6-tablet is-4-desktop">
-        <div class="service-card">
-          <div class="service-icon"><i class="fas fa-hand-dots"></i></div>
-          <h3 style="color: #1A2332; font-weight: 600; font-size: 1.125rem; margin-bottom: 0.5rem;">Dermatología</h3>
-          <p style="color: #4A5568; font-size: 0.875rem; line-height: 1.6; margin-bottom: 1rem;">Cuidado de la piel, diagnóstico y tratamiento de afecciones dermatológicas para todas las edades.</p>
-          <a href="#contacto" class="service-link">Saber más <i class="fas fa-arrow-right"></i></a>
-        </div>
-      </div>
+      {% endfor %}
+      {% endfor %}
     </div>
   </div>
 </section>
 
-<!-- ====== NOSOTROS ====== -->
-<section id="nosotros" class="section kimi-bg-light">
+<!-- ====== NUESTROS MÉDICOS ====== -->
+<section id="medicos" class="l-section l-section-alt">
+  <div class="container">
+    <div class="l-section-header reveal">
+      <h2 class="l-title l-section-header-underline">Nuestros Médicos</h2>
+      <p class="l-desc">Conocé al equipo de especialistas que cuida de vos y tu familia.</p>
+    </div>
+
+      {% for m in medicos %}
+      <div class="doctor-profile reveal">
+        <div class="doctor-profile-image">
+          <div class="doctor-profile-image-frame">
+            <img
+              src="{% cycle 'https://images.unsplash.com/photo-1612349317150-e413f6a5b16d?w=600&h=600&fit=crop&crop=face' 'https://images.unsplash.com/photo-1559839734-2b71ea197ec2?w=600&h=600&fit=crop&crop=face' 'https://images.unsplash.com/photo-1594824476967-48c8b964273f?w=600&h=600&fit=crop&crop=face' 'https://images.unsplash.com/photo-1622253692010-333f2da2031d?w=600&h=600&fit=crop&crop=face' 'https://images.unsplash.com/photo-1537368910025-700350fe46c7?w=600&h=600&fit=crop&crop=face' 'https://images.unsplash.com/photo-1582750433449-648ed127bb54?w=600&h=600&fit=crop&crop=face' %}"
+              alt="{{ m.usuario.nombre_completo }}" loading="lazy">
+            {% if m.atencion_online %}
+            <span class="doctor-profile-image-badge"><i class="fas fa-circle"></i> Disponible Online</span>
+            {% endif %}
+          </div>
+        </div>
+        <div class="doctor-profile-body">
+          <div class="doctor-profile-header">
+            <h3 class="doctor-profile-name">{{ m.usuario.nombre_completo }}</h3>
+            {% if m.atencion_online %}
+            <span class="doctor-profile-online"><i class="fas fa-circle"></i> Online</span>
+            {% endif %}
+          </div>
+          {% with especialidad=m.especialidades.first %}
+          {% if especialidad %}
+          <span class="doctor-profile-spec"><i class="fas fa-stethoscope"></i> {{ especialidad.especialidad.nombre }}</span>
+          {% endif %}
+          {% endwith %}
+          <div class="doctor-profile-meta">
+            <span class="doctor-profile-rating"><i class="fas fa-star"></i> {{ m.calificacion|floatformat:1|default:"4.5" }}</span>
+            <span class="doctor-profile-divider"></span>
+            <span>{{ pacientes_count|default:"1.2k" }}+ pacientes atendidos</span>
+          </div>
+          <div class="doctor-profile-stat-grid">
+            <div class="doctor-profile-stat-card">
+              <span class="doctor-profile-stat-card-icon"><i class="fas fa-calendar"></i></span>
+              <div>
+                <span class="doctor-profile-stat-card-value">{{ m.experiencia|default:"12" }}</span>
+                <span class="doctor-profile-stat-card-label">Años de experiencia</span>
+              </div>
+            </div>
+            <div class="doctor-profile-stat-card">
+              <span class="doctor-profile-stat-card-icon"><i class="fas fa-flask"></i></span>
+              <div>
+                <span class="doctor-profile-stat-card-value">{{ m.especialidades.all|length }}</span>
+                <span class="doctor-profile-stat-card-label">Especialidades</span>
+              </div>
+            </div>
+            <div class="doctor-profile-stat-card">
+              <span class="doctor-profile-stat-card-icon"><i class="fas fa-dollar-sign"></i></span>
+              <div>
+                <span class="doctor-profile-stat-card-value">${{ m.precio_consulta|default:"40" }}</span>
+                <span class="doctor-profile-stat-card-label">Valor consulta</span>
+              </div>
+            </div>
+          </div>
+          <div class="doctor-profile-bio-wrap">
+            <p class="doctor-profile-bio">Médico especialista comprometido con la excelencia clínica y el bienestar integral de sus pacientes. Con una trayectoria dedicada a brindar atención personalizada y de alta calidad, combinando experiencia y calidez humana en cada consulta.</p>
+          </div>
+          <div class="doctor-profile-details">
+            <span class="doctor-profile-detail"><i class="fas fa-graduation-cap"></i> {{ m.informacion_consultorio|default:"Universidad Nacional de Medicina"|truncatechars:35 }}</span>
+            <span class="doctor-profile-detail"><i class="fas fa-clock"></i> {{ m.horario_atencion|default:"Consultorio Central"|truncatechars:25 }}</span>
+          </div>
+          <a href="#contacto" class="button doctor-profile-btn"><i class="fas fa-calendar-check"></i> Agendar Consulta</a>
+        </div>
+      </div>
+      {% empty %}
+      {% with fallback_doctors="[]" %}
+      {% for dummy in "123"|make_list %}
+      <div class="doctor-profile reveal">
+        <div class="doctor-profile-image">
+          <div class="doctor-profile-image-frame">
+            {% if forloop.counter == 1 %}
+            <img src="{% static 'images/doctor-1.jpg' %}" alt="Dr. Martín Martínez">
+            {% elif forloop.counter == 2 %}
+            <img src="{% static 'images/doctor-2.jpg' %}" alt="Dra. Laura González">
+            {% else %}
+            <img src="{% static 'images/doctor-3.jpg' %}" alt="Dra. Ana Fernández">
+            {% endif %}
+            <span class="doctor-profile-image-badge"><i class="fas fa-circle"></i> Disponible Online</span>
+          </div>
+        </div>
+        <div class="doctor-profile-body">
+          <div class="doctor-profile-header">
+            {% if forloop.counter == 1 %}
+            <h3 class="doctor-profile-name">Dr. Martín Martínez</h3>
+            {% elif forloop.counter == 2 %}
+            <h3 class="doctor-profile-name">Dra. Laura González</h3>
+            {% else %}
+            <h3 class="doctor-profile-name">Dra. Ana Fernández</h3>
+            {% endif %}
+            <span class="doctor-profile-online"><i class="fas fa-circle"></i> Online</span>
+          </div>
+          {% if forloop.counter == 1 %}
+          <span class="doctor-profile-spec"><i class="fas fa-stethoscope"></i> Cardiología</span>
+          {% elif forloop.counter == 2 %}
+          <span class="doctor-profile-spec"><i class="fas fa-stethoscope"></i> Pediatría</span>
+          {% else %}
+          <span class="doctor-profile-spec"><i class="fas fa-stethoscope"></i> Dermatología</span>
+          {% endif %}
+          <div class="doctor-profile-meta">
+            <span class="doctor-profile-rating"><i class="fas fa-star"></i> 4.8</span>
+            <span class="doctor-profile-divider"></span>
+            <span>1.2k+ pacientes atendidos</span>
+          </div>
+          <div class="doctor-profile-stat-grid">
+            <div class="doctor-profile-stat-card">
+              <span class="doctor-profile-stat-card-icon"><i class="fas fa-calendar"></i></span>
+              <div>
+                <span class="doctor-profile-stat-card-value">15</span>
+                <span class="doctor-profile-stat-card-label">Años de experiencia</span>
+              </div>
+            </div>
+            <div class="doctor-profile-stat-card">
+              <span class="doctor-profile-stat-card-icon"><i class="fas fa-flask"></i></span>
+              <div>
+                <span class="doctor-profile-stat-card-value">2</span>
+                <span class="doctor-profile-stat-card-label">Especialidades</span>
+              </div>
+            </div>
+            <div class="doctor-profile-stat-card">
+              <span class="doctor-profile-stat-card-icon"><i class="fas fa-dollar-sign"></i></span>
+              <div>
+                <span class="doctor-profile-stat-card-value">$50</span>
+                <span class="doctor-profile-stat-card-label">Valor consulta</span>
+              </div>
+            </div>
+          </div>
+          <div class="doctor-profile-bio-wrap">
+            <p class="doctor-profile-bio">Médico especialista comprometido con la excelencia clínica y el bienestar integral de sus pacientes. Con una trayectoria dedicada a brindar atención personalizada y de alta calidad, combinando experiencia y calidez humana en cada consulta.</p>
+          </div>
+          <div class="doctor-profile-details">
+            <span class="doctor-profile-detail"><i class="fas fa-graduation-cap"></i> Universidad Nacional de Medicina</span>
+            <span class="doctor-profile-detail"><i class="fas fa-clock"></i> Consultorio Central</span>
+          </div>
+          <a href="#contacto" class="button doctor-profile-btn"><i class="fas fa-calendar-check"></i> Agendar Consulta</a>
+        </div>
+      </div>
+      {% endfor %}
+      {% endwith %}
+      {% endfor %}
+  </div>
+</section>
+
+<!-- ====== AGENDA TU CITA ====== -->
+<section id="contacto" class="l-section l-section-cta">
   <div class="container">
     <div class="columns is-vcentered is-variable is-8">
-      <div class="column is-6">
-        <div class="is-relative">
-          <div style="position: absolute; top: -1rem; left: -1rem; width: 100%; height: 100%; border-radius: 1.5rem; background: linear-gradient(135deg, rgba(11,79,124,0.08), rgba(14,154,167,0.08));"></div>
-          <div style="position: relative; z-index: 10; border-radius: 1.5rem; height: 300px; display: flex; align-items: center; justify-content: center; background: #f0f0f0;">
-            <span class="icon" style="font-size: 5rem; color: #c0c0c0;">
-              <i class="fas fa-user-doctor"></i>
-            </span>
-          </div>
-        </div>
-      </div>
-      <div class="column is-6">
-        <span class="section-label mb-3" style="display: inline-block;">Sobre Nosotros</span>
-        <h2 class="section-title mb-4" style="color: #1A2332;">Comprometidos con Tu Bienestar</h2>
-        <p class="is-size-5 mb-5" style="color: #4A5568; line-height: 1.7;">
-          Medisync nació con la misión de ofrecer atención médica de alta calidad,
-          accesible y humana. Nuestro equipo de especialistas trabaja de manera coordinada
-          para brindarte un cuidado integral.
-        </p>
+      <div class="column is-5 reveal">
+        <span class="l-label l-label-light">Contacto</span>
+        <h2 class="l-title l-title-light">Agendá tu Cita Hoy</h2>
+        <p class="l-desc l-desc-light">Completá el formulario y nos pondremos en contacto en menos de 24 horas para confirmar tu turno.</p>
 
-        <div class="mb-5">
-          <div class="is-flex is-align-items-center mb-3" style="gap: 0.75rem;">
-            <span class="feature-check"><i class="fas fa-check"></i></span>
-            <span style="font-weight: 500; color: #1A2332;">Tecnología de vanguardia en diagnóstico</span>
-          </div>
-          <div class="is-flex is-align-items-center mb-3" style="gap: 0.75rem;">
-            <span class="feature-check"><i class="fas fa-check"></i></span>
-            <span style="font-weight: 500; color: #1A2332;">Atención personalizada y seguimiento continuo</span>
-          </div>
-          <div class="is-flex is-align-items-center mb-3" style="gap: 0.75rem;">
-            <span class="feature-check"><i class="fas fa-check"></i></span>
-            <span style="font-weight: 500; color: #1A2332;">Instalaciones modernas y confortables</span>
-          </div>
-          <div class="is-flex is-align-items-center" style="gap: 0.75rem;">
-            <span class="feature-check"><i class="fas fa-check"></i></span>
-            <span style="font-weight: 500; color: #1A2332;">Convenios con las principales aseguradoras</span>
-          </div>
-        </div>
-
-        <div class="columns is-mobile is-multiline is-variable is-2">
-          <div class="column is-6">
-            <div class="stat-card">
-              <div class="stat-value">20+</div>
-              <div class="stat-label">Años de experiencia</div>
-            </div>
-          </div>
-          <div class="column is-6">
-            <div class="stat-card">
-              <div class="stat-value">{{ medicos_count|default:"15" }}</div>
-              <div class="stat-label">Especialistas</div>
-            </div>
-          </div>
-          <div class="column is-6">
-            <div class="stat-card">
-              <div class="stat-value">10,000+</div>
-              <div class="stat-label">Pacientes atendidos</div>
-            </div>
-          </div>
-          <div class="column is-6">
-            <div class="stat-card">
-              <div class="stat-value">98%</div>
-              <div class="stat-label">Satisfacción</div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- ====== TESTIMONIOS ====== -->
-<section id="testimonios" class="section">
-  <div class="container">
-    <div class="has-text-centered mb-6">
-      <span class="section-label mb-3" style="display: inline-block;">Testimonios</span>
-      <h2 class="section-title mb-4" style="color: #1A2332;">Lo que Dicen Nuestros Pacientes</h2>
-      <p class="is-size-5" style="color: #4A5568; max-width: 500px; margin: 0 auto;">
-        La confianza de nuestros pacientes es nuestro mayor orgullo.
-      </p>
-    </div>
-
-    <div class="columns is-multiline is-variable is-3">
-      <div class="column is-6-tablet is-4-desktop">
-        <div class="testimonial-card" style="position: relative;">
-          <div class="testimonial-quote">&ldquo;</div>
-          <div class="stars mt-4 mb-3">
-            <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i>
-          </div>
-          <p class="text mb-4">
-            &ldquo;El Dr. Martínez y su equipo me brindaron una atención excepcional durante mi tratamiento. Su profesionalidad y calidez humana marcaron la diferencia.&rdquo;
-          </p>
-          <div class="is-flex is-align-items-center" style="gap: 1rem; border-top: 1px solid #E8EEF4; padding-top: 1rem;">
-            <span class="icon is-large" style="color: #c0c0c0;"><i class="fas fa-user-circle fa-2x"></i></span>
+        <div class="cta-features">
+          <div class="cta-feature">
+            <span class="cta-feature-icon"><i class="fas fa-calendar-check"></i></span>
             <div>
-              <div style="font-weight: 600; color: #1A2332;">María González</div>
-              <div style="font-size: 0.8125rem; color: #8FA3B8;">52 años &middot; Paciente</div>
+              <strong>Confirmación rápida</strong>
+              <p>Respuesta en menos de 24 horas hábiles.</p>
             </div>
           </div>
-        </div>
-      </div>
-      <div class="column is-6-tablet is-4-desktop">
-        <div class="testimonial-card" style="position: relative;">
-          <div class="testimonial-quote">&ldquo;</div>
-          <div class="stars mt-4 mb-3">
-            <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i>
-          </div>
-          <p class="text mb-4">
-            &ldquo;Llevo a mis hijos a Medisync desde que nacieron. La pediatra es maravillosa, siempre paciente y dedicada con los más pequeños.&rdquo;
-          </p>
-          <div class="is-flex is-align-items-center" style="gap: 1rem; border-top: 1px solid #E8EEF4; padding-top: 1rem;">
-            <span class="icon is-large" style="color: #c0c0c0;"><i class="fas fa-user-circle fa-2x"></i></span>
+          <div class="cta-feature">
+            <span class="cta-feature-icon"><i class="fas fa-clock"></i></span>
             <div>
-              <div style="font-weight: 600; color: #1A2332;">Carlos Rodríguez</div>
-              <div style="font-size: 0.8125rem; color: #8FA3B8;">38 años &middot; Paciente</div>
+              <strong>Horarios flexibles</strong>
+              <p>Turnos mañana, tarde y fines de semana.</p>
             </div>
           </div>
-        </div>
-      </div>
-      <div class="column is-6-tablet is-4-desktop">
-        <div class="testimonial-card" style="position: relative;">
-          <div class="testimonial-quote">&ldquo;</div>
-          <div class="stars mt-4 mb-3">
-            <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i>
-          </div>
-          <p class="text mb-4">
-            &ldquo;Excelente servicio de ginecología. Instalaciones modernas, personal amable y tiempos de espera mínimos. Totalmente recomendado.&rdquo;
-          </p>
-          <div class="is-flex is-align-items-center" style="gap: 1rem; border-top: 1px solid #E8EEF4; padding-top: 1rem;">
-            <span class="icon is-large" style="color: #c0c0c0;"><i class="fas fa-user-circle fa-2x"></i></span>
+          <div class="cta-feature">
+            <span class="cta-feature-icon"><i class="fas fa-shield-check"></i></span>
             <div>
-              <div style="font-weight: 600; color: #1A2332;">Ana Fernández</div>
-              <div style="font-size: 0.8125rem; color: #8FA3B8;">45 años &middot; Paciente</div>
+              <strong>Sin compromiso</strong>
+              <p>Podés cancelar o reprogramar sin costo.</p>
             </div>
           </div>
         </div>
       </div>
-    </div>
-  </div>
-</section>
 
-<!-- ====== CONTACTO ====== -->
-<section id="contacto" class="section contact-section">
-  <div class="container">
-    <div class="columns is-vcentered is-variable is-8">
-      <div class="column is-5">
-        <span class="section-label mb-3" style="display: inline-block;">Contacto</span>
-        <h2 class="title is-2 kimi-heading mb-4" style="color: #fff;">Agenda tu Cita Hoy</h2>
-        <p class="mb-5" style="color: rgba(255,255,255,0.9); font-size: 1.1rem; line-height: 1.6; max-width: 400px;">
-          Estamos aquí para cuidar de ti. Completá el formulario y nuestro equipo se pondrá en contacto.
-        </p>
-
-        <div class="contact-badge mb-5" style="display: inline-flex; align-items: center;">
-          <span class="pulse-dot"></span>
-          Citas disponibles esta semana
-        </div>
-
-        <div class="mb-3 contact-info-item">
-          <span class="icon is-small mr-2"><i class="fas fa-location-dot"></i></span>
-          Av. de la Salud 123, Ciudad
-        </div>
-        <div class="mb-3 contact-info-item">
-          <span class="icon is-small mr-2"><i class="fas fa-phone"></i></span>
-          +54 11 4567-8900
-        </div>
-        <div class="mb-3 contact-info-item">
-          <span class="icon is-small mr-2"><i class="fas fa-envelope"></i></span>
-          info@medisync.com
-        </div>
-        <div class="contact-info-item">
-          <span class="icon is-small mr-2"><i class="fas fa-clock"></i></span>
-          Lun - Vie: 8:00 - 20:00 | Sáb: 9:00 - 14:00
-        </div>
-      </div>
-      <div class="column is-6 is-offset-1">
-        <div class="form-card">
+      <div class="column is-5 is-offset-2 reveal">
+        <div class="cta-form-card">
           <form method="post" action="#contacto">
             {% csrf_token %}
             <div class="field">
               <label class="label">Nombre completo</label>
-              <div class="control">
-                <input class="input" type="text" name="nombre" placeholder="Tu nombre completo" required>
-              </div>
-            </div>
-            <div class="columns is-multiline is-mobile">
-              <div class="column is-6">
-                <div class="field">
-                  <label class="label">Correo electrónico</label>
-                  <div class="control">
-                    <input class="input" type="email" name="correo" placeholder="tu@email.com" required>
-                  </div>
-                </div>
-              </div>
-              <div class="column is-6">
-                <div class="field">
-                  <label class="label">Teléfono</label>
-                  <div class="control">
-                    <input class="input" type="tel" name="telefono" placeholder="+54 11 0000-0000">
-                  </div>
-                </div>
-              </div>
-            </div>
-            <div class="columns is-multiline is-mobile">
-              <div class="column is-6">
-                <div class="field">
-                  <label class="label">Especialidad</label>
-                  <div class="control">
-                    <div class="select is-fullwidth">
-                      <select name="especialidad" required>
-                        <option value="">Seleccioná una especialidad</option>
-                        <option>Medicina General</option>
-                        <option>Cardiología</option>
-                        <option>Pediatría</option>
-                        <option>Ginecología</option>
-                        <option>Traumatología</option>
-                        <option>Dermatología</option>
-                        <option>Otra</option>
-                      </select>
-                    </div>
-                  </div>
-                </div>
-              </div>
-              <div class="column is-6">
-                <div class="field">
-                  <label class="label">Fecha preferida</label>
-                  <div class="control">
-                    <input class="input" type="date" name="fecha">
-                  </div>
-                </div>
+              <div class="control has-icons-left">
+                <input class="input" type="text" name="nombre" placeholder="Tu nombre" required>
+                <span class="icon is-small is-left"><i class="fas fa-user"></i></span>
               </div>
             </div>
             <div class="field">
-              <label class="label">Mensaje</label>
-              <div class="control">
-                <textarea class="textarea" name="mensaje" placeholder="Contanos brevemente el motivo de tu consulta..." rows="3"></textarea>
+              <label class="label">Correo electrónico</label>
+              <div class="control has-icons-left">
+                <input class="input" type="email" name="email" placeholder="correo@ejemplo.com" required>
+                <span class="icon is-small is-left"><i class="fas fa-envelope"></i></span>
               </div>
             </div>
-            <div class="field mt-4">
-              <button type="submit" class="button btn-kimi-green is-fullwidth is-medium">
-                Solicitar Cita
-              </button>
+            <div class="field">
+              <label class="label">Teléfono</label>
+              <div class="control has-icons-left">
+                <input class="input" type="tel" name="telefono" placeholder="+54 11 1234-5678" required>
+                <span class="icon is-small is-left"><i class="fas fa-phone"></i></span>
+              </div>
             </div>
-            <p class="has-text-centered is-size-7 mt-3" style="color: #4A5568;">
-              Nos pondremos en contacto en menos de 24 horas.
-            </p>
+            <div class="field">
+              <label class="label">Especialidad</label>
+              <div class="control has-icons-left">
+                <span class="select is-fullwidth" style="width: 100%;">
+                  <select name="especialidad" style="width: 100%;">
+                    <option value="">Seleccioná una especialidad</option>
+                    {% for s in especialidades %}
+                    <option value="{{ s.id }}">{{ s.nombre }}</option>
+                    {% endfor %}
+                  </select>
+                </span>
+                <span class="icon is-small is-left"><i class="fas fa-stethoscope"></i></span>
+              </div>
+            </div>
+            <div class="field">
+              <label class="label">Mensaje (opcional)</label>
+              <div class="control">
+                <textarea class="textarea" name="mensaje" placeholder="Contanos brevemente tu consulta..." rows="3"></textarea>
+              </div>
+            </div>
+            <div class="field mt-5">
+              <div class="control">
+                <button type="submit" class="button cta-form-btn is-fullwidth is-medium">
+                  <span class="icon"><i class="fas fa-paper-plane"></i></span>
+                  <span>Solicitar Cita</span>
+                </button>
+              </div>
+            </div>
           </form>
         </div>
       </div>
@@ -422,65 +430,192 @@
   </div>
 </section>
 
-<!-- ====== FOOTER ====== -->
-<footer class="landing-footer py-6">
+<!-- ====== SOBRE NOSOTROS ====== -->
+<section id="nosotros" class="l-section">
   <div class="container">
-    <div class="columns is-multiline is-variable is-8">
-      <div class="column is-4-tablet is-3-desktop">
-        <a href="#inicio" class="is-flex is-align-items-center mb-4" style="gap: 0.5rem;">
-          <span style="font-family: 'Playfair Display', serif; font-size: 1.25rem; font-weight: 700; color: #fff;">Medisync</span>
-        </a>
-        <p style="font-size: 0.875rem; line-height: 1.6; margin-bottom: 1.25rem;">
-          Sistema de gestión de citas médicas online. Conectamos pacientes con los mejores profesionales de la salud.
-        </p>
-        <div class="is-flex" style="gap: 0.5rem;">
-          <a href="#" class="social-icon" aria-label="Facebook"><i class="fab fa-facebook-f"></i></a>
-          <a href="#" class="social-icon" aria-label="Instagram"><i class="fab fa-instagram"></i></a>
-          <a href="#" class="social-icon" aria-label="Twitter"><i class="fab fa-x-twitter"></i></a>
-          <a href="#" class="social-icon" aria-label="LinkedIn"><i class="fab fa-linkedin-in"></i></a>
+    <div class="columns is-vcentered is-variable is-8">
+      <div class="column is-5 reveal">
+        <div class="about-visual">
+          <div class="about-visual-decor"></div>
+          <img src="https://images.unsplash.com/photo-1576091160399-112ba8d25d1d?w=600&h=400&fit=crop" alt="Consultorio" loading="lazy">
+          <div class="about-visual-badge">
+            <span class="about-visual-badge-value">20+</span>
+            <span class="about-visual-badge-label">Años de experiencia</span>
+          </div>
         </div>
       </div>
+      <div class="column is-6 is-offset-1 reveal">
+        <span class="l-label">Sobre Nosotros</span>
+        <h2 class="l-title l-section-header-underline">Comprometidos con tu Bienestar</h2>
+        <p class="l-desc" style="margin-bottom: 1.5rem;">Medisync nació con la misión de ofrecer atención médica de alta calidad, accesible y humana. Nuestro equipo de especialistas trabaja de manera coordinada para brindarte un cuidado integral.</p>
 
-      <div class="column is-4-tablet is-3-desktop">
-        <h4 class="mb-4" style="color: #fff; font-weight: 600;">Enlaces</h4>
-        <a href="#inicio" class="is-block mb-2" style="color: rgba(255,255,255,0.7); font-size: 0.875rem;">Inicio</a>
-        <a href="#servicios" class="is-block mb-2" style="color: rgba(255,255,255,0.7); font-size: 0.875rem;">Servicios</a>
-        <a href="#nosotros" class="is-block mb-2" style="color: rgba(255,255,255,0.7); font-size: 0.875rem;">Sobre Nosotros</a>
-        <a href="#testimonios" class="is-block mb-2" style="color: rgba(255,255,255,0.7); font-size: 0.875rem;">Testimonios</a>
-        <a href="#contacto" class="is-block mb-2" style="color: rgba(255,255,255,0.7); font-size: 0.875rem;">Contacto</a>
-      </div>
-
-      <div class="column is-4-tablet is-3-desktop">
-        <h4 class="mb-4" style="color: #fff; font-weight: 600;">Especialidades</h4>
-        <a href="#servicios" class="is-block mb-2" style="color: rgba(255,255,255,0.7); font-size: 0.875rem;">Medicina General</a>
-        <a href="#servicios" class="is-block mb-2" style="color: rgba(255,255,255,0.7); font-size: 0.875rem;">Cardiología</a>
-        <a href="#servicios" class="is-block mb-2" style="color: rgba(255,255,255,0.7); font-size: 0.875rem;">Pediatría</a>
-        <a href="#servicios" class="is-block mb-2" style="color: rgba(255,255,255,0.7); font-size: 0.875rem;">Ginecología</a>
-        <a href="#servicios" class="is-block mb-2" style="color: rgba(255,255,255,0.7); font-size: 0.875rem;">Traumatología</a>
-        <a href="#servicios" class="is-block mb-2" style="color: rgba(255,255,255,0.7); font-size: 0.875rem;">Dermatología</a>
-      </div>
-
-      <div class="column is-4-tablet is-3-desktop">
-        <h4 class="mb-4" style="color: #fff; font-weight: 600;">Contacto</h4>
-        <p style="font-size: 0.875rem; margin-bottom: 0.5rem; color: rgba(255,255,255,0.7);">Av. de la Salud 123, Ciudad</p>
-        <p style="font-size: 0.875rem; margin-bottom: 0.5rem;"><a href="tel:+541145678900" style="color: rgba(255,255,255,0.7);">+54 11 4567-8900</a></p>
-        <p style="font-size: 0.875rem; margin-bottom: 0.5rem;"><a href="mailto:info@medisync.com" style="color: rgba(255,255,255,0.7);">info@medisync.com</a></p>
+        <div class="about-features">
+          <div class="about-feature">
+            <span class="about-feature-icon"><i class="fas fa-microchip"></i></span>
+            <div>
+              <strong>Tecnología de vanguardia</strong>
+              <p>Equipamiento moderno para diagnósticos precisos.</p>
+            </div>
+          </div>
+          <div class="about-feature">
+            <span class="about-feature-icon"><i class="fas fa-user-heart"></i></span>
+            <div>
+              <strong>Atención personalizada</strong>
+              <p>Seguimiento continuo de cada paciente.</p>
+            </div>
+          </div>
+          <div class="about-feature">
+            <span class="about-feature-icon"><i class="fas fa-building"></i></span>
+            <div>
+              <strong>Instalaciones modernas</strong>
+              <p>Espacios confortables para tu bienestar.</p>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
 
-    <div style="border-top: 1px solid rgba(255,255,255,0.1); padding-top: 1.5rem; margin-top: 2rem;" class="is-flex is-justify-content-space-between is-align-items-center is-flex-wrap-wrap">
-      <p style="font-size: 0.75rem; color: rgba(255,255,255,0.5);">
-        &copy; {% now "Y" %} Medisync. Todos los derechos reservados.
-      </p>
-      <div style="display: flex; gap: 1.5rem; font-size: 0.75rem; color: rgba(255,255,255,0.5);">
-        <a href="#" style="color: rgba(255,255,255,0.5);">Política de Privacidad</a>
-        <a href="#" style="color: rgba(255,255,255,0.5);">Términos de Servicio</a>
+    <div class="about-stats reveal">
+      <div class="about-stat">
+        <i class="fas fa-calendar-check about-stat-icon"></i>
+        <span class="about-stat-value">20+</span>
+        <span class="about-stat-label">Años</span>
+      </div>
+      <div class="about-stat">
+        <i class="fas fa-user-md about-stat-icon"></i>
+        <span class="about-stat-value">{{ medicos_count|default:"15" }}</span>
+        <span class="about-stat-label">Especialistas</span>
+      </div>
+      <div class="about-stat">
+        <i class="fas fa-heart about-stat-icon"></i>
+        <span class="about-stat-value">10k+</span>
+        <span class="about-stat-label">Pacientes</span>
+      </div>
+      <div class="about-stat">
+        <i class="fas fa-star about-stat-icon"></i>
+        <span class="about-stat-value">98%</span>
+        <span class="about-stat-label">Satisfacción</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ====== TESTIMONIOS ====== -->
+<section id="testimonios" class="l-section">
+  <div class="container">
+    <div class="l-section-header reveal">
+      <h2 class="l-title l-section-header-underline">Lo que Dicen Nuestros Pacientes</h2>
+      <p class="l-desc">La confianza de nuestros pacientes es nuestro mayor orgullo.</p>
+    </div>
+
+    <div class="columns is-multiline is-variable is-3">
+      <div class="column is-6-tablet is-4-desktop reveal">
+        <div class="testimonial-card-alt">
+          <div class="testimonial-card-alt-stars">
+            <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i>
+          </div>
+          <p class="testimonial-card-alt-text">&ldquo;El Dr. Martínez y su equipo me brindaron una atención excepcional durante mi tratamiento. Su profesionalidad y calidez humana marcaron la diferencia.&rdquo;</p>
+          <div class="testimonial-card-alt-author">
+            <img src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=60&h=60&fit=crop&crop=face" alt="María González" loading="lazy">
+            <div>
+              <strong>María González</strong>
+              <span>52 años &middot; Paciente</span>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="column is-6-tablet is-4-desktop reveal">
+        <div class="testimonial-card-alt">
+          <div class="testimonial-card-alt-stars">
+            <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i>
+          </div>
+          <p class="testimonial-card-alt-text">&ldquo;Llevo a mis hijos a Medisync desde que nacieron. La pediatra es maravillosa, siempre paciente y dedicada con los más pequeños.&rdquo;</p>
+          <div class="testimonial-card-alt-author">
+            <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=60&h=60&fit=crop&crop=face" alt="Carlos Rodríguez" loading="lazy">
+            <div>
+              <strong>Carlos Rodríguez</strong>
+              <span>38 años &middot; Paciente</span>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="column is-6-tablet is-4-desktop reveal">
+        <div class="testimonial-card-alt">
+          <div class="testimonial-card-alt-stars">
+            <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i>
+          </div>
+          <p class="testimonial-card-alt-text">&ldquo;Excelente servicio de ginecología. Instalaciones modernas, personal amable y tiempos de espera mínimos. Totalmente recomendado.&rdquo;</p>
+          <div class="testimonial-card-alt-author">
+            <img src="https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=60&h=60&fit=crop&crop=face" alt="Ana Fernández" loading="lazy">
+            <div>
+              <strong>Ana Fernández</strong>
+              <span>45 años &middot; Paciente</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ====== FOOTER ====== -->
+<footer class="l-footer">
+  <div class="container">
+    <div class="columns is-multiline">
+      <div class="column is-4-desktop is-12-tablet">
+        <div class="l-footer-brand">
+          <span class="brand-mark"></span>
+          <span class="brand-text">Medisync</span>
+        </div>
+        <p class="l-footer-desc">Sistema de gestión de citas médicas online. Conectamos pacientes con los mejores profesionales de la salud.</p>
+        <div class="l-footer-social">
+          <a href="#" aria-label="Facebook"><i class="fab fa-facebook-f"></i></a>
+          <a href="#" aria-label="Instagram"><i class="fab fa-instagram"></i></a>
+          <a href="#" aria-label="X"><i class="fab fa-x-twitter"></i></a>
+          <a href="#" aria-label="LinkedIn"><i class="fab fa-linkedin-in"></i></a>
+        </div>
+      </div>
+      <div class="column is-2-desktop is-offset-1-desktop is-6-tablet">
+        <h4>Enlaces</h4>
+        <a href="#hero">Inicio</a>
+        <a href="#servicios">Servicios</a>
+        <a href="#nosotros">Nosotros</a>
+        <a href="#medicos">Médicos</a>
+        <a href="#testimonios">Testimonios</a>
+        <a href="#contacto">Contacto</a>
+      </div>
+      <div class="column is-2-desktop is-6-tablet">
+        <h4>Especialidades</h4>
+        <a href="#servicios">Medicina General</a>
+        <a href="#servicios">Cardiología</a>
+        <a href="#servicios">Pediatría</a>
+        <a href="#servicios">Ginecología</a>
+        <a href="#servicios">Traumatología</a>
+      </div>
+      <div class="column is-3-desktop is-12-tablet">
+        <h4>Contacto</h4>
+        <div class="l-footer-contact">
+          <i class="fas fa-location-dot"></i><span>Av. de la Salud 123, Ciudad</span>
+        </div>
+        <div class="l-footer-contact">
+          <i class="fas fa-phone"></i><span>+54 11 4567-8900</span>
+        </div>
+        <div class="l-footer-contact">
+          <i class="fas fa-envelope"></i><span>info@medisync.com</span>
+        </div>
+      </div>
+    </div>
+    <div class="l-footer-bottom">
+      <span>&copy; {% now "Y" %} Medisync. Todos los derechos reservados.</span>
+      <div>
+        <a href="#">Política de Privacidad</a>
+        <a href="#">Términos de Servicio</a>
       </div>
     </div>
   </div>
 </footer>
 
-</div><!-- /landing-page -->
+</div>
 {% endblock %}
 
 {% block extra_js %}
@@ -504,7 +639,7 @@ document.addEventListener('DOMContentLoaded', function() {
   });
 
   window.addEventListener('scroll', function() {
-    if (window.scrollY > 50) {
+    if (window.scrollY > 60) {
       navbar.classList.add('scrolled');
     } else {
       navbar.classList.remove('scrolled');
@@ -519,6 +654,78 @@ document.addEventListener('DOMContentLoaded', function() {
         target.scrollIntoView({ behavior: 'smooth' });
       }
     });
+  });
+
+  /* Cycle hero videos */
+  var videos = document.querySelectorAll('.l-hero-video');
+  var currentVideo = 0;
+
+  function cycleVideo() {
+    var old = videos[currentVideo];
+    currentVideo = (currentVideo + 1) % videos.length;
+    var next = videos[currentVideo];
+    old.classList.remove('is-active');
+    next.currentTime = 0;
+    next.play();
+    next.classList.add('is-active');
+  }
+
+  if (videos.length > 1) {
+    videos.forEach(function(v, i) {
+      v.addEventListener('ended', cycleVideo);
+    });
+  }
+
+  /* Profile scroll reveal uses the shared IntersectionObserver */
+
+  /* Scroll reveal */
+  var revealObserver = new IntersectionObserver(function(entries) {
+    entries.forEach(function(entry) {
+      if (entry.isIntersecting) {
+        entry.target.classList.add('is-visible');
+      }
+    });
+  }, { threshold: 0.1 });
+
+  document.querySelectorAll('.reveal').forEach(function(el) {
+    revealObserver.observe(el);
+  });
+
+  /* Login modal */
+  window.openLoginModal = function() {
+    document.getElementById('loginModal').classList.add('is-active');
+    document.getElementById('loginModal').querySelector('input[name="username"]').focus();
+  };
+
+  window.closeLoginModal = function() {
+    document.getElementById('loginModal').classList.remove('is-active');
+    document.getElementById('loginError').style.display = 'none';
+  };
+
+  document.getElementById('loginForm').addEventListener('submit', function(e) {
+    e.preventDefault();
+    var form = e.target;
+    var errorDiv = document.getElementById('loginError');
+    fetch(form.action, {
+      method: 'POST',
+      body: new FormData(form),
+      headers: { 'X-Requested-With': 'XMLHttpRequest' }
+    }).then(function(r) {
+      if (r.redirected) { window.location.href = r.url; return; }
+      return r.text();
+    }).then(function(html) {
+      if (html && html.indexOf('form') > -1) {
+        errorDiv.textContent = 'Correo o contraseña incorrectos. Intente nuevamente.';
+        errorDiv.style.display = 'block';
+      }
+    }).catch(function() {
+      errorDiv.textContent = 'Error de conexión. Intente nuevamente.';
+      errorDiv.style.display = 'block';
+    });
+  });
+
+  document.addEventListener('keydown', function(e) {
+    if (e.key === 'Escape') closeLoginModal();
   });
 });
 </script>
