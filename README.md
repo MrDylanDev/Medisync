@@ -194,4 +194,6 @@ Config en `pytest.ini` + `conftest.py`. Usa `config.test_settings` (SQLite in-me
 
 ---
 
+> 📖 Wiki completa en [github.com/MrDylanDev/Medisync/wiki](https://github.com/MrDylanDev/Medisync/wiki) — onboarding, flujos paciente/médico, troubleshooting, diagramas.
+
 
