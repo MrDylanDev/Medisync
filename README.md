@@ -194,12 +194,4 @@ Config en `pytest.ini` + `conftest.py`. Usa `config.test_settings` (SQLite in-me
 
 ---
 
-## Checklist para desarrollo
 
-- [ ] Migraciones creadas (`makemigrations`) y aplicadas (`migrate`)
-- [ ] Tests pasan (`pytest`)
-- [ ] Endpoints cubiertos: API (DRF) + frontend (template views)
-- [ ] Notificaciones se crean vía signals en los eventos clave
-- [ ] Lockout de login testeable (3 intentos, 15 min)
-- [ ] PDF de comprobante generable
-- [ ] Permisos chequeados por rol (paciente/medico/admin decorators)
