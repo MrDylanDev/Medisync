@@ -18,14 +18,10 @@ urlpatterns = [
     # Home
     path('', core_views.home, name='home'),
 
-    # Frontend — session-based auth
-    path('accounts/login/', auth_views.LoginView.as_view(
-        template_name='accounts/login.html',
-        authentication_form=EmailAuthenticationForm,
-        redirect_authenticated_user=True,
-    ), name='login'),
+    # Frontend — session-based auth (GET redirects to home, POST handled by modal)
+    path('accounts/login/', views_frontend.login_modal, name='login'),
     path('accounts/logout/', auth_views.LogoutView.as_view(
-        next_page='login',
+        next_page='home',
     ), name='logout'),
     path('accounts/register/', views_frontend.register, name='register'),
     path('accounts/profile/', views_frontend.profile, name='profile'),

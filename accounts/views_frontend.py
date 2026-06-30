@@ -8,8 +8,28 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.utils.translation import gettext_lazy as _
 from django.views.decorators.http import require_http_methods
 
+from citas.models import Cita
 from core.utils import send_template_email
-from .models import Usuario
+from especialidades.models import Especialidad
+
+from .models import Usuario, Medico as MedicoProfile
+from .forms import EmailAuthenticationForm
+from medicos.models import Medico as MedicoPractice
+
+
+from django.views.decorators.http import require_http_methods, require_POST
+
+
+@require_http_methods(["GET", "POST"])
+def login_modal(request):
+    if request.method == 'GET':
+        return redirect('home')
+    from django.contrib.auth.views import LoginView
+    return LoginView.as_view(
+        template_name='accounts/login.html',
+        authentication_form=EmailAuthenticationForm,
+        redirect_authenticated_user=True,
+    )(request)
 
 
 @require_http_methods(["GET", "POST"])
@@ -26,6 +46,10 @@ def register(request):
         password = request.POST.get('password', '')
         password_confirm = request.POST.get('password_confirm', '')
         rol = request.POST.get('rol', 'paciente')
+        numero_matricula = request.POST.get('numero_matricula', '').strip()
+        informacion_consultorio = request.POST.get('informacion_consultorio', '').strip()
+        precio_consulta = request.POST.get('precio_consulta', '').strip()
+        atencion_online = request.POST.get('atencion_online') == '1'
 
         errors = {}
 
@@ -57,6 +81,12 @@ def register(request):
         if rol not in ('paciente', 'medico'):
             errors['rol'] = _('Rol inválido.')
 
+        if rol == 'medico':
+            if not numero_matricula:
+                errors['numero_matricula'] = _('El número de matrícula es obligatorio para médicos.')
+            elif MedicoProfile.objects.filter(numero_matricula=numero_matricula).exists():
+                errors['numero_matricula'] = _('Esta matrícula ya está registrada.')
+
         if errors:
             return render(request, 'accounts/register.html', {
                 'errors': errors,
@@ -67,6 +97,10 @@ def register(request):
                     'telefono': telefono,
                     'documento': documento,
                     'rol': rol,
+                    'numero_matricula': numero_matricula,
+                    'informacion_consultorio': informacion_consultorio,
+                    'precio_consulta': precio_consulta,
+                    'atencion_online': atencion_online,
                 },
             })
 
@@ -79,7 +113,18 @@ def register(request):
             documento=documento or None,
             rol=rol,
         )
-        usuario.save()
+
+        if rol == 'medico':
+            MedicoProfile.objects.create(
+                usuario=usuario,
+                numero_matricula=numero_matricula,
+            )
+            MedicoPractice.objects.create(
+                usuario=usuario,
+                informacion_consultorio=informacion_consultorio,
+                precio_consulta=precio_consulta or 0,
+                atencion_online=atencion_online,
+            )
 
         auth_login(request, usuario)
 
@@ -110,7 +155,37 @@ def profile(request):
 def dashboard(request):
     if not request.user.is_authenticated:
         return redirect('login')
-    return render(request, 'dashboard/dashboard.html')
+
+    ctx = {}
+    u = request.user
+
+    if u.rol == 'paciente':
+        paciente = getattr(u, 'paciente', None)
+        if paciente:
+            ctx['total_citas'] = paciente.citas.count()
+            ctx['pendientes'] = paciente.citas.filter(estado__nombre__in=['pendiente', 'confirmada']).count()
+            ctx['realizadas'] = paciente.citas.filter(estado__nombre='realizada').count()
+            ctx['citas_recientes'] = paciente.citas.select_related('medico__usuario', 'horario', 'estado').order_by('-horario__fecha', '-horario__hora_inicio')[:5]
+
+    elif u.rol == 'medico':
+        medico = getattr(u, 'medico', None)
+        if medico:
+            from django.utils import timezone
+            today = timezone.localdate()
+            ctx['citas_hoy'] = medico.citas.filter(horario__fecha=today).count()
+            ctx['proximas'] = medico.citas.filter(horario__fecha__gt=today, estado__nombre__in=['pendiente', 'confirmada']).count()
+            ctx['pacientes_atendidos'] = medico.citas.filter(estado__nombre='realizada').values('paciente').distinct().count()
+            ctx['citas_recientes'] = medico.citas.select_related('paciente__usuario', 'horario', 'estado').order_by('-horario__fecha', '-horario__hora_inicio')[:5]
+
+    elif u.rol == 'admin':
+        ctx['total_usuarios'] = Usuario.objects.count()
+        ctx['total_medicos'] = Usuario.objects.filter(rol='medico').count()
+        ctx['total_especialidades'] = Especialidad.objects.count()
+        from citas.models import Cita
+        ctx['total_citas'] = Cita.objects.count()
+        ctx['citas_recientes'] = Cita.objects.select_related('paciente__usuario', 'medico__usuario', 'horario', 'estado').order_by('-horario__fecha', '-horario__hora_inicio')[:5]
+
+    return render(request, 'dashboard/dashboard.html', ctx)
 
 
 # ─── Admin user management ────────────────────────────────────────────────────

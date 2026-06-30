@@ -7,23 +7,30 @@
 {% block dashboard_content %}
 <section class="section">
   <div class="container">
-    <form method="get" class="box mb-5">
-      <div class="columns is-vcentered">
-        <div class="column is-4">
-          <input class="input" type="text" name="search" placeholder="Buscar por nombre, apellido o correo..." value="{{ search }}">
+    <form method="get" class="filter-bar">
+      <div class="field">
+        <label class="label">Buscar</label>
+        <div class="control">
+          <input class="input" type="text" name="search" placeholder="Nombre, apellido o correo..." value="{{ search }}">
         </div>
-        <div class="column is-2">
-          <div class="select is-fullwidth">
+      </div>
+      <div class="field">
+        <label class="label">Rol</label>
+        <div class="control">
+          <div class="select">
             <select name="rol">
-              <option value="">Todos los roles</option>
+              <option value="">Todos</option>
               <option value="paciente" {% if rol_filtro == 'paciente' %}selected{% endif %}>Paciente</option>
               <option value="medico" {% if rol_filtro == 'medico' %}selected{% endif %}>Médico</option>
               <option value="admin" {% if rol_filtro == 'admin' %}selected{% endif %}>Admin</option>
             </select>
           </div>
         </div>
-        <div class="column is-2">
-          <div class="select is-fullwidth">
+      </div>
+      <div class="field">
+        <label class="label">Estado</label>
+        <div class="control">
+          <div class="select">
             <select name="activo">
               <option value="">Todos</option>
               <option value="true" {% if activo_filtro == 'true' %}selected{% endif %}>Activos</option>
@@ -31,8 +38,10 @@
             </select>
           </div>
         </div>
-        <div class="column is-2">
-          <button class="button is-primary is-fullwidth" type="submit">Filtrar</button>
+      </div>
+      <div class="field">
+        <div class="control">
+          <button class="button is-primary" type="submit">Filtrar</button>
         </div>
       </div>
     </form>

@@ -1,21 +1,7 @@
 {% extends "base.html" %}
 {% load static %}
 
-{% block body_class %}has-sidebar{% endblock %}
-
-{% block extra_head %}
-<style>
-.notif-dropdown { width: 320px; max-height: 400px; overflow-y: auto; }
-.notif-item { border-bottom: 1px solid #f0f0f0; padding: 0.5rem 1rem; }
-.notif-item:last-child { border-bottom: none; }
-.notif-item.unread { background-color: #eff5ff; }
-.notif-badge {
-  position: absolute; top: 5px; right: 0;
-  font-size: 0.6rem; min-width: 18px; height: 18px;
-  line-height: 18px; padding: 0 5px; border-radius: 9px;
-}
-</style>
-{% endblock %}
+{% block extra_head %}{% endblock %}
 
 {% block navbar %}
 <nav class="navbar is-fixed-top is-primary" role="navigation" aria-label="main navigation">
@@ -60,7 +46,7 @@
           </div>
         </div>
         {% else %}
-        <a class="navbar-item" href="{% url 'login' %}">Iniciar Sesión</a>
+        <a class="navbar-item" href="{% url 'home' %}">Iniciar Sesión</a>
         <a class="navbar-item" href="{% url 'register' %}">Registrarse</a>
         {% endif %}
       </div>
@@ -70,49 +56,51 @@
 {% endblock %}
 
 {% block content %}
-<div class="columns is-gapless" style="min-height: calc(100vh - 52px - 168px);">
-  <aside class="column is-2 is-hidden-mobile" style="background-color: #f5f5f5;">
-    <aside class="menu p-4">
-      <p class="menu-label">General</p>
-      <ul class="menu-list">
-        <li><a href="{% url 'dashboard' %}" class="{% if request.resolver_match.url_name == 'dashboard' %}is-active{% endif %}">Dashboard</a></li>
-        <li><a href="{% url 'profile' %}" class="{% if request.resolver_match.url_name == 'profile' %}is-active{% endif %}">Mi Perfil</a></li>
-      </ul>
+<div class="columns is-gapless sidebar-layout">
+  <aside class="column is-2 is-hidden-mobile sidebar-panel">
+    <div class="sidebar-inner">
+      <aside class="menu">
+        <p class="menu-label">General</p>
+        <ul class="menu-list">
+          <li><a href="{% url 'dashboard' %}" class="{% if request.resolver_match.url_name == 'dashboard' %}is-active{% endif %}">Dashboard</a></li>
+          <li><a href="{% url 'profile' %}" class="{% if request.resolver_match.url_name == 'profile' %}is-active{% endif %}">Mi Perfil</a></li>
+        </ul>
 
-      {% if user.rol == 'paciente' %}
-      <p class="menu-label">Paciente</p>
-      <ul class="menu-list">
-        <li><a href="{% url 'citas:mis_citas' %}" class="{% if request.resolver_match.url_name == 'mis_citas' %}is-active{% endif %}">Mis Citas</a></li>
-        <li><a href="{% url 'citas:agendar' %}" class="{% if request.resolver_match.url_name == 'agendar' %}is-active{% endif %}">Agendar Cita</a></li>
-        <li><a href="{% url 'expedientes:lista' %}" class="{% if request.resolver_match.url_name == 'lista' %}is-active{% endif %}">Mi Historial</a></li>
-      </ul>
-      {% elif user.rol == 'medico' %}
-      <p class="menu-label">Médico</p>
-      <ul class="menu-list">
-        <li><a href="{% url 'medicos:mis_horarios' %}" class="{% if request.resolver_match.url_name == 'mis_horarios' %}is-active{% endif %}">Mis Horarios</a></li>
-        <li><a href="{% url 'medicos:citas_agendadas' %}" class="{% if request.resolver_match.url_name == 'citas_agendadas' %}is-active{% endif %}">Citas Agendadas</a></li>
-        <li><a href="{% url 'expedientes:lista' %}" class="{% if request.resolver_match.url_name == 'lista' %}is-active{% endif %}">Expedientes</a></li>
-      </ul>
-      {% elif user.rol == 'admin' %}
-      <p class="menu-label">Administración</p>
-      <ul class="menu-list">
-        <li><a href="{% url 'admin:index' %}">Panel Admin Django</a></li>
-        <li><a href="{% url 'reportes' %}" class="{% if request.resolver_match.url_name == 'reportes' %}is-active{% endif %}">Reportes</a></li>
-        <li><a href="{% url 'admin-usuarios' %}" class="{% if request.resolver_match.url_name == 'admin-usuarios' %}is-active{% endif %}">Usuarios</a></li>
-        <li><a href="{% url 'expedientes:lista' %}" class="{% if request.resolver_match.url_name == 'lista' %}is-active{% endif %}">Expedientes</a></li>
-      </ul>
-      {% endif %}
+        {% if user.rol == 'paciente' %}
+        <p class="menu-label">Paciente</p>
+        <ul class="menu-list">
+          <li><a href="{% url 'citas:mis_citas' %}" class="{% if request.resolver_match.url_name == 'mis_citas' %}is-active{% endif %}">Mis Citas</a></li>
+          <li><a href="{% url 'citas:agendar' %}" class="{% if request.resolver_match.url_name == 'agendar' %}is-active{% endif %}">Agendar Cita</a></li>
+          <li><a href="{% url 'expedientes:lista' %}" class="{% if request.resolver_match.url_name == 'lista' %}is-active{% endif %}">Mi Historial</a></li>
+        </ul>
+        {% elif user.rol == 'medico' %}
+        <p class="menu-label">Médico</p>
+        <ul class="menu-list">
+          <li><a href="{% url 'medicos:mis_horarios' %}" class="{% if request.resolver_match.url_name == 'mis_horarios' %}is-active{% endif %}">Mis Horarios</a></li>
+          <li><a href="{% url 'medicos:citas_agendadas' %}" class="{% if request.resolver_match.url_name == 'citas_agendadas' %}is-active{% endif %}">Citas Agendadas</a></li>
+          <li><a href="{% url 'expedientes:lista' %}" class="{% if request.resolver_match.url_name == 'lista' %}is-active{% endif %}">Expedientes</a></li>
+        </ul>
+        {% elif user.rol == 'admin' %}
+        <p class="menu-label">Administración</p>
+        <ul class="menu-list">
+          <li><a href="{% url 'admin:index' %}">Panel Admin Django</a></li>
+          <li><a href="{% url 'reportes' %}" class="{% if request.resolver_match.url_name == 'reportes' %}is-active{% endif %}">Reportes</a></li>
+          <li><a href="{% url 'admin-usuarios' %}" class="{% if request.resolver_match.url_name == 'admin-usuarios' %}is-active{% endif %}">Usuarios</a></li>
+          <li><a href="{% url 'expedientes:lista' %}" class="{% if request.resolver_match.url_name == 'lista' %}is-active{% endif %}">Expedientes</a></li>
+        </ul>
+        {% endif %}
 
-      <hr>
-      <ul class="menu-list">
-        <li>
-          <form method="post" action="{% url 'logout' %}">
-            {% csrf_token %}
-            <button type="submit" class="button is-light is-small is-fullwidth">Cerrar Sesión</button>
-          </form>
-        </li>
-      </ul>
-    </aside>
+        <hr>
+        <ul class="menu-list">
+          <li>
+            <form method="post" action="{% url 'logout' %}">
+              {% csrf_token %}
+              <button type="submit" class="button is-light is-small is-fullwidth">Cerrar Sesión</button>
+            </form>
+          </li>
+        </ul>
+      </aside>
+    </div>
   </aside>
 
   <main class="column">
