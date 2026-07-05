@@ -1,0 +1,381 @@
+/* ===================================================================
+   Medisync Landing — Doctor Profile (Full-width Rows)
+   =================================================================== */
+
+.doctor-profile {
+  display: flex;
+  align-items: center;
+  gap: 4rem;
+  padding: 4rem 0;
+  position: relative;
+}
+
+.doctor-profile::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 10%;
+  right: 10%;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, var(--l-border), transparent);
+}
+
+.doctor-profile:last-child::after {
+  display: none;
+}
+
+/* ─── Image Frame ──────────────────────────────────── */
+
+.doctor-profile-image {
+  flex: 0 0 42%;
+  max-width: 42%;
+  position: relative;
+}
+
+.doctor-profile-image::before {
+  content: '';
+  position: absolute;
+  inset: -6px;
+  border-radius: calc(var(--l-radius-lg) + 6px);
+  background: linear-gradient(135deg, var(--l-primary-lighter), var(--l-secondary-light), var(--l-primary-lighter));
+  z-index: -1;
+  opacity: 0.4;
+  transition: opacity var(--l-transition);
+}
+
+.doctor-profile:hover .doctor-profile-image::before {
+  opacity: 0.7;
+}
+
+.doctor-profile-image-frame {
+  border-radius: var(--l-radius-lg);
+  overflow: hidden;
+  position: relative;
+  box-shadow: 0 8px 32px rgba(11,79,124,0.1);
+}
+
+.doctor-profile-image-frame img {
+  width: 100%;
+  height: 440px;
+  object-fit: cover;
+  display: block;
+  transition: transform 0.7s ease;
+}
+
+.doctor-profile:hover .doctor-profile-image-frame img {
+  transform: scale(1.05);
+}
+
+.doctor-profile-image-badge {
+  position: absolute;
+  bottom: 1rem;
+  left: 1rem;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  background: rgba(255,255,255,0.95);
+  backdrop-filter: blur(12px);
+  padding: 0.4rem 0.85rem;
+  border-radius: 9999px;
+  font-size: 0.7rem;
+  font-weight: 600;
+  color: var(--l-accent);
+  box-shadow: 0 4px 16px rgba(0,0,0,0.12);
+  letter-spacing: 0.02em;
+}
+
+.doctor-profile-image-badge i {
+  font-size: 0.45rem;
+  color: var(--l-accent);
+}
+
+/* ─── Content ──────────────────────────────────────── */
+
+.doctor-profile-body {
+  flex: 1;
+  min-width: 0;
+}
+
+.doctor-profile-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem;
+  margin-bottom: 0.3rem;
+}
+
+.doctor-profile-name {
+  font-family: 'Playfair Display', serif;
+  font-size: 1.65rem;
+  font-weight: 700;
+  color: var(--l-dark);
+  line-height: 1.15;
+  position: relative;
+}
+
+.doctor-profile-name::after {
+  content: '';
+  position: absolute;
+  bottom: -0.3rem;
+  left: 0;
+  width: 2.5rem;
+  height: 3px;
+  background: linear-gradient(90deg, var(--l-primary), var(--l-secondary));
+  border-radius: 2px;
+}
+
+.doctor-profile-online {
+  font-size: 0.65rem;
+  font-weight: 600;
+  color: var(--l-accent);
+  background: var(--l-accent-light);
+  padding: 0.2rem 0.65rem;
+  border-radius: 9999px;
+  white-space: nowrap;
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+  border: 1px solid rgba(46,204,113,0.15);
+}
+
+.doctor-profile-online i {
+  font-size: 0.45rem;
+}
+
+.doctor-profile-spec {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  font-size: 0.85rem;
+  color: var(--l-white);
+  font-weight: 600;
+  margin: 0.75rem 0 0.85rem;
+  padding: 0.3rem 0.9rem;
+  background: linear-gradient(135deg, var(--l-primary), var(--l-primary-light));
+  border-radius: 9999px;
+  box-shadow: 0 3px 10px rgba(11,79,124,0.15);
+}
+
+.doctor-profile-spec i {
+  font-size: 0.65rem;
+}
+
+/* ─── Meta Row ─────────────────────────────────────── */
+
+.doctor-profile-meta {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  font-size: 0.85rem;
+  color: var(--l-text-light);
+  margin-bottom: 1rem;
+  padding-bottom: 1rem;
+  border-bottom: 1px solid var(--l-border-light);
+}
+
+.doctor-profile-rating {
+  display: flex;
+  align-items: center;
+  gap: 0.3rem;
+  font-weight: 700;
+  color: var(--l-dark);
+  background: #FFFBEB;
+  padding: 0.15rem 0.55rem;
+  border-radius: 9999px;
+  font-size: 0.8rem;
+}
+
+.doctor-profile-rating i {
+  color: #f59e0b;
+  font-size: 0.7rem;
+}
+
+.doctor-profile-divider {
+  width: 3px;
+  height: 3px;
+  border-radius: 50%;
+  background: var(--l-border);
+}
+
+/* ─── Stats ────────────────────────────────────────── */
+
+.doctor-profile-stat-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 0.75rem;
+  margin-bottom: 1.25rem;
+}
+
+.doctor-profile-stat-card {
+  background: var(--l-bg);
+  border-radius: var(--l-radius-sm);
+  padding: 0.75rem 1rem;
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  transition: background var(--l-transition), transform var(--l-transition);
+}
+
+.doctor-profile:hover .doctor-profile-stat-card {
+  background: var(--l-primary-lighter);
+}
+
+.doctor-profile-stat-card-icon {
+  width: 2.25rem;
+  height: 2.25rem;
+  border-radius: var(--l-radius-sm);
+  background: var(--l-white);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--l-primary);
+  font-size: 0.85rem;
+  flex-shrink: 0;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.04);
+}
+
+.doctor-profile-stat-card-value {
+  display: block;
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: var(--l-dark);
+  line-height: 1.2;
+}
+
+.doctor-profile-stat-card-label {
+  display: block;
+  font-size: 0.7rem;
+  color: var(--l-text-light);
+  line-height: 1.2;
+}
+
+/* ─── Bio ──────────────────────────────────────────── */
+
+.doctor-profile-bio-wrap {
+  position: relative;
+  padding-left: 1rem;
+  margin-bottom: 1.25rem;
+}
+
+.doctor-profile-bio-wrap::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  width: 3px;
+  background: linear-gradient(180deg, var(--l-primary), var(--l-secondary));
+  border-radius: 2px;
+}
+
+.doctor-profile-bio {
+  font-size: 0.875rem;
+  color: var(--l-text);
+  line-height: 1.7;
+  font-style: italic;
+  font-weight: 400;
+}
+
+/* ─── Details ──────────────────────────────────────── */
+
+.doctor-profile-details {
+  display: flex;
+  gap: 1.5rem;
+  margin-bottom: 1.5rem;
+  flex-wrap: wrap;
+}
+
+.doctor-profile-detail {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  font-size: 0.8rem;
+  color: var(--l-text);
+  padding: 0.3rem 0.75rem;
+  background: var(--l-bg-alt);
+  border-radius: 9999px;
+  border: 1px solid var(--l-border-light);
+}
+
+.doctor-profile-detail i {
+  color: var(--l-primary);
+  font-size: 0.7rem;
+}
+
+/* ─── CTA Button ───────────────────────────────────── */
+
+.doctor-profile-btn {
+  background: linear-gradient(135deg, var(--l-primary), var(--l-primary-dark)) !important;
+  color: var(--l-white) !important;
+  border: none !important;
+  border-radius: 9999px !important;
+  font-weight: 600 !important;
+  font-size: 0.85rem !important;
+  padding: 0.6rem 1.75rem !important;
+  transition: all var(--l-transition);
+  display: inline-flex !important;
+  align-items: center;
+  gap: 0.55rem;
+  box-shadow: 0 4px 16px rgba(11,79,124,0.2);
+  letter-spacing: 0.02em;
+}
+
+.doctor-profile-btn i {
+  transition: transform var(--l-transition);
+}
+
+.doctor-profile-btn:hover {
+  background: linear-gradient(135deg, var(--l-primary-dark), var(--l-primary-darker)) !important;
+  transform: translateY(-2px);
+  box-shadow: 0 8px 28px rgba(11,79,124,0.3) !important;
+  color: var(--l-white) !important;
+}
+
+.doctor-profile-btn:hover i {
+  transform: translateX(3px);
+}
+
+/* ─── Animations ──────────────────────────────────────── */
+
+.doctor-profile.reveal {
+  opacity: 0;
+}
+
+.doctor-profile.reveal.is-visible {
+  animation: doctorFadeUp 0.7s ease forwards;
+}
+
+@keyframes doctorFadeUp {
+  from { opacity: 0; transform: translateY(40px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.doctor-profile.reveal .doctor-profile-image {
+  opacity: 0;
+  transform: translateX(-50px);
+  transition: opacity 0.6s ease 0.15s, transform 0.7s ease 0.15s;
+}
+
+.doctor-profile.reveal.is-visible .doctor-profile-image {
+  opacity: 1;
+  transform: translateX(0);
+}
+
+.doctor-profile.reveal .doctor-profile-body > * {
+  opacity: 0;
+  transform: translateX(40px);
+}
+
+.doctor-profile.reveal.is-visible .doctor-profile-body > * {
+  opacity: 1;
+  transform: translateX(0);
+  transition: opacity 0.5s ease, transform 0.5s ease;
+}
+
+.doctor-profile.reveal.is-visible .doctor-profile-header { transition-delay: 0.15s; }
+.doctor-profile.reveal.is-visible .doctor-profile-spec { transition-delay: 0.2s; }
+.doctor-profile.reveal.is-visible .doctor-profile-meta { transition-delay: 0.25s; }
+.doctor-profile.reveal.is-visible .doctor-profile-stat-grid { transition-delay: 0.3s; }
+.doctor-profile.reveal.is-visible .doctor-profile-bio-wrap { transition-delay: 0.35s; }
+.doctor-profile.reveal.is-visible .doctor-profile-details { transition-delay: 0.4s; }
+.doctor-profile.reveal.is-visible .doctor-profile-btn { transition-delay: 0.45s; }

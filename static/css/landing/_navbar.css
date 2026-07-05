@@ -1,0 +1,138 @@
+/* ===================================================================
+   Medisync Landing — Navbar
+   =================================================================== */
+
+.landing-navbar {
+  background: transparent !important;
+  transition: all 0.35s ease;
+  height: 5rem;
+  position: fixed !important;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 100;
+}
+
+.landing-navbar.scrolled {
+  background: rgba(255,255,255,0.92) !important;
+  backdrop-filter: blur(16px);
+  height: 4rem;
+  box-shadow: 0 2px 24px rgba(0,0,0,0.06);
+}
+
+.landing-navbar .navbar-item {
+  color: rgba(255,255,255,0.85) !important;
+  font-weight: 500;
+  font-size: 0.9rem;
+  padding: 0.5rem 1rem;
+  transition: color var(--l-transition);
+  position: relative;
+}
+
+.landing-navbar .navbar-item::after {
+  content: '';
+  position: absolute;
+  bottom: 2px;
+  left: 1rem;
+  right: 1rem;
+  height: 2px;
+  background: var(--l-accent);
+  transform: scaleX(0);
+  transition: transform var(--l-transition);
+}
+
+.landing-navbar .navbar-item:hover::after {
+  transform: scaleX(1);
+}
+
+.landing-navbar.scrolled .navbar-item {
+  color: var(--l-text) !important;
+}
+
+.landing-navbar .navbar-item:hover {
+  color: var(--l-white) !important;
+  background: transparent !important;
+}
+
+.landing-navbar.scrolled .navbar-item:hover {
+  color: var(--l-primary) !important;
+}
+
+.landing-navbar .brand-text {
+  color: var(--l-white);
+}
+
+.landing-navbar.scrolled .brand-text {
+  color: var(--l-dark);
+}
+
+.landing-navbar .brand-mark {
+  background: var(--l-white);
+}
+
+.landing-navbar.scrolled .brand-mark {
+  background: var(--l-secondary);
+}
+
+.landing-navbar .brand-mark::after {
+  border-color: var(--l-white);
+}
+
+.landing-navbar.scrolled .brand-mark::after {
+  border-color: var(--l-primary);
+}
+
+.nav-btn-outlined {
+  border: 1.5px solid rgba(255,255,255,0.5) !important;
+  color: rgba(255,255,255,0.9) !important;
+  background: transparent !important;
+  border-radius: 9999px !important;
+  font-weight: 500 !important;
+  padding: 0.45rem 1.25rem !important;
+  transition: all var(--l-transition);
+}
+
+.nav-btn-outlined:hover {
+  border-color: var(--l-white) !important;
+  color: var(--l-white) !important;
+  background: rgba(255,255,255,0.08) !important;
+}
+
+.landing-navbar.scrolled .nav-btn-outlined {
+  border-color: var(--l-border) !important;
+  color: var(--l-text) !important;
+}
+
+.landing-navbar.scrolled .nav-btn-outlined:hover {
+  border-color: var(--l-primary) !important;
+  color: var(--l-primary) !important;
+  background: var(--l-bg) !important;
+}
+
+.nav-btn-primary {
+  background: var(--l-white) !important;
+  color: var(--l-primary) !important;
+  border-radius: 9999px !important;
+  font-weight: 600 !important;
+  padding: 0.45rem 1.25rem !important;
+  border: none !important;
+  transition: all var(--l-transition);
+}
+
+.nav-btn-primary:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+}
+
+.landing-navbar.scrolled .nav-btn-primary {
+  background: linear-gradient(135deg, var(--l-primary), var(--l-primary-dark)) !important;
+  color: var(--l-white) !important;
+}
+
+.landing-navbar .navbar-burger {
+  color: var(--l-white);
+}
+
+.landing-navbar.scrolled .navbar-burger {
+  color: var(--l-dark);
+}

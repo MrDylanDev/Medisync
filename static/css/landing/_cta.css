@@ -1,0 +1,111 @@
+/* ===================================================================
+   Medisync Landing — CTA / Contact
+   =================================================================== */
+
+.cta-info {
+  margin-top: 2rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.cta-info-item {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 0.75rem 1rem;
+  border-radius: var(--l-radius-sm);
+  background: rgba(255,255,255,0.06);
+  backdrop-filter: blur(4px);
+  transition: background var(--l-transition);
+}
+
+.cta-info-item:hover {
+  background: rgba(255,255,255,0.1);
+}
+
+.cta-info-icon {
+  width: 2.75rem;
+  height: 2.75rem;
+  border-radius: 50%;
+  background: rgba(255,255,255,0.12);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--l-white);
+  font-size: 1rem;
+  flex-shrink: 0;
+}
+
+.cta-info-item div {
+  color: rgba(255,255,255,0.9);
+}
+
+.cta-info-item div strong {
+  display: block;
+  color: var(--l-white);
+  font-weight: 600;
+  font-size: 0.875rem;
+}
+
+.cta-info-item div span {
+  font-size: 0.8125rem;
+  opacity: 0.8;
+}
+
+.cta-form-card {
+  background: var(--l-white);
+  border-radius: var(--l-radius-lg);
+  padding: 2.5rem;
+  box-shadow: var(--l-shadow-xl);
+  border: 1px solid rgba(255,255,255,0.1);
+}
+
+.cta-form-card .input,
+.cta-form-card .select select,
+.cta-form-card .textarea {
+  border: 1.5px solid #d1d9e6;
+  border-radius: var(--l-radius-sm);
+  font-family: 'Inter', sans-serif;
+  color: #1a2332;
+  background: #fff !important;
+  transition: border-color var(--l-transition), box-shadow var(--l-transition);
+  font-size: 0.875rem;
+}
+
+.cta-form-card .input:focus,
+.cta-form-card .select select:focus,
+.cta-form-card .textarea:focus {
+  border-color: var(--l-primary);
+  box-shadow: 0 0 0 3px rgba(11,79,124,0.1);
+}
+
+.cta-form-card .input::placeholder,
+.cta-form-card .textarea::placeholder {
+  color: #a0b4c8;
+}
+
+.cta-form-card .label {
+  font-weight: 600;
+  color: var(--l-dark);
+  font-size: 0.8125rem;
+  margin-bottom: 0.4rem;
+}
+
+.cta-form-btn {
+  background: linear-gradient(135deg, var(--l-primary) 0%, var(--l-primary-dark) 100%) !important;
+  color: var(--l-white) !important;
+  border: none !important;
+  border-radius: var(--l-radius-sm) !important;
+  font-weight: 600 !important;
+  padding: 0.9rem !important;
+  height: auto !important;
+  box-shadow: 0 4px 16px rgba(11,79,124,0.25);
+  transition: all var(--l-transition);
+}
+
+.cta-form-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 24px rgba(11,79,124,0.35);
+  color: var(--l-white) !important;
+}

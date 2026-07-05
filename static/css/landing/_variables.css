@@ -1,0 +1,36 @@
+/* ===================================================================
+   Medisync Landing — Design Tokens
+   =================================================================== */
+
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Playfair+Display:wght@600;700;800&display=swap');
+
+:root {
+  --l-primary: #0B4F7C;
+  --l-primary-dark: #083A5C;
+  --l-primary-darker: #052940;
+  --l-primary-light: #157AB8;
+  --l-primary-lighter: #E8F0FE;
+  --l-secondary: #0E9AA7;
+  --l-secondary-light: #E0F7FA;
+  --l-accent: #2ECC71;
+  --l-accent-light: #E8F8F0;
+  --l-dark: #1A2332;
+  --l-darker: #0F1624;
+  --l-text: #4A5568;
+  --l-text-light: #718096;
+  --l-muted: #8FA3B8;
+  --l-border: #E8EEF4;
+  --l-border-light: #F0F4F8;
+  --l-bg: #F0F7FF;
+  --l-bg-alt: #F8FAFE;
+  --l-white: #FFFFFF;
+  --l-shadow: 0 1px 3px rgba(0,0,0,0.06), 0 1px 2px rgba(0,0,0,0.04);
+  --l-shadow-md: 0 4px 12px rgba(0,0,0,0.06), 0 8px 24px rgba(0,0,0,0.04);
+  --l-shadow-lg: 0 12px 40px rgba(0,0,0,0.08), 0 24px 60px rgba(0,0,0,0.04);
+  --l-shadow-xl: 0 24px 64px rgba(0,0,0,0.1), 0 48px 96px rgba(0,0,0,0.06);
+  --l-radius: 1rem;
+  --l-radius-sm: 0.5rem;
+  --l-radius-lg: 1.5rem;
+  --l-transition: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  --l-transition-slow: 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+}
