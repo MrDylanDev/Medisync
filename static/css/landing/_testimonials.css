@@ -1,0 +1,75 @@
+/* ===================================================================
+   Medisync Landing — Testimonials
+   =================================================================== */
+
+.testimonial-card-alt {
+  background: var(--l-white);
+  border: 1px solid var(--l-border);
+  border-radius: var(--l-radius);
+  padding: 2rem;
+  transition: all var(--l-transition-slow);
+  position: relative;
+}
+
+.testimonial-card-alt::before {
+  content: '\201C';
+  position: absolute;
+  top: 1rem;
+  right: 1.5rem;
+  font-family: 'Playfair Display', serif;
+  font-size: 5rem;
+  line-height: 1;
+  color: var(--l-primary-lighter);
+  pointer-events: none;
+}
+
+.testimonial-card-alt:hover {
+  box-shadow: var(--l-shadow-lg);
+  transform: translateY(-4px);
+  border-color: transparent;
+}
+
+.testimonial-card-alt-stars {
+  color: #f59e0b;
+  font-size: 0.8125rem;
+  margin-bottom: 1rem;
+  display: flex;
+  gap: 0.15rem;
+}
+
+.testimonial-card-alt-text {
+  font-size: 0.9375rem;
+  color: var(--l-text);
+  line-height: 1.7;
+  font-style: italic;
+  margin-bottom: 1.5rem;
+  position: relative;
+  z-index: 1;
+}
+
+.testimonial-card-alt-author {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding-top: 1rem;
+  border-top: 1px solid var(--l-border-light);
+}
+
+.testimonial-card-alt-author img {
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 2px solid var(--l-border);
+}
+
+.testimonial-card-alt-author div strong {
+  display: block;
+  font-size: 0.875rem;
+  color: var(--l-dark);
+}
+
+.testimonial-card-alt-author div span {
+  font-size: 0.75rem;
+  color: var(--l-text-light);
+}

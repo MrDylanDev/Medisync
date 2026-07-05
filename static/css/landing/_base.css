@@ -1,0 +1,10 @@
+/* ===================================================================
+   Medisync Landing — Base & Global
+   =================================================================== */
+
+html { scroll-behavior: smooth; }
+
+.landing-page {
+  overflow-x: hidden;
+  font-family: 'Inter', sans-serif;
+}
