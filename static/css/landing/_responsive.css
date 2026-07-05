@@ -1,0 +1,67 @@
+/* ===================================================================
+   Medisync Landing — Responsive Breakpoints
+   =================================================================== */
+
+@media (max-width: 1023px) {
+  .landing-navbar .navbar-menu {
+    background: rgba(255,255,255,0.98) !important;
+    backdrop-filter: blur(16px);
+    border-radius: 0 0 1rem 1rem;
+    box-shadow: var(--l-shadow-md);
+  }
+
+  .landing-navbar .navbar-menu .navbar-item {
+    color: var(--l-text) !important;
+  }
+
+  .landing-navbar .navbar-menu .navbar-item:hover {
+    color: var(--l-primary) !important;
+  }
+
+  .landing-navbar .navbar-menu .brand-text {
+    color: var(--l-dark);
+  }
+
+  .nav-btn-outlined {
+    border-color: var(--l-border) !important;
+    color: var(--l-text) !important;
+  }
+
+  .nav-btn-primary {
+    background: linear-gradient(135deg, var(--l-primary), var(--l-primary-dark)) !important;
+    color: var(--l-white) !important;
+  }
+
+  .hero-title { font-size: 2.75rem; }
+  .l-title { font-size: 2.25rem; }
+  .about-stats { grid-template-columns: repeat(2, 1fr); }
+  .about-stat:not(:last-child)::after { display: none; }
+}
+
+@media (max-width: 768px) {
+  .l-section { padding: 3.5rem 0; }
+  .l-hero::after { height: 100px; }
+  .hero-title { font-size: 2rem; }
+  .hero-actions { flex-direction: column; }
+  .hero-actions .button { width: 100%; }
+  .hero-stats { flex-wrap: wrap; gap: 1rem; }
+  .hero-stat-dot { display: none; }
+  .doctor-profile { flex-direction: column; gap: 2rem; padding: 2.5rem 0; }
+  .doctor-profile-image { flex: none; max-width: 100%; }
+  .doctor-profile-image-frame img { height: 300px; }
+  .doctor-profile-name { font-size: 1.3rem; }
+  .doctor-profile-stat-grid { grid-template-columns: repeat(3, 1fr); gap: 0.5rem; }
+  .doctor-profile-stat-card { padding: 0.6rem 0.75rem; flex-direction: column; text-align: center; gap: 0.4rem; }
+  .doctor-profile-details { flex-wrap: wrap; gap: 0.5rem; }
+  .cta-form-card { padding: 1.5rem; }
+  .about-visual img { height: 280px; }
+  .about-stats { grid-template-columns: repeat(2, 1fr); padding: 1.5rem; }
+  .l-footer-bottom { flex-direction: column; text-align: center; }
+  .l-footer-bottom a { margin: 0 0.75rem; }
+}
+
+@media (max-width: 480px) {
+  .l-section { padding: 2.5rem 0; }
+  .l-title { font-size: 1.75rem; }
+  .doctor-card-img { height: 180px; }
+}

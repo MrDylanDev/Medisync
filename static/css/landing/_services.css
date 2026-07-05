@@ -1,0 +1,70 @@
+/* ===================================================================
+   Medisync Landing — Service Cards
+   =================================================================== */
+
+.service-card-alt {
+  background: var(--l-white);
+  border: 1px solid var(--l-border);
+  border-radius: var(--l-radius);
+  padding: 2rem;
+  transition: all var(--l-transition-slow);
+  position: relative;
+  overflow: hidden;
+}
+
+.service-card-alt::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 3px;
+  background: linear-gradient(90deg, var(--l-primary), var(--l-secondary));
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform var(--l-transition);
+}
+
+.service-card-alt:hover::before {
+  transform: scaleX(1);
+}
+
+.service-card-alt:hover {
+  box-shadow: var(--l-shadow-lg);
+  transform: translateY(-6px);
+  border-color: transparent;
+}
+
+.service-card-alt-icon {
+  width: 3.5rem;
+  height: 3.5rem;
+  border-radius: var(--l-radius-sm);
+  background: linear-gradient(135deg, var(--l-primary-lighter), var(--l-secondary-light));
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--l-primary);
+  font-size: 1.35rem;
+  margin-bottom: 1.25rem;
+  transition: all var(--l-transition);
+}
+
+.service-card-alt:hover .service-card-alt-icon {
+  background: linear-gradient(135deg, var(--l-primary), var(--l-primary-light));
+  color: var(--l-white);
+  transform: scale(1.1) rotate(-3deg);
+  box-shadow: 0 8px 24px rgba(11,79,124,0.2);
+}
+
+.service-card-alt h3 {
+  font-size: 1.125rem;
+  font-weight: 700;
+  color: var(--l-dark);
+  margin-bottom: 0.6rem;
+}
+
+.service-card-alt p {
+  font-size: 0.875rem;
+  color: var(--l-text-light);
+  line-height: 1.65;
+}

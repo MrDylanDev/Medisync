@@ -1,0 +1,120 @@
+/* ===================================================================
+   Medisync Landing — Section Dividers & Commons
+   =================================================================== */
+
+/* ─── Section Dividers ─────────────────────────────────── */
+
+.l-section-divider {
+  position: relative;
+}
+
+.l-section-divider::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 60px;
+  height: 3px;
+  background: linear-gradient(90deg, var(--l-primary), var(--l-secondary));
+  border-radius: 2px;
+}
+
+/* ─── Section Commons ─────────────────────────────────── */
+
+.l-section {
+  padding: 5.5rem 0;
+  position: relative;
+}
+
+.l-section-alt {
+  background: var(--l-bg-alt);
+  position: relative;
+}
+
+.l-section-alt::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, var(--l-border), transparent);
+}
+
+.l-section-cta {
+  background: linear-gradient(135deg, var(--l-primary) 0%, var(--l-primary-darker) 100%);
+  padding: 5rem 0;
+  position: relative;
+  overflow: hidden;
+}
+
+.l-section-cta::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.03'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+  opacity: 0.5;
+}
+
+.l-section-header {
+  text-align: center;
+  margin-bottom: 3.5rem;
+}
+
+.l-section-header-underline {
+  position: relative;
+  display: inline-block;
+}
+
+.l-section-header-underline::after {
+  content: '';
+  position: absolute;
+  bottom: -8px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 40px;
+  height: 3px;
+  background: linear-gradient(90deg, var(--l-primary), var(--l-secondary));
+  border-radius: 2px;
+}
+
+.l-label {
+  display: inline-block;
+  font-size: 0.8125rem;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--l-secondary);
+  margin-bottom: 0.75rem;
+}
+
+.l-label-light {
+  color: rgba(255,255,255,0.7);
+}
+
+.l-title {
+  font-family: 'Playfair Display', serif;
+  font-size: 2.75rem;
+  font-weight: 700;
+  color: var(--l-dark);
+  line-height: 1.15;
+  margin-bottom: 1rem;
+}
+
+.l-title-light {
+  color: var(--l-white);
+}
+
+.l-desc {
+  font-size: 1.1rem;
+  color: var(--l-text);
+  max-width: 540px;
+  margin: 0 auto;
+  line-height: 1.7;
+}
+
+.l-desc-light {
+  color: rgba(255,255,255,0.8);
+  margin: 0;
+}

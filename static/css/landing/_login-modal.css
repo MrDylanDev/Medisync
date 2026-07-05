@@ -1,0 +1,119 @@
+/* ===================================================================
+   Medisync Landing — Login Modal
+   =================================================================== */
+
+#loginModal .modal-background {
+  background: rgba(11, 79, 124, 0.25) !important;
+}
+
+#loginModal .modal-card {
+  border-radius: 16px;
+  overflow: hidden;
+  width: 380px;
+  margin: 0 auto;
+  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+  background: #fff;
+}
+
+#loginModal .modal-card-head {
+  background: #fff;
+  border-bottom: 1px solid var(--l-border);
+  padding: 1.25rem 1.5rem;
+  justify-content: center;
+  align-items: center;
+  box-shadow: none;
+}
+
+#loginModal .modal-card-title {
+  font-family: 'Playfair Display', serif;
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: var(--l-dark);
+  text-align: center;
+}
+
+#loginModal .modal-card-head .delete {
+  position: absolute;
+  top: 0.75rem;
+  right: 0.75rem;
+  background: var(--l-border);
+}
+
+#loginModal .modal-card-head .delete:hover {
+  background: #c8d6e5;
+}
+
+#loginModal .modal-card-body {
+  padding: 1.5rem 1.5rem 0.75rem;
+  background: #fff;
+}
+
+#loginModal .modal-card-body .field {
+  margin-bottom: 0.85rem;
+}
+
+#loginModal .modal-card-body .field .label {
+  font-size: 0.8125rem;
+  color: var(--l-dark);
+  font-weight: 600;
+  margin-bottom: 0.35rem;
+}
+
+#loginModal .modal-card-body .field .input {
+  font-size: 0.875rem;
+  height: 2.6rem;
+  border-radius: 8px;
+  border: 1.5px solid var(--l-border);
+  transition: border-color 0.2s, box-shadow 0.2s;
+  padding-left: 2.6rem;
+  background: #fff;
+}
+
+#loginModal .modal-card-body .field .input:focus {
+  border-color: var(--l-primary);
+  box-shadow: 0 0 0 3px rgba(11, 79, 124, 0.1);
+}
+
+#loginModal .modal-card-body .field .icon.is-left {
+  color: var(--l-muted);
+}
+
+#loginModal .modal-card-foot {
+  justify-content: center;
+  padding: 0.5rem 1.5rem 1.25rem;
+  border-top: 1px solid var(--l-border);
+  background: #fff;
+}
+
+#loginModal .modal-card-foot p {
+  margin: 0;
+  font-size: 0.8rem;
+  color: var(--l-muted);
+}
+
+#loginModal .modal-card-body .has-text-centered a,
+#loginModal .modal-card-foot a {
+  color: var(--l-primary);
+  font-weight: 500;
+}
+
+#loginModal .modal-card-body .has-text-centered a:hover,
+#loginModal .modal-card-foot a:hover {
+  color: var(--l-primary-dark);
+  text-decoration: underline;
+}
+
+#loginModal .button.is-primary {
+  background: linear-gradient(135deg, var(--l-primary), var(--l-secondary));
+  border: none;
+  height: 2.8rem;
+  font-weight: 600;
+  font-size: 0.9rem;
+  border-radius: 8px;
+  transition: box-shadow 0.2s, transform 0.2s;
+}
+
+#loginModal .button.is-primary:hover {
+  box-shadow: 0 4px 15px rgba(11, 79, 124, 0.35);
+  transform: translateY(-1px);
+}
