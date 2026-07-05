@@ -1,0 +1,183 @@
+/* ===================================================================
+   Medisync Landing — Hero Section
+   =================================================================== */
+
+.l-hero {
+  position: relative;
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  overflow: hidden;
+}
+
+.l-hero::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 200px;
+  background: linear-gradient(to top, var(--l-white) 0%, transparent 100%);
+  z-index: 2;
+  pointer-events: none;
+}
+
+.l-hero-bg {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+}
+
+.l-hero-overlay {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+}
+
+.l-hero-overlay::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(135deg, rgba(0,0,0,0.55) 0%, rgba(0,0,0,0.25) 100%);
+  z-index: 1;
+}
+
+.l-hero-video {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  z-index: 0;
+  opacity: 0;
+  transition: opacity 0.8s ease;
+}
+
+.l-hero-video.is-active {
+  opacity: 1;
+}
+
+.l-hero-content {
+  position: relative;
+  z-index: 3;
+  width: 100%;
+  padding: 6rem 0 4rem;
+}
+
+.hero-badge {
+  display: inline-flex;
+  align-items: center;
+  background: rgba(255,255,255,0.12);
+  backdrop-filter: blur(8px);
+  border: 1px solid rgba(255,255,255,0.2);
+  color: var(--l-white);
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  padding: 0.4rem 1.25rem;
+  border-radius: 9999px;
+  margin-bottom: 1.5rem;
+  animation: fadeInUp 0.8s ease 0.2s both;
+}
+
+.hero-title {
+  font-family: 'Playfair Display', serif;
+  font-size: 4rem;
+  font-weight: 800;
+  color: var(--l-white);
+  line-height: 1.08;
+  margin-bottom: 1.25rem;
+  animation: fadeInUp 0.8s ease 0.3s both;
+}
+
+.hero-title-accent {
+  background: linear-gradient(135deg, #2ECC71, #0E9AA7, #157AB8);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  background-size: 200% 200%;
+  animation: gradientShift 4s ease infinite;
+}
+
+.hero-desc {
+  font-size: 1.125rem;
+  color: rgba(255,255,255,0.8);
+  max-width: 500px;
+  line-height: 1.7;
+  margin-bottom: 2rem;
+  animation: fadeInUp 0.8s ease 0.4s both;
+}
+
+.hero-actions {
+  display: flex;
+  gap: 1rem;
+  flex-wrap: wrap;
+  margin-bottom: 2.5rem;
+  animation: fadeInUp 0.8s ease 0.5s both;
+}
+
+.hero-btn-primary {
+  background: var(--l-white) !important;
+  color: var(--l-primary) !important;
+  border: none !important;
+  border-radius: 9999px !important;
+  font-weight: 600 !important;
+  font-size: 0.8125rem !important;
+  padding: 0.55rem 1.25rem !important;
+  height: auto !important;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.15);
+  transition: all var(--l-transition);
+}
+
+.hero-btn-primary:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 30px rgba(0,0,0,0.2);
+  color: var(--l-primary) !important;
+}
+
+.hero-btn-ghost {
+  background: transparent !important;
+  color: var(--l-white) !important;
+  border: 1.5px solid rgba(255,255,255,0.4) !important;
+  border-radius: 9999px !important;
+  font-weight: 500 !important;
+  font-size: 0.8125rem !important;
+  padding: 0.55rem 1.25rem !important;
+  height: auto !important;
+  transition: all var(--l-transition);
+}
+
+.hero-btn-ghost:hover {
+  border-color: var(--l-white) !important;
+  background: rgba(255,255,255,0.06) !important;
+}
+
+.hero-stats {
+  display: flex;
+  align-items: center;
+  gap: 1.5rem;
+  animation: fadeInUp 0.8s ease 0.6s both;
+}
+
+.hero-stat-value {
+  font-family: 'Playfair Display', serif;
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: var(--l-white);
+  display: block;
+  line-height: 1.2;
+}
+
+.hero-stat-label {
+  font-size: 0.8125rem;
+  color: rgba(255,255,255,0.6);
+  display: block;
+}
+
+.hero-stat-dot {
+  width: 4px;
+  height: 4px;
+  border-radius: 50%;
+  background: rgba(255,255,255,0.3);
+}

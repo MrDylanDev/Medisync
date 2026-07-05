@@ -1,0 +1,185 @@
+/* ===================================================================
+   Medisync Landing — About Section
+   =================================================================== */
+
+.about-visual {
+  position: relative;
+  border-radius: var(--l-radius-lg);
+  overflow: hidden;
+}
+
+.about-visual img {
+  width: 100%;
+  height: 420px;
+  object-fit: cover;
+  display: block;
+  border-radius: var(--l-radius-lg);
+}
+
+.about-visual::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(to top, rgba(0,0,0,0.3) 0%, transparent 50%);
+  border-radius: var(--l-radius-lg);
+}
+
+.about-visual-badge {
+  position: absolute;
+  bottom: 1.25rem;
+  left: 1.25rem;
+  z-index: 2;
+  background: var(--l-white);
+  border-radius: var(--l-radius);
+  padding: 1.25rem 1.75rem;
+  box-shadow: var(--l-shadow-lg);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.about-visual-badge-value {
+  font-family: 'Playfair Display', serif;
+  font-size: 2rem;
+  font-weight: 800;
+  color: var(--l-primary);
+  line-height: 1.1;
+}
+
+.about-visual-badge-label {
+  font-size: 0.75rem;
+  color: var(--l-muted);
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+
+.about-visual-decor {
+  position: absolute;
+  top: -12px;
+  right: -12px;
+  width: 80px;
+  height: 80px;
+  border: 3px solid var(--l-secondary);
+  border-radius: var(--l-radius-sm);
+  opacity: 0.15;
+  z-index: 0;
+}
+
+.about-features {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+}
+
+.about-feature {
+  display: flex;
+  align-items: flex-start;
+  gap: 1rem;
+  padding: 1rem;
+  border-radius: var(--l-radius-sm);
+  transition: background var(--l-transition);
+}
+
+.about-feature:hover {
+  background: var(--l-bg);
+}
+
+.about-feature-icon {
+  width: 2.75rem;
+  height: 2.75rem;
+  border-radius: var(--l-radius-sm);
+  background: linear-gradient(135deg, var(--l-primary-lighter), var(--l-secondary-light));
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--l-primary);
+  font-size: 1.1rem;
+  flex-shrink: 0;
+  transition: all var(--l-transition);
+}
+
+.about-feature:hover .about-feature-icon {
+  background: linear-gradient(135deg, var(--l-primary), var(--l-primary-light));
+  color: var(--l-white);
+  transform: scale(1.05);
+}
+
+.about-feature div strong {
+  display: block;
+  font-size: 0.9375rem;
+  color: var(--l-dark);
+  margin-bottom: 0.2rem;
+}
+
+.about-feature div p {
+  font-size: 0.8125rem;
+  color: var(--l-text-light);
+  line-height: 1.5;
+}
+
+.about-stats {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 1rem;
+  margin-top: 4.5rem;
+  padding: 2.5rem;
+  background: var(--l-white);
+  border: 1px solid var(--l-border);
+  border-radius: var(--l-radius-lg);
+  box-shadow: var(--l-shadow);
+  position: relative;
+  overflow: hidden;
+}
+
+.about-stats::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 3px;
+  background: linear-gradient(90deg, var(--l-primary), var(--l-secondary), var(--l-accent));
+}
+
+.about-stat {
+  text-align: center;
+  position: relative;
+}
+
+.about-stat:not(:last-child)::after {
+  content: '';
+  position: absolute;
+  right: -0.5rem;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 1px;
+  height: 40px;
+  background: var(--l-border);
+}
+
+.about-stat-icon {
+  font-size: 1.25rem;
+  color: var(--l-primary);
+  margin-bottom: 0.35rem;
+  display: block;
+  opacity: 0.6;
+}
+
+.about-stat-value {
+  display: block;
+  font-family: 'Playfair Display', serif;
+  font-size: 2rem;
+  font-weight: 800;
+  color: var(--l-primary);
+  line-height: 1.1;
+}
+
+.about-stat-label {
+  display: block;
+  font-size: 0.8125rem;
+  color: var(--l-text-light);
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
