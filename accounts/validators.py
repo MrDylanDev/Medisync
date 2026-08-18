@@ -14,24 +14,23 @@ class UppercaseAndSpecialValidator:
     """
 
     def validate(self, password, user=None):
-        if not re.search(r'[A-Z]', password):
+        if not re.search(r"[A-Z]", password):
             raise ValidationError(
-                _('La contraseña debe contener al menos una mayúscula.'),
-                code='password_no_upper',
+                _("La contraseña debe contener al menos una mayúscula."),
+                code="password_no_upper",
             )
-        if not re.search(r'[0-9]', password):
+        if not re.search(r"[0-9]", password):
             raise ValidationError(
-                _('La contraseña debe contener al menos un dígito.'),
-                code='password_no_digit',
+                _("La contraseña debe contener al menos un dígito."),
+                code="password_no_digit",
             )
-        if not re.search(r'[^A-Za-z0-9]', password):
+        if not re.search(r"[^A-Za-z0-9]", password):
             raise ValidationError(
-                _('La contraseña debe contener al menos un carácter especial.'),
-                code='password_no_special',
+                _("La contraseña debe contener al menos un carácter especial."),
+                code="password_no_special",
             )
 
     def get_help_text(self):
         return _(
-            'La contraseña debe contener al menos una mayúscula, '
-            'un dígito y un carácter especial.'
+            "La contraseña debe contener al menos una mayúscula, un dígito y un carácter especial."
         )

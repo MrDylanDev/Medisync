@@ -33,6 +33,9 @@ def validar_horario_sin_superposicion(sender, instance, **kwargs):
 
     if overlapping.exists():
         raise ValidationError(
-            _('El horario se superpone con un turno existente para este médico '
-              'en la fecha %(fecha)s.') % {'fecha': instance.fecha},
+            _(
+                "El horario se superpone con un turno existente para este médico "
+                "en la fecha %(fecha)s."
+            )
+            % {"fecha": instance.fecha},
         )

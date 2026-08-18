@@ -12,16 +12,21 @@ class MedicoSerializer(serializers.ModelSerializer):
     Includes nested Usuario read-only info and supports
     full CRUD for admin users.
     """
-    usuario_detail = UsuarioSerializer(source='usuario', read_only=True)
+
+    usuario_detail = UsuarioSerializer(source="usuario", read_only=True)
 
     class Meta:
         model = Medico
         fields = [
-            'id', 'usuario', 'usuario_detail',
-            'informacion_consultorio', 'precio_consulta',
-            'atencion_online', 'calificacion',
+            "id",
+            "usuario",
+            "usuario_detail",
+            "informacion_consultorio",
+            "precio_consulta",
+            "atencion_online",
+            "calificacion",
         ]
-        read_only_fields = ['calificacion']
+        read_only_fields = ["calificacion"]
 
 
 class MedicoEspecialidadSerializer(serializers.ModelSerializer):
@@ -29,7 +34,7 @@ class MedicoEspecialidadSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = MedicoEspecialidad
-        fields = ['id', 'medico', 'especialidad', 'es_principal']
+        fields = ["id", "medico", "especialidad", "es_principal"]
 
 
 class HorarioSerializer(serializers.ModelSerializer):
@@ -38,6 +43,10 @@ class HorarioSerializer(serializers.ModelSerializer):
     class Meta:
         model = Horario
         fields = [
-            'id', 'medico', 'fecha',
-            'hora_inicio', 'hora_fin', 'disponible',
+            "id",
+            "medico",
+            "fecha",
+            "hora_inicio",
+            "hora_fin",
+            "disponible",
         ]

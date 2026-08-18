@@ -14,71 +14,72 @@ class Usuario(AbstractUser):
     Replaces the default username field with correo (email) for
     authentication. All auth flows use email + password.
     """
+
     username = None
     correo = models.EmailField(
-        _('correo electrónico'),
+        _("correo electrónico"),
         unique=True,
         max_length=255,
-        help_text=_('Dirección de correo electrónico del usuario'),
+        help_text=_("Dirección de correo electrónico del usuario"),
     )
     nombre = models.CharField(
-        _('nombre'),
+        _("nombre"),
         max_length=100,
-        help_text=_('Nombre del usuario'),
+        help_text=_("Nombre del usuario"),
     )
     apellido = models.CharField(
-        _('apellido'),
+        _("apellido"),
         max_length=100,
-        help_text=_('Apellido del usuario'),
+        help_text=_("Apellido del usuario"),
     )
     telefono = models.CharField(
-        _('teléfono'),
+        _("teléfono"),
         max_length=20,
         blank=True,
-        help_text=_('Número de teléfono de contacto'),
+        help_text=_("Número de teléfono de contacto"),
     )
     documento = models.CharField(
-        _('documento'),
+        _("documento"),
         max_length=30,
         unique=True,
         blank=True,
         null=True,
-        help_text=_('Documento de identidad'),
+        help_text=_("Documento de identidad"),
     )
     rol = models.CharField(
-        _('rol'),
+        _("rol"),
         max_length=20,
         choices=[
-            ('admin', 'Administrador'),
-            ('medico', 'Médico'),
-            ('paciente', 'Paciente'),
+            ("admin", "Administrador"),
+            ("medico", "Médico"),
+            ("paciente", "Paciente"),
         ],
-        default='paciente',
-        help_text=_('Rol del usuario en el sistema'),
+        default="paciente",
+        help_text=_("Rol del usuario en el sistema"),
     )
     is_active = models.BooleanField(
-        _('activo'),
+        _("activo"),
         default=True,
-        help_text=_('Indica si el usuario está activo'),
+        help_text=_("Indica si el usuario está activo"),
     )
 
     objects = UsuarioManager()
 
-    USERNAME_FIELD = 'correo'
-    REQUIRED_FIELDS = ['nombre', 'apellido']
+    USERNAME_FIELD = "correo"
+    REQUIRED_FIELDS = ["nombre", "apellido"]
 
     class Meta:
-        verbose_name = _('usuario')
-        verbose_name_plural = _('usuarios')
-        ordering = ['apellido', 'nombre']
+        verbose_name = _("usuario")
+        verbose_name_plural = _("usuarios")
+        ordering = ["apellido", "nombre"]
 
     def __str__(self):
-        return f'{self.apellido}, {self.nombre} ({self.correo})'
+        return f"{self.apellido}, {self.nombre} ({self.correo})"
 
     @property
     def nombre_completo(self):
         """Return the user's full name."""
-        return f'{self.nombre} {self.apellido}'
+        return f"{self.nombre} {self.apellido}"
 
 
 class Role(models.Model):
@@ -88,22 +89,23 @@ class Role(models.Model):
     Defines named roles with descriptions that can be assigned
     to groups of users for fine-grained access control.
     """
+
     nombre = models.CharField(
-        _('nombre'),
+        _("nombre"),
         max_length=50,
         unique=True,
-        help_text=_('Nombre del rol (ej: administrador, recepcionista)'),
+        help_text=_("Nombre del rol (ej: administrador, recepcionista)"),
     )
     descripcion = models.TextField(
-        _('descripción'),
+        _("descripción"),
         blank=True,
-        help_text=_('Descripción del rol y sus responsabilidades'),
+        help_text=_("Descripción del rol y sus responsabilidades"),
     )
 
     class Meta:
-        verbose_name = _('rol')
-        verbose_name_plural = _('roles')
-        ordering = ['nombre']
+        verbose_name = _("rol")
+        verbose_name_plural = _("roles")
+        ordering = ["nombre"]
 
     def __str__(self):
         return self.nombre
@@ -117,59 +119,60 @@ class Paciente(BaseModel):
     Stores medical record number, date of birth, insurance details,
     and emergency contact information.
     """
+
     usuario = models.OneToOneField(
         Usuario,
         on_delete=models.CASCADE,
-        related_name='paciente',
-        verbose_name=_('usuario'),
+        related_name="paciente",
+        verbose_name=_("usuario"),
     )
     numero_historia_clinica = models.CharField(
-        _('número de historia clínica'),
+        _("número de historia clínica"),
         max_length=20,
         unique=True,
         blank=True,
-        help_text=_('Número único de historia clínica'),
+        help_text=_("Número único de historia clínica"),
     )
     fecha_nacimiento = models.DateField(
-        _('fecha de nacimiento'),
+        _("fecha de nacimiento"),
         null=True,
         blank=True,
     )
     direccion = models.TextField(
-        _('dirección'),
+        _("dirección"),
         blank=True,
-        help_text=_('Dirección del paciente'),
+        help_text=_("Dirección del paciente"),
     )
     obra_social = models.CharField(
-        _('obra social'),
+        _("obra social"),
         max_length=100,
         blank=True,
-        help_text=_('Obra social o prepaga del paciente'),
+        help_text=_("Obra social o prepaga del paciente"),
     )
     numero_afiliado = models.CharField(
-        _('número de afiliado'),
+        _("número de afiliado"),
         max_length=50,
         blank=True,
-        help_text=_('Número de afiliado a la obra social'),
+        help_text=_("Número de afiliado a la obra social"),
     )
     contacto_emergencia_nombre = models.CharField(
-        _('nombre contacto emergencia'),
+        _("nombre contacto emergencia"),
         max_length=200,
         blank=True,
     )
     contacto_emergencia_telefono = models.CharField(
-        _('teléfono contacto emergencia'),
+        _("teléfono contacto emergencia"),
         max_length=20,
         blank=True,
     )
 
     class Meta:
-        verbose_name = _('paciente')
-        verbose_name_plural = _('pacientes')
-        ordering = ['usuario__apellido', 'usuario__nombre']
+        verbose_name = _("paciente")
+        verbose_name_plural = _("pacientes")
+        ordering = ["usuario__apellido", "usuario__nombre"]
 
     def __str__(self):
-        return f'{self.usuario.nombre_completo} — HC: {self.numero_historia_clinica or "S/H"}'
+        return f"{self.usuario.nombre_completo} — HC: {self.numero_historia_clinica or 'S/H'}"
 
 
 class Medico(BaseModel):
@@ -179,36 +182,37 @@ class Medico(BaseModel):
     Stores professional contact details. Clinical specialty
     information is managed in the medicos app (MedicoEspecialidad).
     """
+
     usuario = models.OneToOneField(
         Usuario,
         on_delete=models.CASCADE,
-        related_name='medico_profile',
-        verbose_name=_('usuario'),
+        related_name="medico_profile",
+        verbose_name=_("usuario"),
     )
     numero_matricula = models.CharField(
-        _('número de matrícula'),
+        _("número de matrícula"),
         max_length=20,
         unique=True,
-        help_text=_('Número de matrícula profesional'),
+        help_text=_("Número de matrícula profesional"),
     )
     bio = models.TextField(
-        _('biografía'),
+        _("biografía"),
         blank=True,
-        help_text=_('Resumen profesional del médico'),
+        help_text=_("Resumen profesional del médico"),
     )
     telefono_consultorio = models.CharField(
-        _('teléfono consultorio'),
+        _("teléfono consultorio"),
         max_length=20,
         blank=True,
     )
 
     class Meta:
-        verbose_name = _('médico')
-        verbose_name_plural = _('médicos')
-        ordering = ['usuario__apellido', 'usuario__nombre']
+        verbose_name = _("médico")
+        verbose_name_plural = _("médicos")
+        ordering = ["usuario__apellido", "usuario__nombre"]
 
     def __str__(self):
-        return f'Dr. {self.usuario.nombre_completo} — Mat: {self.numero_matricula}'
+        return f"Dr. {self.usuario.nombre_completo} — Mat: {self.numero_matricula}"
 
 
 class TokenRecuperacion(models.Model):
@@ -218,36 +222,37 @@ class TokenRecuperacion(models.Model):
     Stores one-time use tokens for password recovery flows.
     Tokens expire after a configurable duration (default: 24 hours).
     """
+
     usuario = models.ForeignKey(
         Usuario,
         on_delete=models.CASCADE,
-        related_name='tokens_recuperacion',
-        verbose_name=_('usuario'),
+        related_name="tokens_recuperacion",
+        verbose_name=_("usuario"),
     )
     token = models.CharField(
-        _('token'),
+        _("token"),
         max_length=255,
         unique=True,
-        help_text=_('Token de recuperación'),
+        help_text=_("Token de recuperación"),
     )
     creado_en = models.DateTimeField(
-        _('creado en'),
+        _("creado en"),
         auto_now_add=True,
     )
     utilizado = models.BooleanField(
-        _('utilizado'),
+        _("utilizado"),
         default=False,
-        help_text=_('Indica si el token ya fue utilizado'),
+        help_text=_("Indica si el token ya fue utilizado"),
     )
     expira_en = models.DateTimeField(
-        _('expira en'),
-        help_text=_('Fecha y hora de expiración del token'),
+        _("expira en"),
+        help_text=_("Fecha y hora de expiración del token"),
     )
 
     class Meta:
-        verbose_name = _('token de recuperación')
-        verbose_name_plural = _('tokens de recuperación')
-        ordering = ['-creado_en']
+        verbose_name = _("token de recuperación")
+        verbose_name_plural = _("tokens de recuperación")
+        ordering = ["-creado_en"]
 
     def __str__(self):
-        return f'Token para {self.usuario.correo} — {"Usado" if self.utilizado else "Vigente"}'
+        return f"Token para {self.usuario.correo} — {'Usado' if self.utilizado else 'Vigente'}"

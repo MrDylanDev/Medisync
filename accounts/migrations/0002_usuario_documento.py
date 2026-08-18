@@ -4,15 +4,21 @@ from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
-        ('accounts', '0001_initial'),
+        ("accounts", "0001_initial"),
     ]
 
     operations = [
         migrations.AddField(
-            model_name='usuario',
-            name='documento',
-            field=models.CharField(blank=True, help_text='Documento de identidad', max_length=30, null=True, unique=True, verbose_name='documento'),
+            model_name="usuario",
+            name="documento",
+            field=models.CharField(
+                blank=True,
+                help_text="Documento de identidad",
+                max_length=30,
+                null=True,
+                unique=True,
+                verbose_name="documento",
+            ),
         ),
     ]

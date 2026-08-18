@@ -18,10 +18,10 @@ def crear_perfil_usuario(sender, instance, created, **kwargs):
     if not created:
         return
 
-    if instance.rol == 'paciente':
+    if instance.rol == "paciente":
         Paciente.objects.get_or_create(usuario=instance)
-    elif instance.rol == 'medico':
+    elif instance.rol == "medico":
         Medico.objects.get_or_create(
             usuario=instance,
-            defaults={'numero_matricula': f'TEMP-{instance.id}'},
+            defaults={"numero_matricula": f"TEMP-{instance.id}"},
         )
