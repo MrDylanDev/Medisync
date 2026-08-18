@@ -34,6 +34,7 @@ class CitaSerializer(serializers.ModelSerializer):
             "updated_at",
         ]
         read_only_fields = [
+            "estado",  # solo cambia por los endpoints dedicados (cancelar, marcar realizada/no_asistió)
             "cancelada_por",
             "fecha_cancelacion",
             "created_at",
@@ -45,6 +46,18 @@ class CitaSerializer(serializers.ModelSerializer):
         if not value.disponible:
             raise serializers.ValidationError(_("El horario seleccionado no está disponible."))
         return value
+
+    def validate(self, attrs):
+        """Ensure the medico matches the horario's medico."""
+        horario = attrs.get("horario")
+        # En updates el medico no llega en attrs (es read-only en la vista);
+        # se valida contra el medico ya asignado a la cita.
+        medico = attrs.get("medico") or getattr(self.instance, "medico", None)
+        if horario and medico and medico != horario.medico:
+            raise serializers.ValidationError(
+                {"medico": _("El médico no corresponde al horario seleccionado.")}
+            )
+        return attrs
 
 
 class AuditoriaCitaSerializer(serializers.ModelSerializer):
