@@ -34,3 +34,5 @@ htmlcov/
 *.swo
 .atl/
 openspec/
+
+.venv/
