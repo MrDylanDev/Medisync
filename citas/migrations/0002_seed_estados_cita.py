@@ -5,22 +5,21 @@ from django.db import migrations
 
 def seed_estados(apps, schema_editor):
     """Seed initial EstadoCita records."""
-    EstadoCita = apps.get_model('citas', 'EstadoCita')
+    EstadoCita = apps.get_model("citas", "EstadoCita")
     estados = [
-        {'id': 1, 'nombre': 'pendiente', 'descripcion': 'Cita pendiente de confirmación'},
-        {'id': 2, 'nombre': 'confirmada', 'descripcion': 'Cita confirmada por el paciente'},
-        {'id': 3, 'nombre': 'realizada', 'descripcion': 'Cita realizada (asistió)'},
-        {'id': 4, 'nombre': 'cancelada', 'descripcion': 'Cita cancelada'},
-        {'id': 5, 'nombre': 'no_asistio', 'descripcion': 'El paciente no asistió a la cita'},
+        {"id": 1, "nombre": "pendiente", "descripcion": "Cita pendiente de confirmación"},
+        {"id": 2, "nombre": "confirmada", "descripcion": "Cita confirmada por el paciente"},
+        {"id": 3, "nombre": "realizada", "descripcion": "Cita realizada (asistió)"},
+        {"id": 4, "nombre": "cancelada", "descripcion": "Cita cancelada"},
+        {"id": 5, "nombre": "no_asistio", "descripcion": "El paciente no asistió a la cita"},
     ]
     for data in estados:
-        EstadoCita.objects.update_or_create(id=data['id'], defaults=data)
+        EstadoCita.objects.update_or_create(id=data["id"], defaults=data)
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
-        ('citas', '0001_initial'),
+        ("citas", "0001_initial"),
     ]
 
     operations = [

@@ -30,12 +30,12 @@ def crear_auditoria_cita(sender, instance, created, **kwargs):
     - On update: logs the transition if estado changed
     - No entry is created when non-estado fields change (e.g., notas)
     """
-    old = getattr(instance, '_estado_anterior', None)
+    old = getattr(instance, "_estado_anterior", None)
     if created or old != instance.estado:
         AuditoriaCita.objects.create(
             cita=instance,
             estado_anterior=old,
             estado_nuevo=instance.estado,
             cambiado_por=instance.created_by if instance.created_by_id else None,
-            nota='',
+            nota="",
         )

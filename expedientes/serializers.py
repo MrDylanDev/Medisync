@@ -10,15 +10,22 @@ class ExpedienteSerializer(serializers.ModelSerializer):
     class Meta:
         model = Expediente
         fields = [
-            'id', 'paciente', 'medico', 'cita',
-            'diagnostico', 'tratamiento', 'notas',
-            'paciente_nombre', 'medico_nombre',
-            'created_at', 'updated_at',
+            "id",
+            "paciente",
+            "medico",
+            "cita",
+            "diagnostico",
+            "tratamiento",
+            "notas",
+            "paciente_nombre",
+            "medico_nombre",
+            "created_at",
+            "updated_at",
         ]
-        read_only_fields = ['created_at', 'updated_at']
+        read_only_fields = ["created_at", "updated_at"]
 
     def get_paciente_nombre(self, obj):
         return obj.paciente.usuario.nombre_completo
 
     def get_medico_nombre(self, obj):
-        return f'Dr. {obj.medico.usuario.nombre_completo}'
+        return f"Dr. {obj.medico.usuario.nombre_completo}"

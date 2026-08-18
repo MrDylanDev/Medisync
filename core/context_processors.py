@@ -11,7 +11,7 @@ def global_template_vars(request):
     to all templates without per-view boilerplate.
     """
     return {
-        'app_name': 'Medisync',
-        'current_year': datetime.now().year,
-        'debug': settings.DEBUG,
+        "app_name": "Medisync",
+        "current_year": datetime.now().year,
+        "debug": settings.DEBUG,
     }

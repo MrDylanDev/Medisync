@@ -15,22 +15,28 @@ class RegisterSerializer(serializers.ModelSerializer):
     with the provided credentials. Password confirmation field
     is write-only and removed after validation.
     """
+
     password = serializers.CharField(
         write_only=True,
         required=True,
-        style={'input_type': 'password'},
+        style={"input_type": "password"},
     )
     password_confirm = serializers.CharField(
         write_only=True,
         required=True,
-        style={'input_type': 'password'},
+        style={"input_type": "password"},
     )
 
     class Meta:
         model = Usuario
         fields = [
-            'correo', 'nombre', 'apellido', 'telefono',
-            'password', 'password_confirm', 'rol',
+            "correo",
+            "nombre",
+            "apellido",
+            "telefono",
+            "password",
+            "password_confirm",
+            "rol",
         ]
 
     def validate_correo(self, value):
@@ -38,14 +44,14 @@ class RegisterSerializer(serializers.ModelSerializer):
         return Usuario.objects.normalize_email(value)
 
     def validate(self, attrs):
-        if attrs['password'] != attrs.pop('password_confirm'):
+        if attrs["password"] != attrs.pop("password_confirm"):
             raise serializers.ValidationError(
-                {'password_confirm': _('Las contraseñas no coinciden.')}
+                {"password_confirm": _("Las contraseñas no coinciden.")}
             )
         return attrs
 
     def create(self, validated_data):
-        password = validated_data.pop('password')
+        password = validated_data.pop("password")
         usuario = Usuario(**validated_data)
         usuario.set_password(password)
         usuario.save()
@@ -59,46 +65,47 @@ class LoginSerializer(serializers.Serializer):
     Validates credentials (correo + password) and returns
     the authenticated Usuario instance on success.
     """
+
     correo = serializers.EmailField()
     password = serializers.CharField(
-        style={'input_type': 'password'},
+        style={"input_type": "password"},
         trim_whitespace=False,
     )
 
     def validate(self, attrs):
-        correo = attrs.get('correo')
-        password = attrs.get('password')
+        correo = attrs.get("correo")
+        password = attrs.get("password")
 
         if correo and password:
             if is_login_locked(correo):
                 raise serializers.ValidationError(
-                    _('Demasiados intentos fallidos. La cuenta está bloqueada por 15 minutos.'),
-                    code='account_locked',
+                    _("Demasiados intentos fallidos. La cuenta está bloqueada por 15 minutos."),
+                    code="account_locked",
                 )
 
             user = authenticate(
-                request=self.context.get('request'),
+                request=self.context.get("request"),
                 username=correo,
                 password=password,
             )
             if not user:
                 register_failed_attempt(correo)
                 raise serializers.ValidationError(
-                    _('Credenciales inválidas.'),
-                    code='authentication_failed',
+                    _("Credenciales inválidas."),
+                    code="authentication_failed",
                 )
             if not user.is_active:
                 raise serializers.ValidationError(
-                    _('La cuenta está desactivada.'),
-                    code='account_disabled',
+                    _("La cuenta está desactivada."),
+                    code="account_disabled",
                 )
 
             reset_login_attempts(correo)
-            attrs['user'] = user
+            attrs["user"] = user
         else:
             raise serializers.ValidationError(
-                _('Debe proporcionar correo y contraseña.'),
-                code='missing_fields',
+                _("Debe proporcionar correo y contraseña."),
+                code="missing_fields",
             )
 
         return attrs
@@ -111,32 +118,41 @@ class UsuarioSerializer(serializers.ModelSerializer):
     Excludes sensitive fields like password. Used for
     displaying user profile information.
     """
+
     class Meta:
         model = Usuario
         fields = [
-            'id', 'correo', 'nombre', 'apellido',
-            'telefono', 'documento', 'rol', 'is_active',
+            "id",
+            "correo",
+            "nombre",
+            "apellido",
+            "telefono",
+            "documento",
+            "rol",
+            "is_active",
         ]
-        read_only_fields = ['id', 'is_active']
+        read_only_fields = ["id", "is_active"]
 
 
 class PacienteSerializer(serializers.ModelSerializer):
     """Serializer for patient profile data."""
+
     usuario = UsuarioSerializer(read_only=True)
 
     class Meta:
         model = Paciente
-        fields = '__all__'
-        read_only_fields = ['numero_historia_clinica']
+        fields = "__all__"
+        read_only_fields = ["numero_historia_clinica"]
 
 
 class MedicoSerializer(serializers.ModelSerializer):
     """Serializer for doctor profile data."""
+
     usuario = UsuarioSerializer(read_only=True)
 
     class Meta:
         model = Medico
-        fields = '__all__'
+        fields = "__all__"
 
 
 class PasswordResetRequestSerializer(serializers.Serializer):
@@ -147,6 +163,7 @@ class PasswordResetRequestSerializer(serializers.Serializer):
     if the email exists in the system (no error
     disclosure for security).
     """
+
     correo = serializers.EmailField()
 
 
@@ -157,19 +174,20 @@ class PasswordResetConfirmSerializer(serializers.Serializer):
     Validates the token and sets the new password.
     Requires token, new password, and confirmation.
     """
+
     token = serializers.CharField()
     password = serializers.CharField(
         write_only=True,
-        style={'input_type': 'password'},
+        style={"input_type": "password"},
     )
     password_confirm = serializers.CharField(
         write_only=True,
-        style={'input_type': 'password'},
+        style={"input_type": "password"},
     )
 
     def validate(self, attrs):
-        if attrs['password'] != attrs['password_confirm']:
+        if attrs["password"] != attrs["password_confirm"]:
             raise serializers.ValidationError(
-                {'password_confirm': _('Las contraseñas no coinciden.')}
+                {"password_confirm": _("Las contraseñas no coinciden.")}
             )
         return attrs

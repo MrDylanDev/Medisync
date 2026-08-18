@@ -15,7 +15,7 @@ LOGIN_LOCKOUT_MINUTES = 15
 
 
 def _login_cache_key(email):
-    return f'login_attempts:{email}'
+    return f"login_attempts:{email}"
 
 
 def is_login_locked(email):
@@ -52,7 +52,7 @@ def validate_cuit(cuit: str) -> bool:
         True if the CUIT is valid, False otherwise.
     """
     # Remove hyphens and whitespace
-    cuit = re.sub(r'[\s-]', '', cuit)
+    cuit = re.sub(r"[\s-]", "", cuit)
 
     # Must be exactly 11 digits
     if not cuit.isdigit() or len(cuit) != 11:
@@ -82,9 +82,9 @@ def format_cuit(cuit: str) -> str:
     Returns:
         Formatted CUIT or the original string if invalid.
     """
-    digits = re.sub(r'[\s-]', '', cuit)
+    digits = re.sub(r"[\s-]", "", cuit)
     if len(digits) == 11 and digits.isdigit():
-        return f'{digits[:2]}-{digits[2:10]}-{digits[10:]}'
+        return f"{digits[:2]}-{digits[2:10]}-{digits[10:]}"
     return cuit
 
 
@@ -100,7 +100,7 @@ def date_range(start_date: date, end_date: date):
         Each date in the range.
     """
     if end_date < start_date:
-        raise ValueError('end_date must be >= start_date')
+        raise ValueError("end_date must be >= start_date")
 
     current = start_date
     while current <= end_date:
@@ -121,7 +121,7 @@ def generate_slug(text: str, max_length: int = 50) -> str:
     """
     slug = slugify(text)
     if len(slug) > max_length:
-        slug = slug[:max_length].rstrip('-')
+        slug = slug[:max_length].rstrip("-")
     return slug
 
 
@@ -138,7 +138,7 @@ def parse_argentine_date(date_str: str) -> date:
     Raises:
         ValueError: If the string cannot be parsed.
     """
-    return datetime.strptime(date_str, '%d/%m/%Y').date()
+    return datetime.strptime(date_str, "%d/%m/%Y").date()
 
 
 def send_template_email(subject, template_name, context, recipient_list):
@@ -155,12 +155,12 @@ def send_template_email(subject, template_name, context, recipient_list):
     Returns:
         The number of successfully delivered messages.
     """
-    context.setdefault('site_name', 'Medisync')
-    context.setdefault('protocol', 'http')
-    context.setdefault('domain', 'localhost:8000')
+    context.setdefault("site_name", "Medisync")
+    context.setdefault("protocol", "http")
+    context.setdefault("domain", "localhost:8000")
 
     html_message = render_to_string(template_name, context)
-    plain_message = re.sub(r'<[^>]+>', '', html_message)
+    plain_message = re.sub(r"<[^>]+>", "", html_message)
 
     sent = send_mail(
         subject=subject,
