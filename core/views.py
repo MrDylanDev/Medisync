@@ -2,7 +2,7 @@ from django.db.utils import OperationalError
 from django.shortcuts import render
 
 from especialidades.models import Especialidad
-from medicos.models import Medico, MedicoEspecialidad
+from medicos.models import Medico
 
 
 def home(request):

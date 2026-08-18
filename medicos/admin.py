@@ -1,6 +1,6 @@
 from django.contrib import admin
 
-from .models import Medico, MedicoEspecialidad, Horario
+from .models import Horario, Medico, MedicoEspecialidad
 
 
 class MedicoEspecialidadInline(admin.TabularInline):

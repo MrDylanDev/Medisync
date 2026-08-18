@@ -1,11 +1,12 @@
-from django.conf import settings
 from datetime import datetime
+
+from django.conf import settings
 
 
 def global_template_vars(request):
     """
     Context processor providing global template variables.
-    
+
     Makes app name, current year, and debug status available
     to all templates without per-view boilerplate.
     """

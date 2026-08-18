@@ -1,18 +1,19 @@
 """
 Tests for core app: utils, middleware, context_processors.
 """
-import pytest
 from datetime import date
-from core.utils import (
-    validate_cuit,
-    format_cuit,
-    date_range,
-    generate_slug,
-    parse_argentine_date,
-)
-from core.middleware import get_current_user, RequestUserMiddleware
+
+import pytest
 from django.http import HttpRequest
 
+from core.middleware import RequestUserMiddleware, get_current_user
+from core.utils import (
+    date_range,
+    format_cuit,
+    generate_slug,
+    parse_argentine_date,
+    validate_cuit,
+)
 
 # ─── Utils: validate_cuit ────────────────────────────────────────────────────
 

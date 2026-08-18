@@ -11,7 +11,7 @@ def get_current_user():
 class RequestUserMiddleware:
     """
     Middleware that stores the current request user in thread-local storage.
-    
+
     This enables models like BaseModel to auto-set the created_by field
     without needing to pass the user explicitly through every code path.
     """

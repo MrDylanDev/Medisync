@@ -3,12 +3,13 @@ from datetime import date, datetime, timedelta
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.db import IntegrityError, transaction
-from django.shortcuts import render, redirect, get_object_or_404
+from django.shortcuts import get_object_or_404, redirect, render
 from django.utils.translation import gettext_lazy as _
 from django.views.decorators.http import require_http_methods
 
 from citas.models import Cita, EstadoCita
-from .models import Medico, Horario
+
+from .models import Horario, Medico
 
 
 @login_required
@@ -74,7 +75,7 @@ def agregar_horario(request):
         creados = 0
         current = start
         while current + delta <= end:
-            _, created = Horario.objects.get_or_create(
+            _slot, created = Horario.objects.get_or_create(
                 medico=medico, fecha=fecha,
                 hora_inicio=current.time(),
                 hora_fin=(current + delta).time(),

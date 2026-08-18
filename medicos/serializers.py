@@ -1,7 +1,8 @@
 from rest_framework import serializers
 
-from .models import Medico, MedicoEspecialidad, Horario
 from accounts.serializers import UsuarioSerializer
+
+from .models import Horario, Medico, MedicoEspecialidad
 
 
 class MedicoSerializer(serializers.ModelSerializer):

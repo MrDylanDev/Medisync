@@ -1,8 +1,9 @@
 from django.db import models
-from django.shortcuts import render, get_object_or_404
+from django.shortcuts import get_object_or_404, render
 
 from especialidades.models import Especialidad
-from .models import Medico, Horario
+
+from .models import Horario, Medico
 
 
 def medico_list(request):

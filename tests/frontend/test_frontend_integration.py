@@ -1,14 +1,12 @@
 import pytest
 from django.urls import reverse
-from django.test import Client
 
-from accounts.models import Usuario, Paciente
-from medicos import models as medicos_models
-from especialidades.models import Especialidad
+from accounts.models import Paciente, Usuario
 from citas.models import Cita, EstadoCita
+from especialidades.models import Especialidad
 from expedientes.models import Expediente
+from medicos import models as medicos_models
 from notificaciones.models import Notificacion
-
 
 # ─── Helpers ───────────────────────────────────────────────────────────────
 

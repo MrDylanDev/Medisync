@@ -1,11 +1,11 @@
 """
 Tests for medicos app: models, signals, serializers, views.
 """
-import pytest
-from datetime import time, date
-from django.db import IntegrityError
-from django.core.exceptions import ValidationError
+from datetime import date, time
 
+import pytest
+from django.core.exceptions import ValidationError
+from django.db import IntegrityError
 
 # ─── Fixtures ─────────────────────────────────────────────────────────────────
 
@@ -278,7 +278,7 @@ class TestHorarioOverlapSignal:
 
     def test_different_medico_no_overlap(self, db, medico_usuario):
         """Same times but different medico should be OK."""
-        from medicos.models import Medico, Horario
+        from medicos.models import Horario, Medico
         medico1 = Medico.objects.create(usuario=medico_usuario)
         from accounts.models import Usuario
         otro_user = Usuario.objects.create_user(

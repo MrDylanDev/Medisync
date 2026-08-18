@@ -4,20 +4,17 @@ from django.contrib.auth import password_validation
 from django.contrib.auth.decorators import login_required, user_passes_test
 from django.core.exceptions import ValidationError
 from django.db.models import Q
-from django.shortcuts import render, redirect, get_object_or_404
+from django.shortcuts import get_object_or_404, redirect, render
 from django.utils.translation import gettext_lazy as _
 from django.views.decorators.http import require_http_methods
 
-from citas.models import Cita
 from core.utils import send_template_email
 from especialidades.models import Especialidad
-
-from .models import Usuario, Medico as MedicoProfile
-from .forms import EmailAuthenticationForm
 from medicos.models import Medico as MedicoPractice
 
-
-from django.views.decorators.http import require_http_methods, require_POST
+from .forms import EmailAuthenticationForm
+from .models import Medico as MedicoProfile
+from .models import Usuario
 
 
 @require_http_methods(["GET", "POST"])

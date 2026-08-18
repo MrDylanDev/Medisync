@@ -8,7 +8,7 @@ class UppercaseAndSpecialValidator:
     """
     Password validator requiring at least one uppercase letter,
     one digit, and one special character.
-    
+
     Used in AUTH_PASSWORD_VALIDATORS to enforce password complexity
     beyond Django's built-in validators.
     """

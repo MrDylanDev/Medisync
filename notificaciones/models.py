@@ -1,12 +1,12 @@
-from django.db import models
 from django.conf import settings
+from django.db import models
 from django.utils.translation import gettext_lazy as _
 
 
 class Notificacion(models.Model):
     """
     In-app notification for users.
-    
+
     Tracks system-generated messages about appointments,
     reminders, and other important events.
     """

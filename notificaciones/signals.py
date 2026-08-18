@@ -4,6 +4,7 @@ from django.db.models.signals import post_save
 from django.dispatch import receiver
 
 from citas.models import Cita
+
 from .models import Notificacion
 
 

@@ -1,15 +1,15 @@
-from datetime import datetime, time as time_type, timedelta
+from datetime import datetime, timedelta
 
 from django.db import IntegrityError
 from django.utils.translation import gettext_lazy as _
 from rest_framework import status
 from rest_framework.decorators import api_view, permission_classes
+from rest_framework.pagination import PageNumberPagination
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
-from rest_framework.pagination import PageNumberPagination
 
-from .models import Medico, Horario
-from .serializers import MedicoSerializer, HorarioSerializer
+from .models import Horario, Medico
+from .serializers import HorarioSerializer, MedicoSerializer
 
 PAGE_SIZE = 20
 

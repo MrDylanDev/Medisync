@@ -3,13 +3,14 @@ from django.utils.translation import gettext_lazy as _
 from rest_framework import serializers
 
 from core.utils import is_login_locked, register_failed_attempt, reset_login_attempts
-from .models import Usuario, Paciente, Medico
+
+from .models import Medico, Paciente, Usuario
 
 
 class RegisterSerializer(serializers.ModelSerializer):
     """
     Serializer for user registration.
-    
+
     Validates password confirmation and creates a new Usuario
     with the provided credentials. Password confirmation field
     is write-only and removed after validation.
@@ -54,7 +55,7 @@ class RegisterSerializer(serializers.ModelSerializer):
 class LoginSerializer(serializers.Serializer):
     """
     Serializer for user login.
-    
+
     Validates credentials (correo + password) and returns
     the authenticated Usuario instance on success.
     """
@@ -106,7 +107,7 @@ class LoginSerializer(serializers.Serializer):
 class UsuarioSerializer(serializers.ModelSerializer):
     """
     Serializer for reading/updating Usuario profile.
-    
+
     Excludes sensitive fields like password. Used for
     displaying user profile information.
     """
@@ -141,7 +142,7 @@ class MedicoSerializer(serializers.ModelSerializer):
 class PasswordResetRequestSerializer(serializers.Serializer):
     """
     Serializer for requesting a password reset.
-    
+
     Takes an email address and sends a reset link
     if the email exists in the system (no error
     disclosure for security).
@@ -152,7 +153,7 @@ class PasswordResetRequestSerializer(serializers.Serializer):
 class PasswordResetConfirmSerializer(serializers.Serializer):
     """
     Serializer for confirming a password reset.
-    
+
     Validates the token and sets the new password.
     Requires token, new password, and confirmation.
     """

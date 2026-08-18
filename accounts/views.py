@@ -4,17 +4,18 @@ from django.utils.translation import gettext_lazy as _
 from drf_spectacular.utils import extend_schema
 from rest_framework import status
 from rest_framework.decorators import api_view, permission_classes
+from rest_framework.pagination import PageNumberPagination
 from rest_framework.permissions import AllowAny, IsAdminUser, IsAuthenticated
 from rest_framework.response import Response
-from rest_framework.pagination import PageNumberPagination
+from rest_framework_simplejwt.exceptions import TokenError
 from rest_framework_simplejwt.tokens import RefreshToken
 
 from .serializers import (
-    RegisterSerializer,
     LoginSerializer,
-    UsuarioSerializer,
-    PasswordResetRequestSerializer,
     PasswordResetConfirmSerializer,
+    PasswordResetRequestSerializer,
+    RegisterSerializer,
+    UsuarioSerializer,
 )
 
 Usuario = get_user_model()
@@ -77,7 +78,7 @@ def logout(request):
             {'detail': _('Sesión cerrada correctamente.')},
             status=status.HTTP_200_OK,
         )
-    except Exception:
+    except (TokenError, ImportError):
         return Response(
             {'error': _('Token inválido o expirado.')},
             status=status.HTTP_400_BAD_REQUEST,
@@ -106,7 +107,7 @@ def profile(request):
 def password_reset_request(request):
     """
     Request a password reset email.
-    
+
     Accepts an email address and (if registered) sends a
     password reset link. Always returns success to avoid
     user enumeration.
@@ -127,7 +128,7 @@ def password_reset_request(request):
 def password_reset_confirm(request):
     """
     Confirm password reset with token and set new password.
-    
+
     Validates the reset token and updates the user's password.
     """
     serializer = PasswordResetConfirmSerializer(data=request.data)
