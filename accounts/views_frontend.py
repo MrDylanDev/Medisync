@@ -119,9 +119,12 @@ def register(request):
         )
 
         if rol == "medico":
-            MedicoProfile.objects.create(
+            # La señal crear_perfil_usuario ya creó el MedicoProfile al guardar
+            # el usuario (con matrícula temporal); actualizamos con la del
+            # formulario para no violar la unicidad OneToOne.
+            MedicoProfile.objects.update_or_create(
                 usuario=usuario,
-                numero_matricula=numero_matricula,
+                defaults={"numero_matricula": numero_matricula},
             )
             MedicoPractice.objects.create(
                 usuario=usuario,
