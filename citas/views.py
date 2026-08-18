@@ -11,11 +11,17 @@ from rest_framework.pagination import PageNumberPagination
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 
+from accounts.models import Paciente
 from core.pdf_utils import generar_comprobante_cita
 from core.utils import send_template_email
 
 from .models import Cita, EstadoCita
 from .serializers import CitaSerializer
+
+# Campos que no se pueden modificar vía PUT (reprogramación): el estado solo
+# cambia por endpoints dedicados y paciente/médico son inmutables para evitar
+# que un cliente reasigne la cita a terceros.
+PROTECTED_UPDATE_FIELDS = ("estado", "paciente", "medico")
 
 PAGE_SIZE = 20
 
@@ -33,6 +39,10 @@ def cita_list(request):
     if request.method == "GET":
         if request.user.is_staff:
             queryset = Cita.objects.select_related("paciente", "medico", "horario", "estado").all()
+        elif request.user.rol == "medico":
+            queryset = Cita.objects.select_related(
+                "paciente", "medico", "horario", "estado"
+            ).filter(medico__usuario=request.user)
         else:
             queryset = Cita.objects.select_related(
                 "paciente", "medico", "horario", "estado"
@@ -66,6 +76,16 @@ def cita_detail(request, pk):
         )
 
     if request.method == "GET":
+        can_access = (
+            request.user.is_staff
+            or cita.paciente.usuario == request.user
+            or cita.medico.usuario == request.user
+        )
+        if not can_access:
+            return Response(
+                {"detail": _("No tienes permiso para acceder a esta cita.")},
+                status=status.HTTP_403_FORBIDDEN,
+            )
         serializer = CitaSerializer(cita)
         return Response(serializer.data)
 
@@ -83,7 +103,10 @@ def cita_detail(request, pk):
                 status=status.HTTP_400_BAD_REQUEST,
             )
 
-        serializer = CitaSerializer(cita, data=request.data, partial=True)
+        # La reprogramación solo puede tocar horario/motivo/notas: se descartan
+        # intentos de cambiar estado, paciente o médico.
+        data = {k: v for k, v in request.data.items() if k not in PROTECTED_UPDATE_FIELDS}
+        serializer = CitaSerializer(cita, data=data, partial=True)
         if not serializer.is_valid():
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
@@ -127,6 +150,24 @@ def cancelar_cita(request, pk):
         return Response(
             {"detail": _("Cita no encontrada.")},
             status=status.HTTP_404_NOT_FOUND,
+        )
+
+    # Ownership: solo el paciente dueño, el médico asignado o un staff
+    can_cancel = (
+        request.user.is_staff
+        or cita.paciente.usuario == request.user
+        or cita.medico.usuario == request.user
+    )
+    if not can_cancel:
+        return Response(
+            {"detail": _("No tienes permiso para cancelar esta cita.")},
+            status=status.HTTP_403_FORBIDDEN,
+        )
+
+    if cita.estado.nombre not in ("pendiente", "confirmada"):
+        return Response(
+            {"detail": _("Solo se pueden cancelar citas pendientes o confirmadas.")},
+            status=status.HTTP_400_BAD_REQUEST,
         )
 
     # Check 24-hour cancellation window
@@ -176,7 +217,19 @@ def _book_appointment(request):
     database transaction to prevent race conditions.
     Sends a confirmation email to the patient.
     """
-    serializer = CitaSerializer(data=request.data)
+    # Solo pacientes pueden agendar; la cita se crea a nombre del usuario autenticado.
+    try:
+        paciente = request.user.paciente
+    except Paciente.DoesNotExist:
+        return Response(
+            {"detail": _("Solo los pacientes pueden agendar citas.")},
+            status=status.HTTP_400_BAD_REQUEST,
+        )
+
+    data = request.data.copy()
+    data["paciente"] = paciente.id
+
+    serializer = CitaSerializer(data=data)
     if not serializer.is_valid():
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
