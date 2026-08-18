@@ -1,7 +1,7 @@
-from django.db.models.signals import pre_save, post_save
+from django.db.models.signals import post_save, pre_save
 from django.dispatch import receiver
 
-from .models import Cita, AuditoriaCita
+from .models import AuditoriaCita, Cita
 
 
 @receiver(pre_save, sender=Cita)
@@ -30,12 +30,12 @@ def crear_auditoria_cita(sender, instance, created, **kwargs):
     - On update: logs the transition if estado changed
     - No entry is created when non-estado fields change (e.g., notas)
     """
-    old = getattr(instance, '_estado_anterior', None)
+    old = getattr(instance, "_estado_anterior", None)
     if created or old != instance.estado:
         AuditoriaCita.objects.create(
             cita=instance,
             estado_anterior=old,
             estado_nuevo=instance.estado,
             cambiado_por=instance.created_by if instance.created_by_id else None,
-            nota='',
+            nota="",
         )

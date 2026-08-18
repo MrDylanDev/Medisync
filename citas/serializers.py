@@ -1,7 +1,7 @@
-from rest_framework import serializers
 from django.utils.translation import gettext_lazy as _
+from rest_framework import serializers
 
-from .models import Cita, AuditoriaCita
+from .models import AuditoriaCita, Cita
 
 
 class CitaSerializer(serializers.ModelSerializer):
@@ -11,30 +11,39 @@ class CitaSerializer(serializers.ModelSerializer):
     Includes read-only estado_nombre for convenience.
     Validates that the horario is available when creating.
     """
+
     estado_nombre = serializers.CharField(
-        source='estado.nombre',
+        source="estado.nombre",
         read_only=True,
     )
 
     class Meta:
         model = Cita
         fields = [
-            'id', 'paciente', 'medico', 'horario',
-            'estado', 'estado_nombre', 'motivo', 'notas',
-            'cancelada_por', 'fecha_cancelacion',
-            'created_at', 'updated_at',
+            "id",
+            "paciente",
+            "medico",
+            "horario",
+            "estado",
+            "estado_nombre",
+            "motivo",
+            "notas",
+            "cancelada_por",
+            "fecha_cancelacion",
+            "created_at",
+            "updated_at",
         ]
         read_only_fields = [
-            'cancelada_por', 'fecha_cancelacion',
-            'created_at', 'updated_at',
+            "cancelada_por",
+            "fecha_cancelacion",
+            "created_at",
+            "updated_at",
         ]
 
     def validate_horario(self, value):
         """Ensure the horario is available for booking."""
         if not value.disponible:
-            raise serializers.ValidationError(
-                _('El horario seleccionado no está disponible.')
-            )
+            raise serializers.ValidationError(_("El horario seleccionado no está disponible."))
         return value
 
 
@@ -43,5 +52,5 @@ class AuditoriaCitaSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = AuditoriaCita
-        fields = '__all__'
-        read_only_fields = ['fecha_cambio']
+        fields = "__all__"
+        read_only_fields = ["fecha_cambio"]

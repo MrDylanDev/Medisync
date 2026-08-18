@@ -1,6 +1,6 @@
+from django.core.exceptions import ValidationError
 from django.db.models.signals import pre_save
 from django.dispatch import receiver
-from django.core.exceptions import ValidationError
 from django.utils.translation import gettext_lazy as _
 
 from .models import Horario
@@ -33,6 +33,9 @@ def validar_horario_sin_superposicion(sender, instance, **kwargs):
 
     if overlapping.exists():
         raise ValidationError(
-            _('El horario se superpone con un turno existente para este médico '
-              'en la fecha %(fecha)s.') % {'fecha': instance.fecha},
+            _(
+                "El horario se superpone con un turno existente para este médico "
+                "en la fecha %(fecha)s."
+            )
+            % {"fecha": instance.fecha},
         )

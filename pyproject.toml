@@ -1,0 +1,11 @@
+[tool.ruff]
+line-length = 100
+target-version = "py312"
+
+[tool.ruff.lint]
+select = ["E", "F", "W", "I", "B", "UP", "SIM", "PERF", "RUF"]
+ignore = [
+    "RUF012", # mutable class defaults — idiomático en Django (choices=[...], TIPOS=[...])
+    "INT001", # f-strings en gettext — la app es solo español, sin catálogos de traducción
+    "E501",   # diferido: envolver las ~123 líneas >100 chars en un follow-up
+]
