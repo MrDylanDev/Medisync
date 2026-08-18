@@ -6,7 +6,6 @@ from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
-
     initial = True
 
     dependencies = [
@@ -15,20 +14,47 @@ class Migration(migrations.Migration):
 
     operations = [
         migrations.CreateModel(
-            name='Notificacion',
+            name="Notificacion",
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('tipo', models.CharField(choices=[('cita_confirmada', 'Cita confirmada'), ('cita_cancelada', 'Cita cancelada'), ('recordatorio', 'Recordatorio'), ('expediente_nuevo', 'Nuevo expediente'), ('sistema', 'Sistema')], default='sistema', max_length=30, verbose_name='tipo')),
-                ('titulo', models.CharField(max_length=200, verbose_name='título')),
-                ('mensaje', models.TextField(verbose_name='mensaje')),
-                ('leida', models.BooleanField(default=False, verbose_name='leída')),
-                ('creado_en', models.DateTimeField(auto_now_add=True, verbose_name='creado en')),
-                ('usuario', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='notificaciones', to=settings.AUTH_USER_MODEL, verbose_name='usuario')),
+                (
+                    "id",
+                    models.BigAutoField(
+                        auto_created=True, primary_key=True, serialize=False, verbose_name="ID"
+                    ),
+                ),
+                (
+                    "tipo",
+                    models.CharField(
+                        choices=[
+                            ("cita_confirmada", "Cita confirmada"),
+                            ("cita_cancelada", "Cita cancelada"),
+                            ("recordatorio", "Recordatorio"),
+                            ("expediente_nuevo", "Nuevo expediente"),
+                            ("sistema", "Sistema"),
+                        ],
+                        default="sistema",
+                        max_length=30,
+                        verbose_name="tipo",
+                    ),
+                ),
+                ("titulo", models.CharField(max_length=200, verbose_name="título")),
+                ("mensaje", models.TextField(verbose_name="mensaje")),
+                ("leida", models.BooleanField(default=False, verbose_name="leída")),
+                ("creado_en", models.DateTimeField(auto_now_add=True, verbose_name="creado en")),
+                (
+                    "usuario",
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.CASCADE,
+                        related_name="notificaciones",
+                        to=settings.AUTH_USER_MODEL,
+                        verbose_name="usuario",
+                    ),
+                ),
             ],
             options={
-                'verbose_name': 'notificación',
-                'verbose_name_plural': 'notificaciones',
-                'ordering': ['-creado_en'],
+                "verbose_name": "notificación",
+                "verbose_name_plural": "notificaciones",
+                "ordering": ["-creado_en"],
             },
         ),
     ]

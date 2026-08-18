@@ -4,25 +4,50 @@ from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
-
     initial = True
 
-    dependencies = [
-    ]
+    dependencies = []
 
     operations = [
         migrations.CreateModel(
-            name='Especialidad',
+            name="Especialidad",
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('nombre', models.CharField(help_text='Nombre de la especialidad médica', max_length=100, unique=True, verbose_name='nombre')),
-                ('descripcion', models.TextField(blank=True, help_text='Descripción detallada de la especialidad', verbose_name='descripción')),
-                ('activo', models.BooleanField(default=True, help_text='Indica si la especialidad está activa', verbose_name='activo')),
+                (
+                    "id",
+                    models.BigAutoField(
+                        auto_created=True, primary_key=True, serialize=False, verbose_name="ID"
+                    ),
+                ),
+                (
+                    "nombre",
+                    models.CharField(
+                        help_text="Nombre de la especialidad médica",
+                        max_length=100,
+                        unique=True,
+                        verbose_name="nombre",
+                    ),
+                ),
+                (
+                    "descripcion",
+                    models.TextField(
+                        blank=True,
+                        help_text="Descripción detallada de la especialidad",
+                        verbose_name="descripción",
+                    ),
+                ),
+                (
+                    "activo",
+                    models.BooleanField(
+                        default=True,
+                        help_text="Indica si la especialidad está activa",
+                        verbose_name="activo",
+                    ),
+                ),
             ],
             options={
-                'verbose_name': 'especialidad',
-                'verbose_name_plural': 'especialidades',
-                'ordering': ['nombre'],
+                "verbose_name": "especialidad",
+                "verbose_name_plural": "especialidades",
+                "ordering": ["nombre"],
             },
         ),
     ]

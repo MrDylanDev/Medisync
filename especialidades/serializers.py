@@ -13,4 +13,4 @@ class EspecialidadSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Especialidad
-        fields = ['id', 'nombre', 'descripcion', 'activo']
+        fields = ["id", "nombre", "descripcion", "activo"]

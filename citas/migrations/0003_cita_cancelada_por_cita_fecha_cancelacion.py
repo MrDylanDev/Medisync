@@ -4,20 +4,35 @@ from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
-        ('citas', '0002_seed_estados_cita'),
+        ("citas", "0002_seed_estados_cita"),
     ]
 
     operations = [
         migrations.AddField(
-            model_name='cita',
-            name='cancelada_por',
-            field=models.CharField(blank=True, choices=[('paciente', 'Paciente'), ('medico', 'Médico'), ('admin', 'Administrador')], help_text='Quién canceló la cita', max_length=10, null=True, verbose_name='cancelada por'),
+            model_name="cita",
+            name="cancelada_por",
+            field=models.CharField(
+                blank=True,
+                choices=[
+                    ("paciente", "Paciente"),
+                    ("medico", "Médico"),
+                    ("admin", "Administrador"),
+                ],
+                help_text="Quién canceló la cita",
+                max_length=10,
+                null=True,
+                verbose_name="cancelada por",
+            ),
         ),
         migrations.AddField(
-            model_name='cita',
-            name='fecha_cancelacion',
-            field=models.DateTimeField(blank=True, help_text='Fecha y hora en que se canceló la cita', null=True, verbose_name='fecha de cancelación'),
+            model_name="cita",
+            name="fecha_cancelacion",
+            field=models.DateTimeField(
+                blank=True,
+                help_text="Fecha y hora en que se canceló la cita",
+                null=True,
+                verbose_name="fecha de cancelación",
+            ),
         ),
     ]
