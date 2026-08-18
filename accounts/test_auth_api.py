@@ -147,11 +147,29 @@ class TestPasswordResetEndpoint:
     RESET_URL = "/api/auth/password-reset/"
     RESET_CONFIRM_URL = "/api/auth/password-reset/confirm/"
 
-    def test_reset_request_valid_email(self, api_client, db):
-        """Password reset request with valid data should return 200."""
-        data = {"correo": "test@example.com"}
-        response = api_client.post(self.RESET_URL, data, format="json")
+    def test_reset_request_valid_email(self, api_client, db, test_user):
+        """Reset request should create a token and send an email."""
+        from django.core import mail
+        from django.utils import timezone
+
+        from accounts.models import TokenRecuperacion
+
+        response = api_client.post(self.RESET_URL, {"correo": "test@example.com"}, format="json")
         assert response.status_code == status.HTTP_200_OK
+
+        token = TokenRecuperacion.objects.get(usuario=test_user, utilizado=False)
+        assert token.expira_en > timezone.now()
+        assert len(mail.outbox) == 1
+        assert "test@example.com" in mail.outbox[0].to
+        assert token.token in mail.outbox[0].body
+
+    def test_reset_request_unknown_email_no_enumeration(self, api_client, db):
+        """Unknown email returns 200 (no user enumeration) and creates no token."""
+        from accounts.models import TokenRecuperacion
+
+        response = api_client.post(self.RESET_URL, {"correo": "nobody@test.com"}, format="json")
+        assert response.status_code == status.HTTP_200_OK
+        assert not TokenRecuperacion.objects.exists()
 
     def test_reset_request_invalid_email(self, api_client, db):
         """Password reset request with invalid email should return 400."""
@@ -159,15 +177,98 @@ class TestPasswordResetEndpoint:
         response = api_client.post(self.RESET_URL, data, format="json")
         assert response.status_code == status.HTTP_400_BAD_REQUEST
 
-    def test_reset_confirm_valid(self, api_client, db):
-        """Password reset confirm with valid data should return 200."""
-        data = {
-            "token": "valid-token",
-            "password": "NewPass123!",
-            "password_confirm": "NewPass123!",
-        }
-        response = api_client.post(self.RESET_CONFIRM_URL, data, format="json")
+    def test_reset_confirm_valid(self, api_client, db, test_user):
+        """Confirm with a valid one-time token should update the password."""
+        from datetime import timedelta
+
+        from django.utils import timezone
+
+        from accounts.models import TokenRecuperacion
+
+        recuperacion = TokenRecuperacion.objects.create(
+            usuario=test_user,
+            token="valid-token-123",
+            expira_en=timezone.now() + timedelta(hours=1),
+        )
+        response = api_client.post(
+            self.RESET_CONFIRM_URL,
+            {
+                "token": "valid-token-123",
+                "password": "NewPass123!",
+                "password_confirm": "NewPass123!",
+            },
+            format="json",
+        )
         assert response.status_code == status.HTTP_200_OK
+
+        test_user.refresh_from_db()
+        assert test_user.check_password("NewPass123!")
+        recuperacion.refresh_from_db()
+        assert recuperacion.utilizado is True
+
+    def test_reset_confirm_invalid_token(self, api_client, db, test_user):
+        """Confirm with an unknown token should return 400."""
+        response = api_client.post(
+            self.RESET_CONFIRM_URL,
+            {
+                "token": "does-not-exist",
+                "password": "NewPass123!",
+                "password_confirm": "NewPass123!",
+            },
+            format="json",
+        )
+        assert response.status_code == status.HTTP_400_BAD_REQUEST
+        test_user.refresh_from_db()
+        assert test_user.check_password("TestPass123!")
+
+    def test_reset_confirm_expired_token(self, api_client, db, test_user):
+        """Confirm with an expired token should return 400."""
+        from datetime import timedelta
+
+        from django.utils import timezone
+
+        from accounts.models import TokenRecuperacion
+
+        TokenRecuperacion.objects.create(
+            usuario=test_user,
+            token="expired-token",
+            expira_en=timezone.now() - timedelta(hours=1),
+        )
+        response = api_client.post(
+            self.RESET_CONFIRM_URL,
+            {
+                "token": "expired-token",
+                "password": "NewPass123!",
+                "password_confirm": "NewPass123!",
+            },
+            format="json",
+        )
+        assert response.status_code == status.HTTP_400_BAD_REQUEST
+
+    def test_reset_confirm_used_token(self, api_client, db, test_user):
+        """Confirm with an already-used token should return 400."""
+        from datetime import timedelta
+
+        from django.utils import timezone
+
+        from accounts.models import TokenRecuperacion
+
+        TokenRecuperacion.objects.create(
+            usuario=test_user,
+            token="used-token",
+            expira_en=timezone.now() + timedelta(hours=1),
+            utilizado=True,
+        )
+        response = api_client.post(
+            self.RESET_CONFIRM_URL,
+            {
+                "token": "used-token",
+                "password": "NewPass123!",
+                "password_confirm": "NewPass123!",
+            },
+            format="json",
+        )
+        assert response.status_code == status.HTTP_400_BAD_REQUEST
 
     def test_reset_confirm_password_mismatch(self, api_client, db):
         """Password reset with mismatched passwords should return 400."""
@@ -177,4 +278,28 @@ class TestPasswordResetEndpoint:
             "password_confirm": "DifferentPass1!",
         }
         response = api_client.post(self.RESET_CONFIRM_URL, data, format="json")
+        assert response.status_code == status.HTTP_400_BAD_REQUEST
+
+    def test_reset_confirm_weak_password(self, api_client, db, test_user):
+        """Password reset with a weak password should return 400."""
+        from datetime import timedelta
+
+        from django.utils import timezone
+
+        from accounts.models import TokenRecuperacion
+
+        TokenRecuperacion.objects.create(
+            usuario=test_user,
+            token="weak-token",
+            expira_en=timezone.now() + timedelta(hours=1),
+        )
+        response = api_client.post(
+            self.RESET_CONFIRM_URL,
+            {
+                "token": "weak-token",
+                "password": "weak",
+                "password_confirm": "weak",
+            },
+            format="json",
+        )
         assert response.status_code == status.HTTP_400_BAD_REQUEST
