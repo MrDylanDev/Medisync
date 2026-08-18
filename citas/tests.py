@@ -491,3 +491,201 @@ class TestCitaDetailEndpoint:
         """Authenticated user should view a cita."""
         response = paciente_client.get(f"/api/citas/{cita.id}/", format="json")
         assert response.status_code == 200
+
+
+# ─── Access control (issue #20) ────────────────────────────────────────────
+
+
+@pytest.fixture
+def otro_paciente_usuario(db):
+    """Create a second paciente user (for cross-user tests)."""
+    from accounts.models import Usuario
+
+    return Usuario.objects.create_user(
+        correo="otro@test.com",
+        password="TestPass123!",
+        nombre="Otro",
+        apellido="Paciente",
+        rol="paciente",
+    )
+
+
+@pytest.fixture
+def otro_paciente(db, otro_paciente_usuario):
+    """Create the Paciente profile for the second user."""
+    from accounts.models import Paciente
+
+    return Paciente.objects.get(usuario=otro_paciente_usuario)
+
+
+@pytest.fixture
+def otro_paciente_client(db, otro_paciente_usuario):
+    """Authenticated API client for the second patient."""
+    from rest_framework.test import APIClient
+
+    client = APIClient()
+    client.force_authenticate(user=otro_paciente_usuario)
+    return client
+
+
+@pytest.fixture
+def otro_medico(db):
+    """Create a second medico (practice model)."""
+    from accounts.models import Usuario
+    from medicos.models import Medico
+
+    user = Usuario.objects.create_user(
+        correo="otromed@test.com",
+        password="TestPass123!",
+        nombre="Otro",
+        apellido="Medico",
+        rol="medico",
+    )
+    return Medico.objects.create(usuario=user)
+
+
+class TestCitaAccessControl:
+    """Cualquier usuario autenticado puede leer/cancelar citas ajenas (#20)."""
+
+    def test_detail_denied_for_other_patient(self, db, otro_paciente_client, cita):
+        """Another patient should NOT view a cita they don't own."""
+        response = otro_paciente_client.get(f"/api/citas/{cita.id}/", format="json")
+        assert response.status_code == 403
+
+    def test_detail_allowed_for_owner(self, db, paciente_client, cita):
+        """The owning patient should view their cita."""
+        response = paciente_client.get(f"/api/citas/{cita.id}/", format="json")
+        assert response.status_code == 200
+
+    def test_detail_allowed_for_assigned_medico(self, db, medico_usuario, cita):
+        """The assigned medico should view the cita."""
+        from rest_framework.test import APIClient
+
+        client = APIClient()
+        client.force_authenticate(user=medico_usuario)
+        response = client.get(f"/api/citas/{cita.id}/", format="json")
+        assert response.status_code == 200
+
+    def test_cancel_denied_for_other_patient(self, db, otro_paciente_client, cita):
+        """Another patient should NOT cancel a cita they don't own."""
+        response = otro_paciente_client.post(f"/api/citas/{cita.id}/cancelar/", {}, format="json")
+        assert response.status_code == 403
+
+    def test_cancel_requires_pending_or_confirmed(self, db, paciente_client, cita):
+        """Cancelling a cita that is already realizada should fail."""
+        from citas.models import EstadoCita
+
+        realizada = EstadoCita.objects.get(nombre="realizada")
+        cita.estado = realizada
+        cita.save(update_fields=["estado"])
+        response = paciente_client.post(f"/api/citas/{cita.id}/cancelar/", {}, format="json")
+        assert response.status_code == 400
+
+    def test_book_forces_requester_as_paciente(
+        self, db, paciente_client, paciente, otro_paciente, available_horario
+    ):
+        """Booking always assigns the authenticated patient, not the posted one."""
+        response = paciente_client.post(
+            "/api/citas/",
+            {
+                "paciente": otro_paciente.id,
+                "medico": available_horario.medico_id,
+                "horario": available_horario.id,
+                "motivo": "Consulta",
+            },
+            format="json",
+        )
+        assert response.status_code == 201, response.data
+        assert response.data["paciente"] == paciente.id
+
+    def test_book_requires_paciente_role(self, db, medico_usuario, available_horario):
+        """A medico user cannot book an appointment."""
+        from rest_framework.test import APIClient
+
+        client = APIClient()
+        client.force_authenticate(user=medico_usuario)
+        response = client.post(
+            "/api/citas/",
+            {
+                "medico": available_horario.medico_id,
+                "horario": available_horario.id,
+                "motivo": "Consulta",
+            },
+            format="json",
+        )
+        assert response.status_code == 400
+
+    def test_book_medico_must_match_horario(
+        self, db, paciente_client, paciente, otro_medico, available_horario
+    ):
+        """Booking with a medico different from the horario's medico should fail."""
+        response = paciente_client.post(
+            "/api/citas/",
+            {
+                "paciente": paciente.id,
+                "medico": otro_medico.id,
+                "horario": available_horario.id,
+                "motivo": "Consulta",
+            },
+            format="json",
+        )
+        assert response.status_code == 400
+
+
+class TestCitaProtectedFields:
+    """CitaSerializer permite modificar estado/paciente/medico vía PUT (#21)."""
+
+    def test_put_ignores_estado(self, db, paciente_client, cita):
+        """PUT with estado should leave the estado unchanged."""
+        from citas.models import EstadoCita
+
+        confirmada = EstadoCita.objects.get(nombre="confirmada")
+        response = paciente_client.put(
+            f"/api/citas/{cita.id}/",
+            {"estado": confirmada.id, "motivo": "Nuevo motivo"},
+            format="json",
+        )
+        assert response.status_code == 200, response.data
+        cita.refresh_from_db()
+        assert cita.estado.nombre == "pendiente"
+
+    def test_put_ignores_paciente(self, db, paciente_client, cita, otro_paciente):
+        """PUT with another paciente should leave the paciente unchanged."""
+        response = paciente_client.put(
+            f"/api/citas/{cita.id}/",
+            {"paciente": otro_paciente.id, "motivo": "Nuevo motivo"},
+            format="json",
+        )
+        assert response.status_code == 200, response.data
+        cita.refresh_from_db()
+        assert cita.paciente != otro_paciente
+
+    def test_put_ignores_medico(self, db, paciente_client, cita, otro_medico):
+        """PUT with another medico should leave the medico unchanged."""
+        response = paciente_client.put(
+            f"/api/citas/{cita.id}/",
+            {"medico": otro_medico.id, "motivo": "Nuevo motivo"},
+            format="json",
+        )
+        assert response.status_code == 200, response.data
+        cita.refresh_from_db()
+        assert cita.medico != otro_medico
+
+    def test_put_cannot_reschedule_to_another_medico_horario(
+        self, db, paciente_client, cita, otro_medico
+    ):
+        """Rescheduling to a horario of another medico should fail."""
+        from medicos.models import Horario
+
+        otro_horario = Horario.objects.create(
+            medico=otro_medico,
+            fecha=date.today() + timedelta(days=10),
+            hora_inicio=time(9, 0),
+            hora_fin=time(10, 0),
+        )
+        response = paciente_client.put(
+            f"/api/citas/{cita.id}/",
+            {"horario": otro_horario.id, "motivo": "Reprogramar"},
+            format="json",
+        )
+        assert response.status_code == 400

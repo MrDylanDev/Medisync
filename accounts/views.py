@@ -1,5 +1,9 @@
+import secrets
+from datetime import timedelta
+
 from django.contrib.auth import get_user_model
 from django.db.models import Q
+from django.utils import timezone
 from django.utils.translation import gettext_lazy as _
 from drf_spectacular.utils import extend_schema
 from rest_framework import status
@@ -10,6 +14,9 @@ from rest_framework.response import Response
 from rest_framework_simplejwt.exceptions import TokenError
 from rest_framework_simplejwt.tokens import RefreshToken
 
+from core.utils import send_template_email
+
+from .models import TokenRecuperacion
 from .serializers import (
     LoginSerializer,
     PasswordResetConfirmSerializer,
@@ -122,14 +129,45 @@ def password_reset_request(request):
     user enumeration.
     """
     serializer = PasswordResetRequestSerializer(data=request.data)
-    if serializer.is_valid():
-        # In a real app, this would send an email with the reset link
-        # For development, we just return success
+    if not serializer.is_valid():
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+    correo = serializer.validated_data["correo"]
+    try:
+        user = Usuario.objects.get(correo=correo)
+    except Usuario.DoesNotExist:
+        # Siempre devuelve éxito para no revelar qué correos están registrados.
         return Response(
-            {"detail": _("Si el correo está registrado, recibirás un enlace de recuperación.")},
+            {
+                "detail": _(
+                    "Si el correo está registrado, recibirás un correo para restablecer tu contraseña."
+                )
+            },
             status=status.HTTP_200_OK,
         )
-    return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+    token = secrets.token_urlsafe(32)
+    TokenRecuperacion.objects.create(
+        usuario=user,
+        token=token,
+        expira_en=timezone.now() + timedelta(hours=24),
+    )
+
+    send_template_email(
+        subject="Restablecer contraseña — Medisync",
+        template_name="emails/api_password_reset.html",
+        context={"nombre": user.nombre, "token": token},
+        recipient_list=[correo],
+    )
+
+    return Response(
+        {
+            "detail": _(
+                "Si el correo está registrado, recibirás un correo para restablecer tu contraseña."
+            )
+        },
+        status=status.HTTP_200_OK,
+    )
 
 
 @api_view(["POST"])
@@ -141,13 +179,33 @@ def password_reset_confirm(request):
     Validates the reset token and updates the user's password.
     """
     serializer = PasswordResetConfirmSerializer(data=request.data)
-    if serializer.is_valid():
-        # In a real app, this would validate the token and update the password
-        return Response(
-            {"detail": _("Contraseña actualizada correctamente.")},
-            status=status.HTTP_200_OK,
+    if not serializer.is_valid():
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+    token = serializer.validated_data["token"]
+    password = serializer.validated_data["password"]
+
+    try:
+        recuperacion = TokenRecuperacion.objects.select_related("usuario").get(
+            token=token, utilizado=False, expira_en__gt=timezone.now()
         )
-    return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    except TokenRecuperacion.DoesNotExist:
+        return Response(
+            {"detail": _("Token inválido o expirado.")},
+            status=status.HTTP_400_BAD_REQUEST,
+        )
+
+    user = recuperacion.usuario
+    user.set_password(password)
+    user.save(update_fields=["password"])
+
+    # Invalida los tokens de recuperación pendientes del usuario.
+    TokenRecuperacion.objects.filter(usuario=user, utilizado=False).update(utilizado=True)
+
+    return Response(
+        {"detail": _("Contraseña actualizada correctamente.")},
+        status=status.HTTP_200_OK,
+    )
 
 
 # ─── Admin endpoints ─────────────────────────────────────────────────────────

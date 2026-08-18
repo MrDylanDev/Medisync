@@ -166,6 +166,12 @@ class Paciente(BaseModel):
         blank=True,
     )
 
+    def save(self, *args, **kwargs):
+        """Auto-assign an HC number when missing (numero_historia_clinica is unique)."""
+        if not self.numero_historia_clinica and self.usuario_id:
+            self.numero_historia_clinica = f"HC-{self.usuario_id:06d}"
+        super().save(*args, **kwargs)
+
     class Meta:
         verbose_name = _("paciente")
         verbose_name_plural = _("pacientes")
