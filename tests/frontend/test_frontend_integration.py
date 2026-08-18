@@ -213,6 +213,52 @@ class TestAdminUsuariosFrontend:
         assert Usuario.objects.filter(pk=admin_user.pk).exists()
 
 
+# ─── Registro Frontend ────────────────────────────────────────────────────
+
+@pytest.mark.django_db
+class TestRegistroFrontend:
+    def test_registro_medico_crea_perfiles(self, client):
+        """Registrar un médico debe redirigir y crear/actualizar ambos perfiles."""
+        r = client.post(reverse('register'), {
+            'correo': 'nuevo_medico@test.com',
+            'nombre': 'Nuevo',
+            'apellido': 'Medico',
+            'telefono': '',
+            'documento': '',
+            'password': 'Medico1!',
+            'password_confirm': 'Medico1!',
+            'rol': 'medico',
+            'numero_matricula': 'MN 12345',
+        })
+        assert r.status_code == 302, r.content.decode()[:500]
+
+        user = Usuario.objects.get(correo='nuevo_medico@test.com')
+        assert user.rol == 'medico'
+        # accounts.Medico (perfil): debe tener la matrícula del formulario (no TEMP-*)
+        perfil = user.medico_profile
+        assert perfil.numero_matricula == 'MN 12345'
+        # medicos.Medico (práctica): debe existir
+        assert medicos_models.Medico.objects.filter(usuario=user).exists()
+
+    def test_registro_paciente_crea_perfil(self, client):
+        """Registrar un paciente sigue creando su perfil correctamente."""
+        r = client.post(reverse('register'), {
+            'correo': 'nuevo_paciente@test.com',
+            'nombre': 'Nuevo',
+            'apellido': 'Paciente',
+            'telefono': '',
+            'documento': '',
+            'password': 'Paciente1!',
+            'password_confirm': 'Paciente1!',
+            'rol': 'paciente',
+        })
+        assert r.status_code == 302, r.content.decode()[:500]
+
+        user = Usuario.objects.get(correo='nuevo_paciente@test.com')
+        assert hasattr(user, 'paciente')
+        assert user.paciente is not None
+
+
 # ─── Notificación signal tests ─────────────────────────────────────────────
 
 @pytest.mark.django_db
