@@ -7,7 +7,7 @@ from django.contrib.auth import get_user_model
 from django.core.exceptions import ValidationError
 from django.db import IntegrityError
 
-from accounts.models import Medico, TokenRecuperacion
+from accounts.models import Medico, Paciente, TokenRecuperacion
 from accounts.serializers import (
     LoginSerializer,
     RegisterSerializer,
@@ -132,6 +132,28 @@ class TestPacienteModel:
         paciente.save()
         assert "Test User" in str(paciente)
         assert "HC-001" in str(paciente)
+
+    def test_auto_hc_number_unique(self, db):
+        """Each patient gets an auto-generated, unique HC number."""
+        first = Usuario.objects.create_user(
+            correo="hc1@test.com",
+            password="TestPass123!",
+            nombre="Uno",
+            apellido="Paciente",
+            rol="paciente",
+        ).paciente
+        second = Usuario.objects.create_user(
+            correo="hc2@test.com",
+            password="TestPass123!",
+            nombre="Dos",
+            apellido="Paciente",
+            rol="paciente",
+        ).paciente
+
+        assert first.numero_historia_clinica
+        assert second.numero_historia_clinica
+        assert first.numero_historia_clinica != second.numero_historia_clinica
+        assert Paciente.objects.count() == 2
 
 
 # ─── Models: Medico ──────────────────────────────────────────────────────────

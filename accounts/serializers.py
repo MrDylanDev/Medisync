@@ -1,4 +1,5 @@
-from django.contrib.auth import authenticate
+from django.contrib.auth import authenticate, password_validation
+from django.core.exceptions import ValidationError
 from django.utils.translation import gettext_lazy as _
 from rest_framework import serializers
 
@@ -190,4 +191,8 @@ class PasswordResetConfirmSerializer(serializers.Serializer):
             raise serializers.ValidationError(
                 {"password_confirm": _("Las contraseñas no coinciden.")}
             )
+        try:
+            password_validation.validate_password(attrs["password"])
+        except ValidationError as e:
+            raise serializers.ValidationError({"password": " ".join(e.messages)}) from None
         return attrs
