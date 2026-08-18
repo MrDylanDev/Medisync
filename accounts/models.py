@@ -1,15 +1,16 @@
-from django.db import models
 from django.contrib.auth.models import AbstractUser
+from django.db import models
 from django.utils.translation import gettext_lazy as _
 
 from core.models import BaseModel
+
 from .managers import UsuarioManager
 
 
 class Usuario(AbstractUser):
     """
     Custom user model using email as the unique identifier.
-    
+
     Replaces the default username field with correo (email) for
     authentication. All auth flows use email + password.
     """
@@ -83,7 +84,7 @@ class Usuario(AbstractUser):
 class Role(models.Model):
     """
     Role model for system-wide permission management.
-    
+
     Defines named roles with descriptions that can be assigned
     to groups of users for fine-grained access control.
     """
@@ -111,7 +112,7 @@ class Role(models.Model):
 class Paciente(BaseModel):
     """
     Patient profile model extending Usuario with medical record info.
-    
+
     Each patient has one-to-one relationship with a Usuario account.
     Stores medical record number, date of birth, insurance details,
     and emergency contact information.
@@ -174,7 +175,7 @@ class Paciente(BaseModel):
 class Medico(BaseModel):
     """
     Doctor profile model linking a Usuario to medical practice info.
-    
+
     Stores professional contact details. Clinical specialty
     information is managed in the medicos app (MedicoEspecialidad).
     """
@@ -213,7 +214,7 @@ class Medico(BaseModel):
 class TokenRecuperacion(models.Model):
     """
     Password reset token model.
-    
+
     Stores one-time use tokens for password recovery flows.
     Tokens expire after a configurable duration (default: 24 hours).
     """

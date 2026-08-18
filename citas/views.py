@@ -2,17 +2,18 @@ from datetime import datetime, timedelta
 
 from django.db import transaction
 from django.http import HttpResponse
-from django.utils.translation import gettext_lazy as _
 from django.utils import timezone
-from drf_spectacular.utils import extend_schema, OpenApiParameter, inline_serializer
-from rest_framework import serializers, status
+from django.utils.translation import gettext_lazy as _
+from drf_spectacular.utils import extend_schema
+from rest_framework import status
 from rest_framework.decorators import api_view, permission_classes
+from rest_framework.pagination import PageNumberPagination
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
-from rest_framework.pagination import PageNumberPagination
 
-from core.utils import send_template_email
 from core.pdf_utils import generar_comprobante_cita
+from core.utils import send_template_email
+
 from .models import Cita, EstadoCita
 from .serializers import CitaSerializer
 
@@ -93,7 +94,6 @@ def cita_detail(request, pk):
         if not serializer.is_valid():
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
-        from datetime import datetime
         with transaction.atomic():
             old_horario = cita.horario
             nueva_cita = serializer.save()

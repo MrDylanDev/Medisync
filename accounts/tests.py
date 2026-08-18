@@ -2,16 +2,17 @@
 Tests for accounts app: models, managers, validators, serializers, views.
 """
 import pytest
-from django.core.exceptions import ValidationError
 from django.contrib.auth import get_user_model
+from django.core.exceptions import ValidationError
+from django.db import IntegrityError
 
-from accounts.validators import UppercaseAndSpecialValidator
 from accounts.models import Medico, TokenRecuperacion
 from accounts.serializers import (
-    RegisterSerializer,
     LoginSerializer,
+    RegisterSerializer,
     UsuarioSerializer,
 )
+from accounts.validators import UppercaseAndSpecialValidator
 
 Usuario = get_user_model()
 
@@ -72,7 +73,7 @@ class TestUsuarioManager:
             nombre='First',
             apellido='User',
         )
-        with pytest.raises(Exception):  # IntegrityError
+        with pytest.raises(IntegrityError):
             Usuario.objects.create_user(
                 correo='dup@test.com',
                 password='TestPass123!',
@@ -159,7 +160,7 @@ class TestMedicoModel:
             apellido='Doc',
             rol='medico',
         )
-        with pytest.raises(Exception):
+        with pytest.raises(IntegrityError):
             Medico.objects.create(
                 usuario=otro_user,
                 numero_matricula='MAT-UNIQUE',

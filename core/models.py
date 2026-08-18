@@ -1,11 +1,11 @@
-from django.db import models
 from django.conf import settings
+from django.db import models
 
 
 class BaseModel(models.Model):
     """
     Abstract base model providing common timestamp and user tracking fields.
-    
+
     All domain models should inherit from this to ensure consistent
     created_at, updated_at, and created_by fields across the application.
     """

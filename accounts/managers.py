@@ -14,7 +14,7 @@ class UsuarioManager(BaseUserManager):
         """
         if not correo:
             raise ValueError(_('El correo electrónico es obligatorio'))
-        
+
         correo = self.normalize_email(correo)
         user = self.model(correo=correo, **extra_fields)
         user.set_password(password)

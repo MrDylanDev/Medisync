@@ -1,5 +1,4 @@
 from django.db import models
-from django.conf import settings
 from django.utils.translation import gettext_lazy as _
 
 from core.models import BaseModel
@@ -8,7 +7,7 @@ from core.models import BaseModel
 class Expediente(BaseModel):
     """
     Medical record entry for a patient.
-    
+
     Each entry records a diagnosis, treatment, or clinical note
     made by a doctor during or after an appointment.
     """

@@ -1,7 +1,7 @@
-from rest_framework import serializers
 from django.utils.translation import gettext_lazy as _
+from rest_framework import serializers
 
-from .models import Cita, AuditoriaCita
+from .models import AuditoriaCita, Cita
 
 
 class CitaSerializer(serializers.ModelSerializer):

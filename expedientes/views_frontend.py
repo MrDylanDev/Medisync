@@ -1,6 +1,6 @@
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
-from django.shortcuts import render, redirect, get_object_or_404
+from django.shortcuts import get_object_or_404, redirect, render
 from django.utils.translation import gettext_lazy as _
 from django.views.decorators.http import require_http_methods
 
@@ -34,8 +34,8 @@ def crear(request):
         messages.error(request, _('Solo los médicos pueden crear expedientes.'))
         return redirect('dashboard')
 
-    from citas.models import Cita
     from accounts.models import Paciente
+    from citas.models import Cita
 
     pacientes = Paciente.objects.select_related('usuario').all().order_by('usuario__apellido')
     citas = Cita.objects.select_related('paciente__usuario', 'horario').filter(
@@ -66,7 +66,7 @@ def crear(request):
         from medicos.models import Medico
         medico = get_object_or_404(Medico, usuario=request.user) if request.user.rol == 'medico' else None
 
-        expediente = Expediente.objects.create(
+        Expediente.objects.create(
             paciente_id=paciente_id,
             medico=medico or Medico.objects.get(pk=request.POST.get('medico')),
             cita_id=cita_id or None,

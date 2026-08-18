@@ -4,6 +4,7 @@ Pytest configuration and shared fixtures for the Medisync project.
 Sets the test database to SQLite to avoid requiring a running MySQL server.
 """
 import os
+
 os.environ.setdefault('DB_ENGINE', 'django.db.backends.sqlite3')
 os.environ.setdefault('DB_NAME', ':memory:')
 

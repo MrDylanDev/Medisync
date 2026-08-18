@@ -4,7 +4,7 @@ from rest_framework import permissions
 class IsOwnerOrReadOnly(permissions.BasePermission):
     """
     Custom permission: only the owner of an object can edit it.
-    
+
     Read permissions are allowed for any authenticated request.
     Write permissions require the requesting user to match the
     object's owner, identified by a `usuario` or `user` attribute.

@@ -35,14 +35,12 @@ def no_leidas_count(request):
 @login_required
 def recientes(request):
     qs = Notificacion.objects.filter(usuario=request.user).order_by('-creado_en')[:5]
-    items = []
-    for n in qs:
-        items.append({
-            'id': n.id,
-            'titulo': n.titulo,
-            'tipo': n.tipo,
-            'tipo_display': n.get_tipo_display(),
-            'leida': n.leida,
-            'creado_en': timezone.localtime(n.creado_en).strftime('%d/%m %H:%M'),
-        })
+    items = [{
+        'id': n.id,
+        'titulo': n.titulo,
+        'tipo': n.tipo,
+        'tipo_display': n.get_tipo_display(),
+        'leida': n.leida,
+        'creado_en': timezone.localtime(n.creado_en).strftime('%d/%m %H:%M'),
+    } for n in qs]
     return JsonResponse(items, safe=False)

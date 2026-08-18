@@ -1,10 +1,10 @@
 """
 Tests for citas app: models, signals, serializers, views.
 """
-import pytest
-from datetime import time, date, timedelta
-from django.db import IntegrityError
+from datetime import date, time, timedelta
 
+import pytest
+from django.db import IntegrityError
 
 # ─── Fixtures ─────────────────────────────────────────────────────────────────
 
@@ -206,7 +206,7 @@ class TestCitaAuditSignal:
 
     def test_crear_cita_crea_auditoria(self, db, paciente, horario, admin_user):
         """Creating a Cita should create an initial audit entry."""
-        from citas.models import Cita, AuditoriaCita
+        from citas.models import AuditoriaCita, Cita
         cita = Cita.objects.create(
             paciente=paciente, medico=horario.medico,
             horario=horario, motivo='Consulta',

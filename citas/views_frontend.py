@@ -3,14 +3,15 @@ from datetime import date, datetime, timedelta
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.db import transaction
-from django.shortcuts import render, redirect, get_object_or_404
-from django.utils.translation import gettext_lazy as _
+from django.shortcuts import get_object_or_404, redirect, render
 from django.utils import timezone
+from django.utils.translation import gettext_lazy as _
 from django.views.decorators.http import require_http_methods
 
-from especialidades.models import Especialidad
-from medicos.models import Medico, Horario
 from core.utils import send_template_email
+from especialidades.models import Especialidad
+from medicos.models import Horario, Medico
+
 from .models import Cita, EstadoCita
 
 
@@ -81,7 +82,7 @@ def agendar(request):
             messages.success(request, _('Cita agendada correctamente. Revisá tu correo.'))
             return redirect('citas:mis_citas')
 
-        for field, msg in errors.items():
+        for msg in errors.values():
             messages.error(request, msg)
 
     return render(request, 'citas/book.html', {

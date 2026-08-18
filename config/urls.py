@@ -1,11 +1,10 @@
 from django.contrib import admin
 from django.contrib.auth import views as auth_views
-from django.urls import path, include, reverse_lazy
+from django.urls import include, path, reverse_lazy
 
 from accounts import views as accounts_views
-from citas import views as citas_views
 from accounts import views_frontend
-from accounts.forms import EmailAuthenticationForm
+from citas import views as citas_views
 from core import views as core_views
 from core import views_reports
 from especialidades import views_public as especialidades_public
