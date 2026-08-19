@@ -183,7 +183,7 @@ def dashboard(request):
             ).order_by("-horario__fecha", "-horario__hora_inicio")[:5]
 
     elif u.rol == "medico":
-        medico = getattr(u, "medico", None)
+        medico = getattr(u, "medico_datos", None)
         if medico:
             from django.utils import timezone
 
