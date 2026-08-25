@@ -89,7 +89,7 @@ def logout(request):
             {"detail": _("Sesión cerrada correctamente.")},
             status=status.HTTP_200_OK,
         )
-    except (TokenError, ImportError):
+    except TokenError:
         return Response(
             {"error": _("Token inválido o expirado.")},
             status=status.HTTP_400_BAD_REQUEST,
